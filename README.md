@@ -6,6 +6,7 @@ Jedes Spiel ist eine einzelne HTML-Datei und läuft im Browser, am Smartboard un
 
 | Spiel | Thema |
 |---|---|
+| [Elfmeter-Cup](elfmeter-cup.html) | Watt, Kilowatt, Kilowattstunden, Stromkosten (Ergebnis eintippen) |
 | [Strom-Profi](strom-profi.html) | Watt, Kilowatt, Kilowattstunden, Stromkosten |
 | [Funktion oder nicht?](funktion-oder-nicht.html) | Senkrechtentest, Definitions- und Wertemenge |
 | [Zahlenmaschine](zahlenmaschine.html) | Funktionsgleichung, Funktionswerte |
