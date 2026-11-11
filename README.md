@@ -12,3 +12,11 @@ Jedes Spiel ist eine einzelne HTML-Datei und läuft im Browser, am Smartboard un
 | [Zahlenmaschine](zahlenmaschine.html) | Funktionsgleichung, Funktionswerte |
 
 Spielarten: Klassenduell (Team Blau gegen Team Orange) und Blitzrunde. Drei Niveaus: Basis, Standard, Expert.
+
+## Physik 9F · Radioaktivität
+
+| Spiel | Thema |
+|---|---|
+| [α-β-γ-Check](abg-check.html) | Strahlungsarten α, β, γ erkennen (12 kurze Aussagen) |
+| [Mission Strahlenlabor](mission-strahlenlabor.html) | α, β, γ: Eigenschaften, Abschirmung, Veränderung im Kern, Zerfallsgleichungen (4 Stationen, Urkunde) |
+| [Halbwertszeit-Profi](halbwertszeit-profi.html) | Rechnen mit der Halbwertszeit |
