@@ -25,5 +25,6 @@ Spielarten: Klassenduell (Team Blau gegen Team Orange) und Blitzrunde. Drei Nive
 
 | Spiel | Thema |
 |---|---|
+| [Zwei Zähler – ein Rätsel](einstieg-zwei-zaehler.html) | Einstiegsanimation: Warum läuft ein Stromzähler schneller als der andere? (Leitfrage der Stunde) |
 | [Stromfresser-Duell](stromfresser-duell.html) | Leistung P = U · I, Energie E = P · t in Wh und kWh: Alltagsgeräte im Duell vergleichen (Klassenduell, Blitzrunde, drei Niveaus) |
 | [Stromzähler-Simulation](stromzaehler-simulation.html) | Acht Haushaltsgeräte mit eigenem Stromzähler, Timer und Zeitraffer; Säulen für P und E, Kurve E(t) |
