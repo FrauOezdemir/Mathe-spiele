@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stromzähler-Simulation · Physik 10</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Lexend:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--blau:#164A9C;--dblau:#0E2F66;--hblau:#1C69D4;--fblau:#EAF0FA;--orange:#E8833A;--dorange:#B4561A;--horange:#FFF1E4;--rot:#E2231A;--gruen:#2E9E4F;--gelb:#E0A800;--hgelb:#FFF8DC;--grau:#6b7280}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Lexend',system-ui,sans-serif;background:#f4f7fc;color:#1d2433}
+button,select{font:inherit;color:inherit;cursor:pointer}
+.fred{font-family:'Fredoka','Lexend',sans-serif;font-weight:600}
+header{background:var(--dblau);color:#fff;display:flex;align-items:center;gap:14px;padding:10px 20px}
+header .logo{width:44px;height:44px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex:none}
+header .t{font-family:Fredoka;font-weight:600;font-size:clamp(18px,2.4vw,26px)}
+header .s{font-size:13px;opacity:.85}
+.stripe{height:6px;background:linear-gradient(90deg,var(--hblau) 0 33.3%,var(--dblau) 33.3% 66.6%,var(--rot) 66.6% 100%)}
+main{padding:14px clamp(10px,2vw,24px);max-width:1900px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.panel{background:#fff;border-radius:18px;box-shadow:0 6px 24px rgba(14,47,102,.10);padding:14px 18px}
+/* Kopf: Hauptzähler + Steuerung */
+.kopf{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center}
+.haupt{display:flex;gap:18px;align-items:center}
+.zaehler{background:#2b2f36;border-radius:16px;padding:10px 12px;width:210px;color:#fff;text-align:center;box-shadow:inset 0 -4px 0 #1a1d22}
+.zaehler .lab{font-size:11px;letter-spacing:1px;opacity:.8}
+.zaehler .fenster{background:#e9ecef;border-radius:8px;margin:6px 0;padding:6px;position:relative;overflow:hidden}
+.ziffern{display:flex;justify-content:center;gap:2px}
+.ziffern span{background:#111;color:#fff;font-family:'Lexend';font-weight:700;font-size:22px;width:20px;text-align:center;border-radius:3px;line-height:30px}
+.ziffern span.n{background:#c0392b}
+.ziffern i{font-style:normal;color:#111;font-weight:700;font-size:20px;align-self:flex-end;margin:0 1px}
+.einheit{color:#111;font-size:12px;font-weight:700;margin-top:2px}
+.scheibe{height:22px;margin:6px 6px 0;background:#d5d9de;border-radius:6px;position:relative;overflow:hidden;border:2px solid #9aa1a9}
+.scheibe .rand{position:absolute;top:2px;bottom:2px;left:0;right:0;background:repeating-linear-gradient(90deg,#c9ced4 0 6px,#b9bec5 6px 12px)}
+.scheibe .mark{position:absolute;top:2px;bottom:2px;width:14px;background:var(--rot);border-radius:2px}
+.zaehler .k{font-size:10.5px;opacity:.75;margin-top:4px}
+.werte{display:flex;flex-direction:column;gap:8px}
+.big{font-family:Fredoka;font-weight:600;font-size:clamp(26px,3vw,40px);color:var(--dblau);line-height:1}
+.big small{font-size:.5em;color:var(--grau);font-family:Lexend;font-weight:600}
+.kl{font-size:13px;color:var(--grau);font-weight:600}
+.uhr{font-family:Fredoka;font-size:clamp(22px,2.4vw,32px);color:var(--dorange)}
+.steuer{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;align-items:center}
+.btn{font-weight:700;border:none;border-radius:14px;padding:12px 18px;font-size:16px;color:#fff;background:var(--blau);box-shadow:0 4px 0 var(--dblau);min-height:50px}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--dblau)}
+.btn.gr{background:var(--gruen);box-shadow:0 4px 0 #1f6e37}
+.btn.gy{background:#6b7684;box-shadow:0 4px 0 #4a525c}
+.btn.or{background:var(--orange);box-shadow:0 4px 0 var(--dorange)}
+.btn.ws{background:#fff;color:var(--dblau);border:2px solid var(--blau);box-shadow:0 4px 0 #c9d6ec}
+.sel{display:flex;flex-direction:column;font-size:12px;color:var(--grau);font-weight:600;gap:3px}
+.sel select{border:2px solid #c9d6ec;border-radius:12px;padding:10px 12px;font-size:15px;background:#fff;color:var(--dblau);font-weight:600;min-height:48px}
+/* Geräte */
+.geraete{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.gc{background:#fff;border:3px solid #d5deec;border-radius:18px;padding:10px 10px 12px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;transition:border-color .2s,background .2s;position:relative}
+.gc.on{border-color:var(--gruen);background:#F3FBF5}
+.gc .farbe{position:absolute;top:0;left:14px;right:14px;height:5px;border-radius:0 0 5px 5px}
+.gc svg.ic{width:62px;height:62px;transition:filter .3s}
+.gc.on svg.ic{filter:drop-shadow(0 0 7px rgba(232,131,58,.75))}
+.gc .n{font-family:Fredoka;font-weight:600;font-size:18px;color:var(--dblau);line-height:1.1;min-height:20px}
+.gc .p{font-family:Fredoka;font-weight:600;font-size:28px;color:var(--rot);line-height:1}
+.gc .p small{font-size:15px}
+.schalter{width:100%;border:none;border-radius:12px;padding:9px;font-weight:700;font-size:16px;background:#e3e7ee;color:#4a5562;min-height:44px}
+.gc.on .schalter{background:var(--gruen);color:#fff}
+.mini{background:#2b2f36;border-radius:10px;padding:5px 6px 6px;width:100%}
+.mini .fenster{background:#e9ecef;border-radius:6px;padding:3px}
+.mini .ziffern span{font-size:15px;width:14px;line-height:21px}
+.mini .ziffern i{font-size:14px}
+.mini .einheit{font-size:10px;margin:0}
+.mini .scheibe{height:13px;margin:4px 2px 0;border-width:1.5px}
+.mini .scheibe .mark{width:9px}
+.timer{width:100%;display:flex;flex-direction:column;gap:3px;font-size:11.5px;color:var(--grau);font-weight:600;text-align:left}
+.timer select{border:2px solid #c9d6ec;border-radius:10px;padding:5px 6px;font-size:14px;color:var(--dblau);font-weight:600;background:#fff}
+.tbar{height:8px;background:#e6ecf6;border-radius:6px;overflow:hidden}
+.tbar div{height:100%;width:0;background:var(--orange)}
+.lauf{display:flex;justify-content:space-between;width:100%;font-size:12px;color:#4a5562}
+.lauf b{color:var(--dblau)}
+.hinweis{font-size:11.5px;color:var(--dorange);font-weight:700;min-height:15px}
+/* Diagramm */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;align-items:center}
+.tab{border:2px solid #c9d6ec;background:#fff;border-radius:12px;padding:8px 14px;font-weight:700;color:var(--dblau);font-size:15px;min-height:44px}
+.tab.on{background:var(--blau);border-color:var(--blau);color:#fff}
+.dtitel{margin-left:auto;font-size:13px;color:var(--grau);font-weight:600;max-width:520px;text-align:right}
+#chart{width:100%;height:auto;display:block}
+#chart text{font-family:Lexend,sans-serif}
+.fuss{font-size:12px;color:var(--grau);text-align:center;padding:4px 0 14px}
+@media (max-width:900px){.kopf{grid-template-columns:1fr}.steuer{justify-content:flex-start}.haupt{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+<header><div class="logo"><svg width="28" height="28" viewBox="0 0 64 64"><path d="M38 4 L14 36 H30 L24 60 L50 26 H34 Z" fill="#E8833A" stroke="#B4561A" stroke-width="3" stroke-linejoin="round"/></svg></div>
+<div><div class="t">Stromzähler-Simulation</div><div class="s">Physik 10 · Leistung P und Energie E = P · t · Herr Özdemir</div></div></header>
+<div class="stripe"></div>
+<main>
+ <div class="panel kopf">
+  <div class="haupt">
+   <div class="zaehler"><div class="lab">STROMZÄHLER · HAUS</div>
+    <div class="fenster"><div class="ziffern" id="hz"></div><div class="einheit">kWh</div></div>
+    <div class="scheibe"><div class="rand"></div><div class="mark" id="hm"></div></div>
+    <div class="k">Die Scheibe dreht sich schneller, je größer die Leistung ist.</div></div>
+   <div class="werte">
+    <div><div class="kl">Gesamtleistung gerade</div><div class="big" id="ptot">0 <small>W</small></div></div>
+    <div><div class="kl">Energie bisher</div><div class="big" id="etot">0 <small>Wh</small></div></div>
+    <div><div class="kl">Simulierte Zeit</div><div class="uhr" id="uhr">0 h 00 min</div></div>
+   </div>
+  </div>
+  <div class="steuer">
+   <button class="btn" id="play">⏸ Pause</button>
+   <label class="sel">Zeitraffer<select id="speed">
+    <option value="60">1 s = 1 min</option><option value="600" selected>1 s = 10 min</option><option value="3600">1 s = 1 h</option><option value="7200">1 s = 2 h</option></select></label>
+   <button class="btn gr" id="allOn">Alle ein</button>
+   <button class="btn gy" id="allOff">Alle aus</button>
+   <button class="btn or" id="tag">Ein ganz normaler Tag</button>
+   <button class="btn ws" id="reset">↺ Zurücksetzen</button>
+  </div>
+ </div>
+ <div class="geraete" id="geraete"></div>
+ <div class="panel">
+  <div class="tabs">
+   <button class="tab on" data-v="E">Säulen: Energie (Wh)</button>
+   <button class="tab" data-v="P">Säulen: Leistung (W)</button>
+   <button class="tab" data-v="L">Kurve: Energie über der Zeit</button>
+   <div class="dtitel" id="dtitel"></div>
+  </div>
+  <svg id="chart" viewBox="0 0 1200 380"></svg>
+ </div>
+ <div class="fuss">Typische Leistungen, gerundet. Vereinfachung: Die Geräte laufen mit konstanter Leistung, solange sie eingeschaltet sind.</div>
+</main>
+<script>
+const ST="fill='none' stroke='#0E2F66' stroke-width='3.4' stroke-linejoin='round' stroke-linecap='round'";
+const IC={
+ kocher:`<path d='M20 54 L23 20 H43 L46 54 Z' ${ST}/><path d='M21 20 H45 M29 14 H37' ${ST}/><path d='M44 26 C56 26 56 46 45.5 47' ${ST}/><path d='M23 26 L12 18' ${ST}/><path d='M16 54 H50 V59 H16 Z' ${ST}/>`,
+ foehn:`<circle cx='24' cy='26' r='14' ${ST}/><circle cx='24' cy='26' r='5' ${ST}/><path d='M36 19 H56 V33 H36' ${ST}/><path d='M18 39 L14 58 H24 L27 40' ${ST}/>`,
+ toaster:`<rect x='17' y='9' width='12' height='16' rx='3' ${ST}/><rect x='35' y='9' width='12' height='16' rx='3' ${ST}/><rect x='8' y='22' width='48' height='32' rx='9' ${ST}/><path d='M56 32 H60 M16 54 V58 M48 54 V58' ${ST}/>`,
+ konsole:`<path d='M16 22 H48 C56 22 60 34 60 44 C60 52 53 54 49 48 L44 41 H20 L15 48 C11 54 4 52 4 44 C4 34 8 22 16 22 Z' ${ST}/><path d='M18 29 V39 M13 34 H23' ${ST}/><circle cx='43' cy='31' r='2.5' fill='#0E2F66'/><circle cx='49' cy='37' r='2.5' fill='#0E2F66'/>`,
+ fernseher:`<rect x='4' y='8' width='56' height='36' rx='4' ${ST}/><path d='M24 54 H40 M32 44 V54' ${ST}/>`,
+ laptop:`<rect x='12' y='12' width='40' height='28' rx='3' ${ST}/><path d='M4 46 H60 L56 52 H8 Z' ${ST}/>`,
+ router:`<rect x='6' y='36' width='52' height='16' rx='4' ${ST}/><path d='M16 36 L12 12 M48 36 L52 12' ${ST}/><circle cx='16' cy='44' r='2' fill='#0E2F66'/><circle cx='24' cy='44' r='2' fill='#0E2F66'/><circle cx='32' cy='44' r='2' fill='#0E2F66'/><path d='M24 22 Q32 15 40 22 M27.5 27 Q32 23.5 36.5 27' ${ST}/>`,
+ led:`<path d='M32 6 a16 16 0 0 1 10 28.5 v7.5 h-20 v-7.5 a16 16 0 0 1 10 -28.5 z' ${ST}/><path d='M23 48 H41 M25 54 H39' ${ST}/><path d='M26 30 L29 20 L32 28 L35 20 L38 30' ${ST}/>`,
+};
+// Name, Icon, Leistung W, typische Nutzung pro Tag (min), Farbe
+const DEV=[
+ {n:'Wasserkocher',ic:'kocher',P:2000,typ:6,c:'#E2231A'},
+ {n:'Föhn',ic:'foehn',P:1800,typ:12,c:'#E8833A'},
+ {n:'Toaster',ic:'toaster',P:900,typ:6,c:'#B8860B'},
+ {n:'Spielkonsole',ic:'konsole',P:150,typ:120,c:'#7A4FD0'},
+ {n:'Fernseher',ic:'fernseher',P:100,typ:180,c:'#1C69D4'},
+ {n:'Laptop',ic:'laptop',P:50,typ:240,c:'#0E9AA7'},
+ {n:'WLAN-Router',ic:'router',P:10,typ:1440,c:'#2E9E4F'},
+ {n:'LED-Lampe',ic:'led',P:8,typ:300,c:'#8A6D3B'},
+];
+const TOPT=[[0,'kein Timer'],[6,'6 min'],[12,'12 min'],[30,'30 min'],[60,'1 h'],[120,'2 h'],[180,'3 h'],[240,'4 h'],[300,'5 h'],[480,'8 h'],[1440,'24 h']];
+const fmt=(x,d=0)=>{const r=(Math.round(x*10**d)/10**d).toFixed(d).split('.');return r[0].replace(/\B(?=(\d{3})+(?!\d))/g,' ')+(r[1]?','+r[1]:'');};
+const fmtE=x=>x<10?fmt(x,2):x<100?fmt(x,1):fmt(x,0);
+const zeit=h=>{const m=Math.round(h*60);return `${Math.floor(m/60)} h ${String(m%60).padStart(2,'0')} min`;};
+
+// Zustand
+let D, simH=0, running=true, speed=600, view='E', hm=0;
+function init(){
+ D=DEV.map(d=>({...d,on:false,E:0,tOn:0,timer:0,ang:0,hist:[[0,0]],msg:''}));
+ simH=0; hm=0; build(); draw(true);
+}
+// Ziffernrolle: Wert in kWh mit 3 Nachkommastellen (Hauptzähler) bzw. Wh mit 1 Nachkommastelle (Gerät)
+function ziffern(el,val,vk,nk){
+ const s=val.toFixed(nk).split('.'); const a=s[0].padStart(vk,'0').slice(-vk);
+ el.innerHTML=[...a].map(c=>`<span>${c}</span>`).join('')+'<i>,</i>'+[...s[1]].map(c=>`<span class="n">${c}</span>`).join('');
+}
+function build(){
+ const g=document.getElementById('geraete');
+ g.innerHTML=D.map((d,i)=>`<div class="gc" id="g${i}"><div class="farbe" style="background:${d.c}"></div>
+  <svg class="ic" viewBox="0 0 64 64">${IC[d.ic]}</svg><div class="n">${d.n}</div>
+  <div class="p">${fmt(d.P)} <small>W</small></div>
+  <button class="schalter" data-i="${i}">AUS</button>
+  <div class="mini"><div class="fenster"><div class="ziffern" id="z${i}"></div><div class="einheit">Wh</div></div>
+   <div class="scheibe"><div class="rand"></div><div class="mark" id="m${i}"></div></div></div>
+  <div class="lauf"><span>läuft: <b id="t${i}">0 h 00 min</b></span></div>
+  <label class="timer">⏱ Timer<select data-i="${i}">${TOPT.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('')}</select>
+   <div class="tbar"><div id="b${i}"></div></div></label>
+  <div class="hinweis" id="h${i}"></div></div>`).join('');
+ g.querySelectorAll('.schalter').forEach(b=>b.onclick=()=>toggle(+b.dataset.i));
+ g.querySelectorAll('.timer select').forEach(s=>s.onchange=()=>{const d=D[+s.dataset.i];d.timer=+s.value/60;d.msg='';if(d.timer&&d.tOn>=d.timer){d.tOn=0;}upd();});
+ upd();
+}
+function toggle(i,state){
+ const d=D[i]; const ns=state===undefined?!d.on:state;
+ if(ns&&d.timer&&d.tOn>=d.timer-1e-9){d.tOn=0;} // Timer neu starten
+ d.on=ns; d.msg=''; d.hist.push([simH,d.E]); if(ns&&!running)setRun(true); upd();
+}
+function setRun(r){running=r;document.getElementById('play').textContent=r?'⏸ Pause':'▶ Weiter';}
+document.getElementById('play').onclick=()=>setRun(!running);
+document.getElementById('speed').onchange=e=>speed=+e.target.value;
+document.getElementById('allOn').onclick=()=>D.forEach((d,i)=>toggle(i,true));
+document.getElementById('allOff').onclick=()=>D.forEach((d,i)=>toggle(i,false));
+document.getElementById('reset').onclick=()=>{const t=D.map(d=>d.timer);init();D.forEach((d,i)=>{d.timer=t[i];document.querySelector(`.timer select[data-i="${i}"]`).value=Math.round(t[i]*60);});upd();setRun(true);};
+document.getElementById('tag').onclick=()=>{
+ init(); D.forEach((d,i)=>{d.timer=d.typ/60;document.querySelector(`.timer select[data-i="${i}"]`).value=d.typ;});
+ document.getElementById('speed').value='3600'; speed=3600;
+ D.forEach((d,i)=>toggle(i,true)); setRun(true);
+};
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{view=t.dataset.v;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===t));draw(true);});
+
+function upd(){
+ const Pt=D.reduce((s,d)=>s+(d.on?d.P:0),0), Et=D.reduce((s,d)=>s+d.E,0);
+ document.getElementById('ptot').innerHTML=`${fmt(Pt)} <small>W</small>`;
+ document.getElementById('etot').innerHTML=`${fmtE(Et)} <small>Wh</small>`;
+ document.getElementById('uhr').textContent=zeit(simH);
+ ziffern(document.getElementById('hz'),Et/1000,5,3);
+ document.getElementById('hm').style.left=`calc(${(hm%360)/360*100}% - 7px)`;
+ D.forEach((d,i)=>{
+  document.getElementById('g'+i).classList.toggle('on',d.on);
+  document.querySelector(`#g${i} .schalter`).textContent=d.on?'EIN':'AUS';
+  ziffern(document.getElementById('z'+i),d.E,5,1);
+  document.getElementById('m'+i).style.left=`calc(${(d.ang%360)/360*100}% - 4px)`;
+  document.getElementById('t'+i).textContent=zeit(d.tOn);
+  document.getElementById('b'+i).style.width=d.timer?Math.min(100,100*d.tOn/d.timer)+'%':'0';
+  document.getElementById('h'+i).textContent=d.msg;
+ });
+}
+// Animation
+let last=performance.now(), lastDraw=0;
+const DEG_PER_W=0.16; // Scheibe: Grad pro Sekunde und Watt (sichtbar, proportional zur Leistung)
+function frame(now){
+ const dt=Math.min(.1,(now-last)/1000); last=now;
+ if(running){
+  let dh=dt*speed/3600;
+  if(simH<24 && simH+dh>=24){ dh=24-simH; }
+  D.forEach(d=>{
+   if(!d.on) return;
+   let h=dh;
+   if(d.timer && d.tOn+h>=d.timer){h=Math.max(0,d.timer-d.tOn); d.on=false; d.msg='Timer abgelaufen'; }
+   d.E+=d.P*h; d.tOn+=h; d.ang+=d.P*DEG_PER_W*dt*(h/dh||0);
+   if(!d.on) d.hist.push([simH+h,d.E]);
+  });
+  const Pt=D.reduce((s,d)=>s+(d.on?d.P:0),0);
+  hm+=Pt*DEG_PER_W*dt*0.35;
+  const before=simH; simH+=dh;
+  if(before<24 && simH>=24){ setRun(false); D.forEach(d=>{if(d.on)d.msg='';}); document.getElementById('dtitel').textContent='24 Stunden sind vorbei. Mit „Weiter“ läuft die Zeit weiter.'; }
+  if(now-lastDraw>200){ D.forEach(d=>{ if(d.on){ d.hist.push([simH,d.E]); if(d.hist.length>1500) d.hist=d.hist.filter((p,k)=>k%2===0||k===d.hist.length-1); } }); }
+  upd();
+ }
+ if(now-lastDraw>200){ draw(); lastDraw=now; }
+ requestAnimationFrame(frame);
+}
+// Diagramme
+const W=1200,H=380,L=70,R=20,T=24,B=78;
+function nice(m){ if(m<=0)return 1; const e=10**Math.floor(Math.log10(m)), f=m/e; return (f<=1?1:f<=2?2:f<=2.5?2.5:f<=5?5:10)*e; }
+function draw(){
+ const s=document.getElementById('chart'), t=document.getElementById('dtitel');
+ const pw=W-L-R, ph=H-T-B; let h='';
+ if(view==='E'||view==='P'){
+  const vals=D.map(d=>view==='E'?d.E:d.P), mx=nice(Math.max(...vals,view==='E'?1:10));
+  if(!(simH>=24&&!running)) t.textContent=view==='E'?'Die Säulen wachsen, solange ein Gerät eingeschaltet ist. E = P · t':'Die Leistung bleibt gleich, egal wie lange das Gerät läuft. Grau = ausgeschaltet.';
+  for(let k=0;k<=5;k++){const y=T+ph-ph*k/5;h+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="#e6ecf6"/><text x="${L-8}" y="${y+4}" text-anchor="end" font-size="13" fill="#6b7280">${fmt(mx*k/5,mx<5?1:0)}</text>`;}
+  h+=`<text x="16" y="${T+ph/2}" transform="rotate(-90 16 ${T+ph/2})" text-anchor="middle" font-size="14" fill="#4a5562" font-weight="600">${view==='E'?'Energie E in Wh':'Leistung P in W'}</text>`;
+  const bw=pw/D.length;
+  D.forEach((d,i)=>{
+   const v=vals[i], bh=ph*v/mx, x=L+i*bw+bw*.18, w=bw*.64, y=T+ph-bh;
+   const col=view==='P'&&!d.on?'#c3cad6':d.c;
+   h+=`<rect x="${x}" y="${y}" width="${w}" height="${Math.max(0,bh)}" rx="6" fill="${col}"/>`;
+   h+=`<text x="${x+w/2}" y="${y-7}" text-anchor="middle" font-size="16" font-weight="700" fill="#0E2F66">${view==='E'?fmtE(v)+' Wh':fmt(v)+' W'}</text>`;
+   h+=`<g transform="translate(${x+w/2-15},${T+ph+6}) scale(.47)">${IC[d.ic]}</g>`;
+   h+=`<text x="${x+w/2}" y="${T+ph+60}" text-anchor="middle" font-size="14" fill="#0E2F66" font-weight="600">${d.n}</text>`;
+  });
+  h+=`<line x1="${L}" x2="${W-R}" y1="${T+ph}" y2="${T+ph}" stroke="#0E2F66" stroke-width="2"/>`;
+ }else{
+  if(!(simH>=24&&!running)) t.textContent='Je steiler die Linie, desto größer die Leistung. Waagerecht = ausgeschaltet.';
+  const xm=nice(Math.max(1,simH)), ym=nice(Math.max(1,...D.map(d=>d.E)));
+  for(let k=0;k<=5;k++){const y=T+ph-ph*k/5;h+=`<line x1="${L}" x2="${W-R-150}" y1="${y}" y2="${y}" stroke="#e6ecf6"/><text x="${L-8}" y="${y+4}" text-anchor="end" font-size="13" fill="#6b7280">${fmt(ym*k/5,ym<5?1:0)}</text>`;}
+  const pw2=pw-150;
+  for(let k=0;k<=5;k++){const x=L+pw2*k/5;h+=`<line x1="${x}" x2="${x}" y1="${T}" y2="${T+ph}" stroke="#f0f3f8"/><text x="${x}" y="${T+ph+20}" text-anchor="middle" font-size="13" fill="#6b7280">${fmt(xm*k/5,xm<5?1:0)}</text>`;}
+  h+=`<text x="${L+pw2/2}" y="${T+ph+46}" text-anchor="middle" font-size="14" fill="#4a5562" font-weight="600">Zeit t in Stunden</text>`;
+  h+=`<text x="16" y="${T+ph/2}" transform="rotate(-90 16 ${T+ph/2})" text-anchor="middle" font-size="14" fill="#4a5562" font-weight="600">Energie E in Wh</text>`;
+  const sorted=D.map((d,i)=>i).sort((a,b)=>D[b].E-D[a].E);
+  D.forEach((d,i)=>{
+   const pts=d.hist.concat([[simH,d.E]]).map(p=>`${(L+pw2*p[0]/xm).toFixed(1)},${(T+ph-ph*p[1]/ym).toFixed(1)}`).join(' ');
+   h+=`<polyline points="${pts}" fill="none" stroke="${d.c}" stroke-width="${d.on?4:3}" stroke-linejoin="round" stroke-linecap="round"/>`;
+  });
+  sorted.forEach((i,k)=>{const d=D[i],y=T+10+k*28;
+   h+=`<rect x="${W-R-140}" y="${y}" width="16" height="16" rx="4" fill="${d.c}"/><text x="${W-R-118}" y="${y+13}" font-size="13" fill="#0E2F66" font-weight="${d.on?700:400}">${d.n}</text>`;});
+  h+=`<line x1="${L}" x2="${L+pw2}" y1="${T+ph}" y2="${T+ph}" stroke="#0E2F66" stroke-width="2"/><line x1="${L}" x2="${L}" y1="${T}" y2="${T+ph}" stroke="#0E2F66" stroke-width="2"/>`;
+ }
+ s.innerHTML=h;
+}
+init(); requestAnimationFrame(frame);
+</script>
+</body>
+</html>
