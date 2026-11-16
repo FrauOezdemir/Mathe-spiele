@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plus & Minus Profi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fff8ec; --ink:#2b2340; --muted:#6b6280; --line:#eadfcb;
+  --summand:#2563eb; --summe:#15803d; --minuend:#ea580c; --subtrahend:#9333ea; --differenz:#db2777;
+  --ok:#16a34a; --bad:#dc2626; --accent:#f59e0b; --accent2:#6366f1;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:Nunito,system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;
+  background-image:radial-gradient(circle at 5% 0%,#ffe2a8 0,transparent 38%),radial-gradient(circle at 100% 25%,#dfe4ff 0,transparent 35%),radial-gradient(circle at 0% 100%,#ffd9ea 0,transparent 30%);
+  background-attachment:fixed;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:560px;margin:0 auto;padding:16px 14px 48px}
+h1,h2,h3,.fred{font-family:Fredoka,Nunito,sans-serif}
+button{font:inherit;color:inherit;cursor:pointer}
+.screen{display:none}.screen.on{display:block;animation:pop .25s ease}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* Home */
+.hero{text-align:center;padding:10px 0 4px}
+.logo{display:inline-flex;gap:6px;margin-bottom:4px}
+.logo span{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;font-family:Fredoka,Nunito,system-ui,sans-serif;font-size:2.2rem;font-weight:700;color:#fff;transform:rotate(-6deg);box-shadow:0 4px 0 rgba(0,0,0,.15)}
+.logo span:nth-child(1){background:var(--summand)}
+.logo span:nth-child(2){background:var(--differenz);transform:rotate(6deg)}
+.hero h1{margin:6px 0 2px;font-size:2rem}
+.hero p{margin:0;color:var(--muted);font-weight:600}
+.starsTotal{display:inline-block;margin-top:10px;background:#fff;border:2px solid var(--line);border-radius:999px;padding:4px 14px;font-weight:800}
+.mode{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:20px;padding:12px 14px;margin:10px 0;box-shadow:0 4px 0 var(--line);transition:transform .08s}
+.mode:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.mode .ic{font-size:1.8rem;width:54px;height:54px;border-radius:16px;display:grid;place-items:center;flex:none}
+.mode b{font-family:Fredoka,Nunito,system-ui,sans-serif;font-size:1.2rem;font-weight:600;display:block}
+.mode span.d{color:var(--muted);font-size:.95rem}
+.mode small.rec{display:block;color:var(--accent);font-weight:800;font-size:.8rem}
+.box{background:#fff;border:2px solid var(--line);border-radius:20px;padding:14px;margin-top:16px}
+.box h3{margin:0 0 8px;font-size:1.1rem}
+.setrow{margin:8px 0}
+.setlab{font-weight:800;font-size:.9rem;color:var(--muted);margin-bottom:4px}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;border:2px solid var(--line);background:#fffdf8;border-radius:12px;padding:9px 4px;font-weight:700;font-size:.95rem}
+.seg button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+
+/* buttons */
+.btn{font-family:Fredoka,Nunito,system-ui,sans-serif;font-weight:600;border:none;border-radius:16px;padding:14px 18px;font-size:1.15rem;background:var(--accent2);color:#fff;box-shadow:0 4px 0 #4338ca;transition:transform .08s;width:100%}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #4338ca}
+.btn.ghost{background:#fff;color:var(--ink);border:2px solid var(--line);box-shadow:0 3px 0 var(--line)}
+.btn.small{width:auto;padding:8px 12px;font-size:.95rem}
+.hidden{display:none!important}
+
+/* game top */
+.gtop{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.gtop .meta{flex:1;min-width:0}
+.bar{height:12px;background:#fff;border:2px solid var(--line);border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#f97316);border-radius:999px;transition:width .35s}
+.gline{display:flex;justify-content:space-between;font-weight:800;font-size:.9rem;margin-top:4px;color:var(--muted)}
+.gline .sc{color:var(--ink)}
+.card{background:#fff;border-radius:24px;padding:18px 16px;border:2px solid var(--line);box-shadow:0 6px 0 var(--line)}
+.prompt{font-family:Fredoka,Nunito,system-ui,sans-serif;font-size:1.35rem;font-weight:500;text-align:center;line-height:1.35}
+.prompt b{font-weight:700}
+
+/* terms */
+.t{font-weight:800;padding:0 5px;border-radius:7px;white-space:nowrap}
+.t-summand{color:var(--summand);background:#dbeafe}
+.t-summe{color:var(--summe);background:#dcfce7}
+.t-minuend{color:var(--minuend);background:#ffedd5}
+.t-subtrahend{color:var(--subtrahend);background:#f3e8ff}
+.t-differenz{color:var(--differenz);background:#fce7f3}
+
+/* equation */
+.eq{display:flex;justify-content:center;align-items:flex-start;gap:4px;margin:16px 0 6px}
+.eq .part{display:flex;flex-direction:column;align-items:center;min-width:56px}
+.eq .num{font-family:Fredoka,Nunito,system-ui,sans-serif;font-size:clamp(1.7rem,8vw,2.2rem);font-weight:600;padding:2px 8px;border-radius:12px;border:3px solid transparent;line-height:1.2}
+.eq .part.mark .num{background:#fff3c4;border-color:var(--accent);animation:pulse 1.3s infinite}
+@keyframes pulse{50%{transform:scale(1.07)}}
+.eq .sym{font-family:Fredoka,Nunito,system-ui,sans-serif;font-size:clamp(1.6rem,7vw,2rem);padding-top:4px;color:var(--muted)}
+.eq .lab{font-size:.78rem;font-weight:800;min-height:1.2em;margin-top:3px;padding:0 4px;border-radius:6px}
+.eq .lab.q{color:var(--accent);font-size:1rem}
+.eq .part.c-summand .num{color:var(--summand)}
+.eq .part.c-summe .num{color:var(--summe)}
+.eq .part.c-minuend .num{color:var(--minuend)}
+.eq .part.c-subtrahend .num{color:var(--subtrahend)}
+.eq .part.c-differenz .num{color:var(--differenz)}
+.formula{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px;margin:16px 0 4px;font-size:1.2rem}
+.formula .op{font-family:Fredoka,Nunito,system-ui,sans-serif;font-size:1.5rem;color:var(--muted)}
+.formula .gap{display:inline-block;min-width:70px;text-align:center;border:3px dashed var(--accent);border-radius:10px;font-family:Fredoka,Nunito,system-ui,sans-serif;font-weight:700;color:var(--accent);background:#fff8e1;animation:pulse 1.3s infinite}
+
+/* column (Kästchen) */
+.colwrap{display:flex;justify-content:center;margin:14px 0 6px}
+.col{display:grid;gap:1px;background:#d6e2f2;border:1px solid #d6e2f2;--cell:clamp(34px,10.5vw,46px)}
+.cell{width:var(--cell);height:var(--cell);display:grid;place-items:center;background:#fff;font-family:Fredoka,Nunito,system-ui,sans-serif;font-size:calc(var(--cell)*.62);font-weight:500;line-height:1}
+.cell.carry{height:calc(var(--cell)*.55);font-size:calc(var(--cell)*.42);color:var(--bad);font-weight:700;background:#fffafa}
+.cell.res{box-shadow:inset 0 3px 0 var(--ink)}
+.cell.typed{color:var(--accent2);font-weight:600}
+.cell.cur{background:#eef2ff}
+.cell.c-summand{color:var(--summand)}.cell.c-summe{color:var(--summe)}.cell.c-minuend{color:var(--minuend)}.cell.c-subtrahend{color:var(--subtrahend)}.cell.c-differenz{color:var(--differenz)}
+.ansbox{margin:16px auto 4px;max-width:220px;text-align:center;font-family:Fredoka,Nunito,system-ui,sans-serif;font-size:2.2rem;font-weight:600;color:var(--accent2);border:3px solid #c7d2fe;border-radius:16px;padding:6px;min-height:64px;background:#f8f9ff}
+.ansbox .ph{color:#b9bfd6;font-size:1.2rem;font-weight:500}
+
+/* options */
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.opts.one{grid-template-columns:1fr}
+.opt{background:#fff;border:2px solid var(--line);border-radius:16px;padding:14px 10px;font-weight:800;font-size:1.12rem;box-shadow:0 4px 0 var(--line);transition:transform .08s}
+.opt:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.opt.right{background:#dcfce7;border-color:var(--ok);box-shadow:0 4px 0 var(--ok)}
+.opt.wrong{background:#fee2e2;border-color:var(--bad);box-shadow:0 4px 0 var(--bad);animation:shake .35s}
+.opt:disabled{cursor:default}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.shake{animation:shake .35s}
+
+/* keypad */
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.pad button{font-family:Fredoka,Nunito,system-ui,sans-serif;font-size:1.6rem;font-weight:600;padding:10px 0;border-radius:14px;border:2px solid var(--line);background:#fff;box-shadow:0 3px 0 var(--line)}
+.pad button:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
+.pad .ok{background:var(--ok);color:#fff;border-color:#15803d;box-shadow:0 3px 0 #15803d}
+.pad .del{background:#fff7ed}
+.pad.off{opacity:.35;pointer-events:none}
+
+/* feedback */
+.fb{margin-top:14px;border-radius:16px;font-weight:600;line-height:1.45}
+.fb:empty{display:none}
+.fb.ok{background:#dcfce7;padding:12px 14px;border:2px solid #86efac}
+.fb.bad{background:#fff1f2;padding:12px 14px;border:2px solid #fecdd3}
+.fb.hint{background:#fef3c7;padding:12px 14px;border:2px solid #fcd34d}
+.fb .head{font-family:Fredoka,Nunito,system-ui,sans-serif;font-size:1.2rem;font-weight:600;display:block;margin-bottom:4px}
+.fb .eq{margin:8px 0 0}
+.steps{margin:8px 0 0;padding-left:20px;font-weight:600;font-size:.95rem}
+.steps li{margin:4px 0}
+.next{margin-top:14px}
+.bonus{display:inline-block;background:var(--accent);color:#fff;border-radius:999px;padding:0 8px;font-size:.85rem;margin-left:4px}
+
+/* learn */
+.lcard{background:#fff;border:2px solid var(--line);border-radius:20px;padding:14px 16px;margin:12px 0}
+.lcard h2{margin:0 0 4px;font-size:1.3rem}
+.lcard p{margin:6px 0;line-height:1.45}
+.merk{background:#fff8e1;border-left:5px solid var(--accent);border-radius:10px;padding:8px 12px;margin:10px 0;font-weight:700}
+.tip{color:var(--muted);font-size:.95rem}
+.twocol{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+/* end */
+.bigstars{font-size:3rem;text-align:center;letter-spacing:6px;margin:6px 0}
+.bigstars .off{filter:grayscale(1);opacity:.25}
+.endmsg{text-align:center;font-family:Fredoka,Nunito,system-ui,sans-serif;font-size:1.3rem;margin:4px 0 12px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.stat{background:#fffdf7;border:2px solid var(--line);border-radius:14px;text-align:center;padding:8px 4px}
+.stat b{display:block;font-family:Fredoka,Nunito,system-ui,sans-serif;font-size:1.5rem}
+.stat span{font-size:.78rem;font-weight:700;color:var(--muted)}
+.mist{list-style:none;padding:0;margin:8px 0}
+.mist li{background:#fff1f2;border-radius:12px;padding:8px 12px;margin:6px 0;font-weight:600}
+.mist li b{color:var(--ok)}
+.newrec{text-align:center;color:var(--accent);font-weight:800}
+.row{display:flex;gap:10px;margin-top:14px}
+
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+.confetti span{position:absolute;top:-40px;animation:fall 2.8s linear forwards}
+@keyframes fall{to{transform:translateY(112vh) rotate(380deg)}}
+.iconbtn{background:#fff;border:2px solid var(--line);border-radius:12px;padding:6px 10px;font-weight:800;box-shadow:0 2px 0 var(--line)}
+.topbar{display:flex;justify-content:flex-end}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HOME -->
+  <section id="home" class="screen on">
+    <div class="topbar"><button class="iconbtn" id="soundBtn" aria-label="Ton an/aus">🔊</button></div>
+    <div class="hero">
+      <div class="logo"><span>+</span><span>−</span></div>
+      <h1>Plus & Minus Profi</h1>
+      <p>Fachwörter lernen & schriftlich rechnen</p>
+      <div class="starsTotal">⭐ <span id="starsTotal">0</span> Sterne gesammelt</div>
+    </div>
+
+    <button class="mode" data-go="learn"><div class="ic" style="background:#fef3c7">📖</div><div><b>Merkzettel</b><span class="d">Zuerst lernen: alle Fachwörter auf einen Blick</span></div></button>
+    <button class="mode" data-play="quiz"><div class="ic" style="background:#dbeafe">🏷️</div><div><b>Fachwörter-Quiz</b><span class="d">Summand, Minuend, Differenz & Co.</span><small class="rec" id="rec-quiz"></small></div></button>
+    <button class="mode" data-play="calc"><div class="ic" style="background:#dcfce7">✏️</div><div><b>Rechnen</b><span class="d">Schriftlich plus & minus – mit und ohne Übertrag</span><small class="rec" id="rec-calc"></small></div></button>
+    <button class="mode" data-play="mix"><div class="ic" style="background:#fce7f3">🏆</div><div><b>Profi-Mix</b><span class="d">Fachwörter + Rechnen + Textaufgaben</span><small class="rec" id="rec-mix"></small></div></button>
+
+    <div class="box">
+      <h3>⚙️ Einstellungen fürs Rechnen</h3>
+      <div id="settings"></div>
+    </div>
+  </section>
+
+  <!-- LEARN -->
+  <section id="learn" class="screen">
+    <div class="gtop"><button class="iconbtn" data-go="home">← Menü</button></div>
+    <div id="learnBody"></div>
+    <button class="btn" data-play="quiz">Jetzt üben: Fachwörter-Quiz 🏷️</button>
+  </section>
+
+  <!-- GAME -->
+  <section id="game" class="screen">
+    <div class="gtop">
+      <button class="iconbtn" data-go="home">←</button>
+      <div class="meta">
+        <div class="bar"><i id="prog"></i></div>
+        <div class="gline"><span id="qnum"></span><span><span id="streak"></span> <span class="sc" id="score"></span></span></div>
+      </div>
+    </div>
+    <div class="card" id="qcard"></div>
+  </section>
+
+  <!-- END -->
+  <section id="end" class="screen">
+    <div class="card" id="endcard"></div>
+  </section>
+</div>
+
+<script>
+/* ---------- Hilfsfunktionen ---------- */
+const $=s=>document.querySelector(s);
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const nDigit=n=>rnd(10**(n-1),10**n-1);
+const digitsOf=n=>String(n).split('').reverse().map(Number);
+const sym=op=>op==='+'?'+':'−';
+const res=(a,b,op)=>op==='+'?a+b:a-b;
+const eqText=(a,b,op)=>`${a} ${sym(op)} ${b} = ${res(a,b,op)}`;
+const strip=h=>h.replace(/<[^>]+>/g,'');
+
+const TERM_COL={Summand:'summand',Summanden:'summand',Summe:'summe',Minuend:'minuend',Subtrahend:'subtrahend',Differenz:'differenz'};
+const ART={Summand:'der',Summe:'die',Minuend:'der',Subtrahend:'der',Differenz:'die'};
+const T=name=>`<span class="t t-${TERM_COL[name]||''}">${name}</span>`;
+
+/* ---------- Speicher ---------- */
+const KEY='plusMinusProfi.v1';
+let store={settings:{op:'beides',carry:'beides',digits:3},high:{},stars:0,sound:true};
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s){store=Object.assign(store,s);store.settings=Object.assign({op:'beides',carry:'beides',digits:3},s.settings||{});}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){}}
+
+/* ---------- Ton ---------- */
+let ac=null;
+function beep(kind){
+  if(!store.sound)return;
+  try{
+    ac=ac||new (window.AudioContext||window.webkitAudioContext)();
+    const notes=kind==='win'?[523,659,784,1047]:kind==='ok'?[660,880]:kind==='hint'?[440,392]:[247,196];
+    notes.forEach((f,i)=>{const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime+i*.11;
+      o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.2,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+.25);
+      o.connect(g).connect(ac.destination);o.start(t);o.stop(t+.3);});
+  }catch(e){}
+}
+
+/* ---------- Aufgaben erzeugen ---------- */
+function addCarry(a,b){const A=digitsOf(a),B=digitsOf(b);for(let i=0;i<Math.max(A.length,B.length);i++){if((A[i]||0)+(B[i]||0)>=10)return true;}return false;}
+function subBorrow(a,b){const A=digitsOf(a),B=digitsOf(b);for(let i=0;i<B.length;i++){if(A[i]<B[i])return true;}return false;}
+
+function genAdd(n,carry){
+  for(let t=0;t<3000;t++){
+    const lb=(n>1&&Math.random()<.3)?n-1:n; let a,b;
+    if(!carry){
+      const A=[],B=[];let okk=true;
+      for(let i=0;i<n;i++){
+        const lead=i===n-1, da=rnd(lead?1:0,lead?8:9);A.push(da);
+        if(i<lb){const min=(i===lb-1)?1:0,max=9-da;if(max<min){okk=false;break;}B.push(rnd(min,max));}
+      }
+      if(!okk)continue;
+      a=+A.reverse().join('');b=+B.reverse().join('');
+    }else{a=nDigit(n);b=nDigit(lb);}
+    if(b<2||addCarry(a,b)!==carry)continue;
+    return [a,b];
+  }
+  return carry?[47,38]:[42,35];
+}
+function genSub(n,borrow){
+  for(let t=0;t<3000;t++){
+    const lb=(n>1&&Math.random()<.3)?n-1:n; let a,b;
+    if(!borrow){
+      const A=[],B=[];let okk=true;
+      for(let i=0;i<n;i++){
+        const lead=i===n-1, da=rnd(lead?2:0,9);A.push(da);
+        if(i<lb){const bl=i===lb-1,min=bl?1:0,max=(bl&&lb===n)?da-1:da;if(max<min){okk=false;break;}B.push(rnd(min,max));}
+      }
+      if(!okk)continue;
+      a=+A.reverse().join('');b=+B.reverse().join('');
+    }else{a=nDigit(n);b=nDigit(lb);if(b>=a)continue;}
+    if(b<2||a-b<2||subBorrow(a,b)!==borrow)continue;
+    return [a,b];
+  }
+  return borrow?[52,27]:[58,23];
+}
+
+/* Lösungsweg Stelle für Stelle */
+const PLACES=['Einer','Zehner','Hunderter','Tausender','Zehntausender'];
+function solve(a,b,op){
+  const A=digitsOf(a),B=digitsOf(b),steps=[],carries=[];let c=0;
+  if(op==='+'){
+    const L=Math.max(A.length,B.length);
+    for(let i=0;i<L;i++){
+      const da=A[i]||0,hasA=i<A.length,hasB=i<B.length,db=B[i]||0,s=da+db+c,P=`<b>${PLACES[i]}:</b> `;
+      let txt;
+      if(hasA&&!hasB&&!c){txt=P+`nur die ${da} → schreibe ${da} ab`;}
+      else{
+        const parts=[];if(hasA)parts.push(da);if(hasB)parts.push(db);
+        txt=P+parts.join(' + ')+(c?' + 1 (Übertrag)':'')+` = ${s}`;
+        txt+=s>=10?` → schreibe ${s%10}, merke <b>1 Übertrag</b>`:` → schreibe ${s}`;
+      }
+      if(s>=10){carries[i+1]=1;c=1;}else c=0;
+      steps.push(txt);
+    }
+    if(c)steps.push(`<b>${PLACES[L]}:</b> nur der Übertrag 1 → schreibe 1`);
+  }else{
+    for(let i=0;i<A.length;i++){
+      const da=A[i],hasB=i<B.length,db=B[i]||0,sub=db+c,P=`<b>${PLACES[i]}:</b> `;let txt;
+      if(!hasB&&!c){
+        txt=(i===A.length-1&&da===0)?P+'nichts mehr übrig':P+`nur die ${da} → schreibe ${da} ab`;
+      }else{
+        const pre=c?(hasB?`erst den Übertrag dazu: ${db} + 1 = ${sub}. Dann `:`nur der Übertrag 1. `):'';
+        if(da>=sub){
+          const r=da-sub;txt=P+pre+`${da} − ${sub} = ${r}`;
+          txt+=(i===A.length-1&&r===0&&A.length>1)?' → eine 0 ganz vorne schreibt man nicht':` → schreibe ${r}`;c=0;
+        }else{
+          const r=da+10-sub;txt=P+pre+`${da} − ${sub} geht nicht → ${da+10} − ${sub} = ${r} → schreibe ${r}, merke <b>1 Übertrag</b>`;
+          carries[i+1]=1;c=1;
+        }
+      }
+      steps.push(txt);
+    }
+  }
+  return {steps,carries,result:res(a,b,op)};
+}
+
+/* ---------- Darstellung ---------- */
+function eqHTML(a,b,op,o={}){
+  const nums=[a,b,res(a,b,op)],roles=op==='+'?['Summand','Summand','Summe']:['Minuend','Subtrahend','Differenz'],sy=[sym(op),'='];
+  let h='<div class="eq">';
+  for(let k=0;k<3;k++){
+    const c=TERM_COL[roles[k]];
+    const lab=o.labels?`<div class="lab t-${c}">${roles[k]}</div>`:(o.mark===k?'<div class="lab q">?</div>':'<div class="lab"></div>');
+    h+=`<div class="part ${o.mark===k?'mark':''} ${o.labels?'c-'+c:''}"><div class="num">${nums[k]}</div>${lab}</div>`;
+    if(k<2)h+=`<div class="sym">${sy[k]}</div>`;
+  }
+  return h+'</div>';
+}
+function colWidth(a,b,op){return Math.max(String(a).length,String(b).length)+(op==='+'?2:1);}
+function columnHTML(a,b,op,o={}){
+  const A=String(a),B=String(b),n=colWidth(a,b,op);
+  const R=o.result!=null?String(o.result):(o.typed||'');
+  const c=o.colors||{};
+  const row=(str,cls,first)=>{const pad=n-str.length;let h='';for(let i=0;i<n;i++){const ch=(i===0&&first)?first:(i>=pad?str[i-pad]:'');h+=`<div class="cell ${cls}">${ch}</div>`;}return h;};
+  let carryRow='';for(let i=0;i<n;i++){const ci=n-1-i;carryRow+=`<div class="cell carry">${o.carries&&o.carries[ci]?'1':''}</div>`;}
+  let resRow='';const pad=n-R.length;
+  for(let i=0;i<n;i++){const ch=i>=pad?R[i-pad]:'';const cur=(o.typing&&i===pad-1)?'cur':'';resRow+=`<div class="cell res ${o.typing?'typed':''} ${c.r||''} ${cur}">${ch}</div>`;}
+  return `<div class="colwrap"><div class="col" style="grid-template-columns:repeat(${n},var(--cell))">${row(A,c.a||'')}${row(B,c.b||'',sym(op))}${carryRow}${resRow}</div></div>`;
+}
+
+/* ---------- Fragen: Fachwörter ---------- */
+const DEFS=[
+ {p:'Wie nennt man das Ergebnis einer <b>Addition</b>?',a:'Summe',o:['Summe','Differenz','Summand','Minuend'],e:`${T('Summand')} + ${T('Summand')} = ${T('Summe')}`},
+ {p:'Wie nennt man das Ergebnis einer <b>Subtraktion</b>?',a:'Differenz',o:['Differenz','Summe','Subtrahend','Minuend'],e:`${T('Minuend')} − ${T('Subtrahend')} = ${T('Differenz')}`},
+ {p:'Die Zahlen, die man addiert, heißen …',a:'Summanden',o:['Summanden','Subtrahenden','Summen','Differenzen'],e:`Die Zahlen, die man zusammenzählt, heißen ${T('Summanden')}.`},
+ {p:'Die Zahl, <b>von der</b> man etwas abzieht, heißt …',a:'Minuend',o:['Minuend','Subtrahend','Differenz','Summand'],e:`Der ${T('Minuend')} steht vorne. Von ihm wird etwas weggenommen.`},
+ {p:'Die Zahl, <b>die</b> abgezogen wird, heißt …',a:'Subtrahend',o:['Subtrahend','Minuend','Summand','Differenz'],e:`Der ${T('Subtrahend')} steht hinter dem Minuszeichen. Er wird abgezogen.`},
+ {p:'Ein anderes Wort für <b>Plusrechnen</b> ist …',a:'Addition',o:['Addition','Subtraktion','Multiplikation','Division'],e:'Addition = Plusrechnen (+)'},
+ {p:'Ein anderes Wort für <b>Minusrechnen</b> ist …',a:'Subtraktion',o:['Subtraktion','Addition','Multiplikation','Division'],e:'Subtraktion = Minusrechnen (−)'},
+ {p:'„Zusammenzählen“ heißt in der Mathesprache …',a:'addieren',o:['addieren','subtrahieren','multiplizieren','dividieren'],e:'addieren = zusammenzählen = plus rechnen'},
+ {p:'„Abziehen“ heißt in der Mathesprache …',a:'subtrahieren',o:['subtrahieren','addieren','multiplizieren','dividieren'],e:'subtrahieren = abziehen = minus rechnen'},
+ {p:'Ergibt beim schriftlichen Rechnen eine Stelle 10 oder mehr, merkst du dir einen …',a:'Übertrag',o:['Übertrag','Rest','Summand','Überschlag'],e:'Du schreibst nur die Einerziffer hin und merkst dir 1 als <b>Übertrag</b> für die nächste Stelle.'},
+ {p:'Bei welcher Stelle fängst du beim schriftlichen Rechnen an?',a:'bei den Einern',o:['bei den Einern','bei den Zehnern','bei den Hundertern','ganz links'],e:'Immer rechts anfangen: erst Einer, dann Zehner, dann Hunderter …'},
+ {p:'Darf man bei der Addition die Summanden vertauschen?',a:'Ja, die Summe bleibt gleich',o:['Ja, die Summe bleibt gleich','Nein, die Summe ändert sich'],e:'Beispiel: 12 + 5 = 17 und 5 + 12 = 17.'},
+ {p:'Darf man bei der Subtraktion Minuend und Subtrahend vertauschen?',a:'Nein, das Ergebnis ändert sich',o:['Nein, das Ergebnis ändert sich','Ja, die Differenz bleibt gleich'],e:'Beispiel: 12 − 5 = 7, aber 5 − 12 geht mit unseren Zahlen gar nicht.'},
+ {p:'Die Summe ist immer … als jeder Summand (wenn kein Summand 0 ist).',a:'größer',o:['größer','kleiner','genauso groß'],e:'Beispiel: 30 + 12 = 42. Die Summe 42 ist größer als 30 und größer als 12.'},
+ {p:'Die Differenz ist immer … als der Minuend (wenn der Subtrahend nicht 0 ist).',a:'kleiner',o:['kleiner','größer','genauso groß'],e:'Beispiel: 50 − 20 = 30. Die Differenz 30 ist kleiner als der Minuend 50.'},
+ {p:'Mit der Umkehraufgabe kannst du dein Ergebnis …',a:'überprüfen',o:['überprüfen','runden','verdoppeln','abschreiben'],e:'Das nennt man <b>Probe</b>: Du rechnest rückwärts. Kommt die Startzahl heraus, stimmt dein Ergebnis.'},
+ {p:'Die Umkehraufgabe einer Subtraktion ist eine …',a:'Addition',o:['Addition','Subtraktion'],e:'Beispiel: 50 − 20 = 30 → Probe: 30 + 20 = 50'},
+ {p:'Die Umkehraufgabe einer Addition ist eine …',a:'Subtraktion',o:['Subtraktion','Addition'],e:'Beispiel: 30 + 20 = 50 → Probe: 50 − 20 = 30'},
+ {p:'„Differenz“ bedeutet so viel wie …',a:'Unterschied',o:['Unterschied','Zusammenzählen','Hälfte','Rest beim Teilen'],e:'Die Differenz sagt dir, wie groß der Unterschied zwischen zwei Zahlen ist.'},
+];
+const GAPS=[
+ [['Summand','+','Summand','=','?'],'Summe',`${T('Summand')} + ${T('Summand')} = ${T('Summe')}`],
+ [['?','+','Summand','=','Summe'],'Summand',`${T('Summand')} + ${T('Summand')} = ${T('Summe')}`],
+ [['Minuend','−','Subtrahend','=','?'],'Differenz',`${T('Minuend')} − ${T('Subtrahend')} = ${T('Differenz')}`],
+ [['?','−','Subtrahend','=','Differenz'],'Minuend',`${T('Minuend')} − ${T('Subtrahend')} = ${T('Differenz')}`],
+ [['Minuend','−','?','=','Differenz'],'Subtrahend',`${T('Minuend')} − ${T('Subtrahend')} = ${T('Differenz')}`],
+];
+const ROLES=op=>op==='+'?['Summand','Summand','Summe']:['Minuend','Subtrahend','Differenz'];
+const smallPair=op=>op==='+'?genAdd(2,Math.random()<.5):genSub(2,Math.random()<.5);
+
+function qLabel(){
+  const op=pick(['+','-']),[a,b]=smallPair(op),k=rnd(0,2),roles=ROLES(op),nums=[a,b,res(a,b,op)];
+  const opts=op==='+'?['Summand','Summe','Differenz','Minuend']:['Minuend','Subtrahend','Differenz','Summe'];
+  return {type:'choice',prompt:'Wie heißt die markierte Zahl?',body:eqHTML(a,b,op,{mark:k}),options:shuffle(opts),answer:roles[k],
+    explain:eqHTML(a,b,op,{labels:true}),summary:`Bei ${eqText(a,b,op)} ist ${nums[k]} ${ART[roles[k]]} ${roles[k]}`};
+}
+function qFind(){
+  for(;;){
+    const op=pick(['+','-']),[a,b]=smallPair(op),nums=[a,b,res(a,b,op)];
+    if(new Set(nums).size<3)continue;
+    const roles=ROLES(op),k=op==='+'?2:rnd(0,2);
+    return {type:'choice',prompt:`Welche Zahl ist ${ART[roles[k]]} ${T(roles[k])}?`,body:eqHTML(a,b,op),options:shuffle(nums.map(String)),answer:String(nums[k]),
+      explain:eqHTML(a,b,op,{labels:true}),summary:`Bei ${eqText(a,b,op)} ist ${ART[roles[k]]} ${roles[k]} die ${nums[k]}`};
+  }
+}
+let usedDefs=new Set();
+function qDef(){
+  let i;do{i=rnd(0,DEFS.length-1);}while(usedDefs.has(i)&&usedDefs.size<DEFS.length);usedDefs.add(i);
+  const d=DEFS[i];
+  return {type:'choice',prompt:d.p,options:shuffle(d.o),answer:d.a,explain:`<div>${d.e}</div>`,summary:`${strip(d.p)} → ${d.a}`};
+}
+function qGap(){
+  const [parts,ans,e]=pick(GAPS);
+  const body='<div class="formula">'+parts.map(p=>p==='?'?'<span class="gap">?</span>':(p==='+'||p==='−'||p==='=')?`<span class="op">${p}</span>`:T(p)).join('')+'</div>';
+  return {type:'choice',prompt:'Welches Wort fehlt?',body,options:shuffle(['Summand','Summe','Minuend','Subtrahend','Differenz']),answer:ans,
+    explain:`<div class="formula">${e}</div>`,summary:`${parts.join(' ').replace('?','___')} → ${ans}`,one:false};
+}
+function qUmkehr(){
+  const op=pick(['+','-']),[a,b]=op==='+'?genAdd(2,false):genSub(2,false),r=res(a,b,op);
+  let correct,wrongs,e;
+  if(op==='-'){correct=`${r} + ${b} = ${a}`;wrongs=[`${a} + ${b} = ${a+b}`,`${a} + ${r} = ${a+r}`];e=`Rückwärts rechnen: ${T('Differenz')} + ${T('Subtrahend')} = ${T('Minuend')}`;}
+  else{correct=`${r} − ${b} = ${a}`;wrongs=[`${r} + ${b} = ${r+b}`,`${a} + ${r} = ${a+r}`];e=`Rückwärts rechnen: ${T('Summe')} − ${T('Summand')} = anderer ${T('Summand')}`;}
+  return {type:'choice',prompt:`Mit welcher <b>Umkehraufgabe</b> kannst du<br><b>${eqText(a,b,op)}</b> überprüfen?`,options:shuffle([correct,...wrongs]),answer:correct,one:true,
+    explain:`<div>${e}</div>`,summary:`Probe zu ${eqText(a,b,op)} → ${correct}`};
+}
+function qSmall(){
+  const op=pick(['+','-']),[a,b]=op==='+'?genAdd(2,false):genSub(2,false),r=res(a,b,op);
+  const other=op==='+'?Math.abs(a-b):a+b;
+  const set=new Set([r,other,r+10,r>12?r-10:r+20]);let x=r+1;while(set.size<4){set.add(x);x+=11;}
+  const term=op==='+'?'Summe':'Differenz';
+  return {type:'choice',prompt:`Wie groß ist die ${T(term)} von ${a} und ${b}?`,options:shuffle([...set].map(String)),answer:String(r),
+    explain:`<div>${term} bedeutet <b>${op==='+'?'plus':'minus'}</b> rechnen:</div>${eqHTML(a,b,op,{labels:true})}`,summary:`${term} von ${a} und ${b} → ${eqText(a,b,op)}`};
+}
+
+/* ---------- Fragen: Rechnen ---------- */
+function qCalc(phraseProb){
+  const st=store.settings;
+  const op=st.op==='plus'?'+':st.op==='minus'?'-':pick(['+','-']);
+  const carry=st.carry==='mit'?true:st.carry==='ohne'?false:Math.random()<.5;
+  const n=+st.digits||3;
+  const [a,b]=op==='+'?genAdd(n,carry):genSub(n,carry);
+  const phrased=Math.random()<phraseProb;let prompt='Rechne schriftlich:',tpl='';
+  if(phrased){
+    const P=op==='+'?[
+      ['sum',`Berechne die ${T('Summe')} von <b>${a}</b> und <b>${b}</b>.`],
+      ['sum',`Die ${T('Summanden')} heißen <b>${a}</b> und <b>${b}</b>. Wie groß ist die ${T('Summe')}?`],
+      ['sum',`<b>Addiere</b> ${a} und ${b}.`]
+    ]:[
+      ['dif',`Berechne die ${T('Differenz')} von <b>${a}</b> und <b>${b}</b>.`],
+      ['dif',`Der ${T('Minuend')} ist <b>${a}</b>, der ${T('Subtrahend')} ist <b>${b}</b>. Wie groß ist die ${T('Differenz')}?`],
+      ['dif',`<b>Subtrahiere</b> ${b} von ${a}.`],
+      ['miss',`Die ${T('Summe')} ist <b>${a}</b>, ein ${T('Summand')} ist <b>${b}</b>. Wie groß ist der andere ${T('Summand')}?`]
+    ];
+    [tpl,prompt]=pick(P);
+  }
+  return {type:'calc',a,b,op,carry,phrased,tpl,prompt,answer:res(a,b,op),summary:eqText(a,b,op)};
+}
+
+function buildRound(mode){
+  usedDefs=new Set();
+  if(mode==='quiz')return shuffle([qLabel(),qLabel(),qLabel(),qFind(),qFind(),qDef(),qDef(),qGap(),qUmkehr(),qSmall()]);
+  if(mode==='calc')return Array.from({length:10},()=>qCalc(.3));
+  return shuffle([qLabel(),qFind(),qDef(),pick([qGap,qUmkehr])(),qSmall(),...Array.from({length:5},()=>qCalc(.5))]);
+}
+
+/* ---------- Spielablauf ---------- */
+let G=null;
+const PRAISE=['Super!','Klasse!','Richtig! 🎉','Spitze!','Genau so!','Toll gemacht!','Prima!','Stark! 💪'];
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id===id));window.scrollTo(0,0);if(id==='home')renderHome();}
+function startGame(mode){G={mode,qs:buildRound(mode),i:0,score:0,streak:0,best:0,first:0,wrong:[],tries:0,typed:'',locked:false};show('game');renderQ();}
+const cur=()=>G.qs[G.i];
+function renderTop(){
+  $('#prog').style.width=(G.i/G.qs.length*100)+'%';
+  $('#qnum').textContent=`Aufgabe ${G.i+1} von ${G.qs.length}`;
+  $('#score').textContent='⭐ '+G.score;
+  $('#streak').textContent=G.streak>=2?'🔥'+G.streak:'';
+}
+function renderQ(){
+  const q=cur();G.tries=0;G.typed='';G.locked=false;renderTop();
+  let h=`<div class="prompt">${q.prompt}</div>`;
+  if(q.type==='choice'){
+    const one=q.one||q.options.some(o=>o.length>13);
+    h+=(q.body||'')+`<div class="opts ${one?'one':''}">${q.options.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join('')}</div>`;
+  }else{
+    h+=q.phrased?'<div class="ansbox" id="ansbox"></div>':'<div id="colArea"></div>';
+    h+=`<div class="pad" id="pad">${[1,2,3,4,5,6,7,8,9].map(d=>`<button data-k="${d}">${d}</button>`).join('')}<button class="del" data-k="del" aria-label="Löschen">⌫</button><button data-k="0">0</button><button class="ok" data-k="ok" aria-label="Prüfen">✓</button></div>`;
+  }
+  h+=`<div id="fb" class="fb" aria-live="polite"></div><button id="next" class="btn next hidden">${G.i===G.qs.length-1?'Ergebnis ansehen 🏁':'Weiter ➜'}</button>`;
+  $('#qcard').innerHTML=h;
+  if(q.type==='calc')updateTyped();
+}
+function maxLen(q){return q.phrased?6:colWidth(q.a,q.b,q.op)-1;}
+function updateTyped(){
+  const q=cur();
+  if(q.phrased)$('#ansbox').innerHTML=G.typed||'<span class="ph">deine Antwort</span>';
+  else $('#colArea').innerHTML=columnHTML(q.a,q.b,q.op,{typed:G.typed,typing:true});
+}
+function feedback(kind,head,body=''){const fb=$('#fb');fb.className='fb '+kind;fb.innerHTML=`<span class="head">${head}</span>${body}`;}
+function showNext(){$('#next').classList.remove('hidden');const p=$('#pad');if(p)p.classList.add('off');setTimeout(()=>$('#next').scrollIntoView({behavior:'smooth',block:'nearest'}),60);}
+function gain(pts,first){
+  let bonus='';G.score+=pts;
+  if(first){G.first++;G.streak++;G.best=Math.max(G.best,G.streak);if(G.streak>=3&&G.streak%3===0){G.score+=5;bonus=`<span class="bonus">🔥 ${G.streak}er-Serie +5</span>`;}}
+  renderTop();return bonus;
+}
+function choose(i){
+  if(G.locked)return;G.locked=true;
+  const q=cur(),v=q.options[i],ok=v===q.answer;
+  document.querySelectorAll('.opt').forEach((b,j)=>{b.disabled=true;if(q.options[j]===q.answer)b.classList.add('right');});
+  if(ok){beep('ok');const bonus=gain(10,true);feedback('ok',pick(PRAISE)+' +10'+bonus,q.explain);}
+  else{beep('bad');document.querySelectorAll('.opt')[i].classList.add('wrong');G.streak=0;renderTop();G.wrong.push({q:q.summary});
+    feedback('bad','Nicht schlimm – richtig ist: '+q.answer,q.explain);}
+  showNext();
+}
+function hintFor(q,val){
+  if(q.phrased&&q.tpl==='miss'&&val===q.a+q.b)return `Achtung: Der andere ${T('Summand')} muss <b>kleiner</b> sein als die ${T('Summe')}. Rechne ${T('Summe')} <b>minus</b> ${T('Summand')}.`;
+  if(q.phrased&&q.op==='-'&&val===q.a+q.b)return `Achtung, du hast plus gerechnet! Bei der ${T('Differenz')} musst du <b>subtrahieren</b> (minus).`;
+  if(q.phrased&&q.op==='+'&&val===Math.abs(q.a-q.b))return `Achtung, du hast minus gerechnet! Die ${T('Summe')} bekommst du durch <b>addieren</b> (plus).`;
+  if(q.carry)return 'In dieser Aufgabe gibt es einen <b>Übertrag</b>. Hast du ihn mitgerechnet? Fang rechts bei den Einern an.';
+  return 'Rechne Stelle für Stelle: zuerst die Einer, dann die Zehner, dann die Hunderter …';
+}
+function solutionHTML(q,withCol){
+  const s=solve(q.a,q.b,q.op);let h='';
+  if(q.phrased)h+=`<div>Die Rechnung heißt: <b>${q.a} ${sym(q.op)} ${q.b}</b></div>`;
+  if(withCol)h+=columnHTML(q.a,q.b,q.op,{result:s.result,carries:s.carries});
+  return h+`<ol class="steps">${s.steps.map(x=>`<li>${x}</li>`).join('')}</ol>`;
+}
+function submit(){
+  if(G.locked||!G.typed)return;
+  const q=cur(),val=+G.typed,s=solve(q.a,q.b,q.op);
+  if(val===q.answer){
+    G.locked=true;beep('ok');const first=G.tries===0;const bonus=gain(first?10:5,first);
+    if(!q.phrased)$('#colArea').innerHTML=columnHTML(q.a,q.b,q.op,{result:s.result,carries:s.carries});
+    feedback('ok',pick(PRAISE)+(first?' +10':' Im 2. Versuch geschafft! +5')+bonus,q.phrased?`<div>${eqText(q.a,q.b,q.op)}</div>`:(q.carry?'<div class="tip">Die kleinen roten Einsen sind die Überträge.</div>':''));
+    showNext();
+  }else if(G.tries===0){
+    G.tries=1;G.streak=0;renderTop();beep('hint');
+    feedback('hint','Fast! Versuch es nochmal.',hintFor(q,val));
+    G.typed='';updateTyped();const el=q.phrased?$('#ansbox'):$('#colArea');el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake');
+  }else{
+    G.locked=true;beep('bad');G.wrong.push({q:q.summary});
+    if(!q.phrased)$('#colArea').innerHTML=columnHTML(q.a,q.b,q.op,{result:s.result,carries:s.carries});
+    feedback('bad',`Die Lösung ist ${q.answer}. So geht's:`,solutionHTML(q,q.phrased));
+    showNext();
+  }
+}
+function key(k){
+  const q=cur();if(!q||q.type!=='calc'||G.locked)return;
+  if(k==='ok')return submit();
+  if(k==='del')G.typed=G.typed.slice(0,-1);
+  else if(G.typed.length<maxLen(q)){if(G.typed==='0')G.typed='';G.typed+=k;}
+  updateTyped();
+}
+function next(){G.i++;if(G.i>=G.qs.length)endGame();else{renderQ();window.scrollTo({top:0,behavior:'smooth'});}}
+
+function endGame(){
+  const n=G.qs.length,pct=G.first/n,stars=pct>=.9?3:pct>=.7?2:pct>=.5?1:0;
+  store.stars+=stars;const rec=G.score>(store.high[G.mode]||0);if(rec)store.high[G.mode]=G.score;save();
+  const msgs=['Nicht aufgeben! Schau dir den Merkzettel an und probier es nochmal. 💪','Gut! Schau dir die Fehler unten an und versuch’s nochmal.','Super gemacht! Noch ein bisschen üben, dann bist du Profi.','Wow – du bist ein echter Plus-&-Minus-Profi! 🏆'];
+  let h=`<div class="bigstars">${[0,1,2].map(i=>`<span class="${i<stars?'':'off'}">⭐</span>`).join('')}</div>
+   <div class="endmsg">${msgs[stars]}</div>
+   ${rec&&G.score>0?'<div class="newrec">🎉 Neuer Rekord!</div>':''}
+   <div class="stats"><div class="stat"><b>${G.score}</b><span>Punkte</span></div><div class="stat"><b>${G.first}/${n}</b><span>sofort richtig</span></div><div class="stat"><b>🔥${G.best}</b><span>beste Serie</span></div></div>`;
+  if(G.wrong.length)h+=`<h3 class="fred" style="margin:14px 0 4px">Das üben wir nochmal:</h3><ul class="mist">${G.wrong.map(w=>`<li>${w.q}</li>`).join('')}</ul>`;
+  h+=`<div class="row"><button class="btn ghost" data-go="home">Menü</button><button class="btn" data-play="${G.mode}">Nochmal 🔁</button></div>`;
+  $('#endcard').innerHTML=h;show('end');
+  if(stars>=2){beep('win');confetti();}
+}
+function confetti(){
+  const box=document.createElement('div');box.className='confetti';const em=['⭐','🎉','✨','➕','➖','🌟'];
+  for(let i=0;i<40;i++){const s=document.createElement('span');s.textContent=pick(em);s.style.left=Math.random()*100+'vw';s.style.animationDelay=Math.random()*.9+'s';s.style.fontSize=(16+Math.random()*18)+'px';box.appendChild(s);}
+  document.body.appendChild(box);setTimeout(()=>box.remove(),4200);
+}
+
+/* ---------- Startseite & Merkzettel ---------- */
+const SETS=[['op','Rechenart',[['plus','➕ Plus'],['minus','➖ Minus'],['beides','beides']]],['carry','Übertrag',[['ohne','ohne'],['mit','mit'],['beides','gemischt']]],['digits','Zahlen',[[2,'2-stellig'],[3,'3-stellig'],[4,'4-stellig']]]];
+function renderHome(){
+  $('#starsTotal').textContent=store.stars;
+  ['quiz','calc','mix'].forEach(m=>{$('#rec-'+m).textContent=store.high[m]?`🏅 Rekord: ${store.high[m]} Punkte`:'';});
+  $('#soundBtn').textContent=store.sound?'🔊':'🔇';
+  $('#settings').innerHTML=SETS.map(([k,label,vals])=>`<div class="setrow"><div class="setlab">${label}</div><div class="seg">${vals.map(([v,t])=>`<button data-set="${k}" data-v="${v}" class="${String(store.settings[k])===String(v)?'on':''}">${t}</button>`).join('')}</div></div>`).join('');
+}
+function renderLearn(){
+  const sa=solve(345,128,'+'),ss=solve(473,128,'-');
+  $('#learnBody').innerHTML=`
+  <div class="lcard"><h2>➕ Addition</h2>
+    <p><b>addieren</b> = zusammenzählen = plus rechnen</p>
+    ${eqHTML(345,128,'+',{labels:true})}
+    <div class="merk">${T('Summand')} + ${T('Summand')} = ${T('Summe')}</div>
+    <p class="tip">Die Zahlen, die man zusammenzählt, heißen <b>Summanden</b>. Das Ergebnis heißt <b>Summe</b>. Die Summanden darf man vertauschen.</p>
+  </div>
+  <div class="lcard"><h2>➖ Subtraktion</h2>
+    <p><b>subtrahieren</b> = abziehen = minus rechnen</p>
+    ${eqHTML(473,128,'-',{labels:true})}
+    <div class="merk">${T('Minuend')} − ${T('Subtrahend')} = ${T('Differenz')}</div>
+    <p class="tip">🧠 Eselsbrücke: Im Alphabet kommt <b>M</b> vor <b>S</b> – also steht der <b>M</b>inuend vorne und der <b>S</b>ubtrahend dahinter.<br>„Differenz“ heißt <b>Unterschied</b>.</p>
+  </div>
+  <div class="lcard"><h2>✏️ Schriftlich rechnen mit Übertrag</h2>
+    <p>Immer <b>rechts bei den Einern</b> anfangen. Ergibt eine Stelle 10 oder mehr, schreibst du nur die Einerziffer hin und merkst dir eine kleine <b style="color:var(--bad)">1</b> als <b>Übertrag</b> für die nächste Stelle.</p>
+    <div class="twocol">${columnHTML(345,128,'+',{result:473,carries:sa.carries,colors:{a:'c-summand',b:'c-summand',r:'c-summe'}})}${columnHTML(473,128,'-',{result:345,carries:ss.carries,colors:{a:'c-minuend',b:'c-subtrahend',r:'c-differenz'}})}</div>
+    <p><b>Plus:</b></p><ol class="steps">${sa.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
+    <p><b>Minus:</b></p><ol class="steps">${ss.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
+  </div>
+  <div class="lcard"><h2>🔍 Probe mit der Umkehraufgabe</h2>
+    <p>Mit der <b>Umkehraufgabe</b> rechnest du rückwärts und prüfst, ob dein Ergebnis stimmt:</p>
+    <div class="merk">473 − 128 = 345 → Probe: 345 + 128 = 473 ✔</div>
+    <p class="tip">Minus wird mit Plus geprüft – und Plus mit Minus.</p>
+  </div>`;
+}
+
+/* ---------- Ereignisse ---------- */
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button');if(!t)return;
+  if(t.dataset.go){if(t.dataset.go==='learn')renderLearn();show(t.dataset.go);return;}
+  if(t.dataset.play){startGame(t.dataset.play);return;}
+  if(t.dataset.set){const k=t.dataset.set;store.settings[k]=k==='digits'?+t.dataset.v:t.dataset.v;save();renderHome();return;}
+  if(t.id==='soundBtn'){store.sound=!store.sound;save();renderHome();if(store.sound)beep('ok');return;}
+  if(t.classList.contains('opt')){choose(+t.dataset.i);return;}
+  if(t.dataset.k){key(t.dataset.k);return;}
+  if(t.id==='next'){next();return;}
+});
+document.addEventListener('keydown',e=>{
+  if(!$('#game').classList.contains('on')||!G)return;
+  const q=cur();
+  if(e.key==='Enter'){e.preventDefault();if(G.locked)next();else if(q.type==='calc')submit();return;}
+  if(q.type==='calc'){if(/^[0-9]$/.test(e.key))key(e.key);else if(e.key==='Backspace'){e.preventDefault();key('del');}}
+  else if(/^[1-5]$/.test(e.key)&&+e.key<=q.options.length)choose(+e.key-1);
+});
+renderHome();
+</script>
+</body>
+</html>
