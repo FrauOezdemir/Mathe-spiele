@@ -197,6 +197,14 @@ table.words{width:100%;border-collapse:collapse;margin:8px 0;font-size:.95rem}
 table.words td{border:1px solid var(--line);padding:6px 8px;vertical-align:top}
 table.words td:first-child{font-family:Fredoka,Nunito,system-ui,sans-serif;font-size:1.4rem;text-align:center;width:44px}
 .hl{background:#fff3c4;border-radius:6px;padding:0 4px;font-weight:800}
+/* Untereinander-Eingabe */
+.cell.in{cursor:pointer}
+.cell.carry.in{height:calc(var(--cell)*.75);background:#fff5f5}
+.cell.in.sel{background:#e0e7ff;outline:3px solid var(--accent2);outline-offset:-3px}
+.cell.carry.in.sel{background:#ffe4e6;outline-color:var(--bad)}
+.coltip{text-align:center;color:var(--muted);font-size:.88rem;font-weight:700;margin-top:6px;line-height:1.35}
+.pad .ue{grid-column:span 3;font-size:1.1rem;background:#fff1f2;border-color:#fecdd3;color:var(--bad);box-shadow:0 3px 0 #fecdd3}
+.pad .ue sup{font-size:.8em}
 </style>
 </head>
 <body>
@@ -551,7 +559,17 @@ function qCalc(phraseProb){
     ];
     [tpl,prompt]=pick(P);
   }
-  return {type:'calc',a,b,op,carry,phrased,tpl,prompt,answer:res(a,b,op),summary:eqText(a,b,op)};
+  const q={type:'calc',a,b,op,carry,phrased,tpl,prompt,answer:res(a,b,op),summary:eqText(a,b,op)};
+  if(phrased){
+    const expr=`${a} ${sym(op)} ${b}`;
+    const opts=[...new Set([expr,`${a} + ${b}`,`${a} − ${b}`,`${b} − ${a}`])].slice(0,3);
+    const why=tpl==='sum'?`${T('Summe')} und addieren heißen <b>plus</b>.`
+      :tpl==='miss'?`Der andere ${T('Summand')} = ${T('Summe')} <b>minus</b> ${T('Summand')}.`
+      :prompt.includes('Subtrahiere')?`Achtung Reihenfolge: Die Zahl nach „von“ steht vorne.`
+      :`${T('Differenz')} heißt <b>minus</b>: ${T('Minuend')} − ${T('Subtrahend')}.`;
+    q.pre={prompt:'Welche Rechnung passt?',options:shuffle(opts),answer:expr,explain:why,next:`Jetzt rechne schriftlich: <b>${expr}</b>`};
+  }
+  return q;
 }
 
 /* ================= 5. KLAMMERN ================= */
@@ -675,25 +693,45 @@ function renderTop(){
   $('#score').textContent='⭐ '+G.score;
   $('#streak').textContent=G.streak>=2?'🔥'+G.streak:'';
 }
-const padHTML=()=>`<div class="pad" id="pad">${[1,2,3,4,5,6,7,8,9].map(d=>`<button data-k="${d}">${d}</button>`).join('')}<button class="del" data-k="del" aria-label="Löschen">⌫</button><button data-k="0">0</button><button class="ok" data-k="ok" aria-label="Prüfen">✓</button></div>`;
-const numInputHTML=q=>`<div class="ansrow"><div class="ansbox" id="ansbox"></div>${q.unit?`<span class="unit">${q.unit}</span>`:''}</div>`+padHTML();
+const padHTML=col=>`<div class="pad" id="pad">${col?'<button class="ue" data-k="ue">Übertrag <sup>1</sup> aufschreiben</button>':''}${[1,2,3,4,5,6,7,8,9].map(d=>`<button data-k="${d}">${d}</button>`).join('')}<button class="del" data-k="del" aria-label="Löschen">⌫</button><button data-k="0">0</button><button class="ok" data-k="ok" aria-label="Prüfen">✓</button></div>`;
+const numInputHTML=q=>`<div class="ansrow"><div class="ansbox" id="ansbox"></div>${q.unit?`<span class="unit">${q.unit}</span>`:''}</div>`+padHTML(false);
+const colInputBlock=()=>`<div id="colArea"></div><div class="coltip">Wie im Heft: Erst die Einer eintippen, dann Zehner, Hunderter …<br>Übertrag: Knopf „Übertrag 1“ oder auf das kleine rote Kästchen tippen.</div>`+padHTML(true);
 const optsHTML=(opts,one)=>`<div class="opts ${one||opts.some(o=>o.length>13)?'one':''}">${opts.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join('')}</div>`;
 function renderQ(){
   const q=cur();Object.assign(G,{tries:0,typed:'',locked:false,preDone:false,clean:true,logged:false});renderTop();
+  if(q.type==='calc')G.col={res:[],carry:[],sel:{row:'r',i:0},W:colWidth(q.a,q.b,q.op)-1};
   let h=`<div class="prompt ${q.long?'long':''}">${q.prompt}</div>${q.body||''}`;
   if(q.type==='choice')h+=optsHTML(q.options,q.one);
-  else if(q.type==='calc')h+=(q.phrased?'<div class="ansbox" id="ansbox"></div>':'<div id="colArea"></div>')+padHTML();
   else if(q.pre)h+=`<div class="sub">${q.pre.prompt}</div>${optsHTML(q.pre.options,true)}<div id="prefb" class="prefb"></div><div id="stage2"></div>`;
+  else if(q.type==='calc')h+=colInputBlock();
   else h+=numInputHTML(q);
   h+=`<div id="fb" class="fb" aria-live="polite"></div><button id="next" class="btn next hidden">${G.i===G.qs.length-1?'Ergebnis ansehen 🏁':'Weiter ➜'}</button>`;
   $('#qcard').innerHTML=h;
   if(q.type!=='choice'&&!(q.pre&&!G.preDone))updateTyped();
 }
-function inputReady(q){return q&&(q.type==='calc'||(q.type==='num'&&(!q.pre||G.preDone)));}
-function maxLen(q){return q.type==='num'||q.phrased?7:colWidth(q.a,q.b,q.op)-1;}
+function inputReady(q){return q&&(q.type==='calc'||q.type==='num')&&(!q.pre||G.preDone);}
+/* Untereinander-Eingabe: Kästchen von rechts nach links */
+function colInputHTML(q){
+  const A=String(q.a),B=String(q.b),n=colWidth(q.a,q.b,q.op),C=G.col;
+  const row=(str,first)=>{const pad=n-str.length;let h='';for(let j=0;j<n;j++){const ch=(j===0&&first)?first:(j>=pad?str[j-pad]:'');h+=`<div class="cell">${ch}</div>`;}return h;};
+  let cr='',rr='';
+  for(let j=0;j<n;j++){
+    const i=n-1-j;
+    if(j===0){cr+='<div class="cell carry"></div>';rr+='<div class="cell res"></div>';continue;}
+    const cs=C.sel.row==='c'&&C.sel.i===i,rs=C.sel.row==='r'&&C.sel.i===i;
+    cr+=i>=1?`<div class="cell carry in ${cs?'sel':''}" data-cell="c${i}">${C.carry[i]||''}</div>`:'<div class="cell carry"></div>';
+    rr+=`<div class="cell res in typed ${rs?'sel':''}" data-cell="r${i}">${C.res[i]??''}</div>`;
+  }
+  return `<div class="colwrap"><div class="col" style="grid-template-columns:repeat(${n},var(--cell))">${row(A)}${row(B,sym(q.op))}${cr}${rr}</div></div>`;
+}
+function colRead(){
+  const C=G.col;let s='',started=false,gap=false;
+  for(let i=C.W-1;i>=0;i--){const d=C.res[i];if(d==null||d===''){if(started)gap=true;}else{started=true;s+=d;}}
+  return {s,gap};
+}
 function updateTyped(){
   const q=cur();
-  if(q.type==='calc'&&!q.phrased)$('#colArea').innerHTML=columnHTML(q.a,q.b,q.op,{typed:G.typed,typing:true});
+  if(q.type==='calc')$('#colArea').innerHTML=colInputHTML(q);
   else $('#ansbox').innerHTML=G.typed||'<span class="ph">deine Antwort</span>';
 }
 function feedback(kind,head,body=''){const fb=$('#fb');fb.className='fb '+kind;fb.innerHTML=`<span class="head">${head}</span>${body}`;}
@@ -707,7 +745,7 @@ function finish(clean){
 }
 function choose(i){
   const q=cur();
-  if(q.type==='num'&&q.pre&&!G.preDone)return choosePre(i);
+  if(q.pre&&!G.preDone)return choosePre(i);
   if(G.locked||q.type!=='choice')return;G.locked=true;
   const v=q.options[i],ok=v===q.answer;
   document.querySelectorAll('.opt').forEach((b,j)=>{b.disabled=true;if(q.options[j]===q.answer)b.classList.add('right');});
@@ -723,48 +761,67 @@ function choosePre(i){
   if(ok){beep('ok');G.score+=5;fb.className='prefb ok';fb.innerHTML=`<b>${pick(PRAISE)} +5</b> ${p.explain}`;}
   else{beep('bad');document.querySelectorAll('.opt')[i].classList.add('wrong');G.clean=false;G.streak=0;renderTop();logWrong(q);
     fb.className='prefb bad';fb.innerHTML=`<b>Richtig ist: ${p.answer}</b><br>${p.explain}`;}
-  $('#stage2').innerHTML=`<div class="sub">${p.next}</div>`+numInputHTML(q);updateTyped();
+  $('#stage2').innerHTML=`<div class="sub">${p.next}</div>`+(q.type==='calc'?colInputBlock():numInputHTML(q));updateTyped();
   setTimeout(()=>$('#stage2').scrollIntoView({behavior:'smooth',block:'nearest'}),60);
 }
-function hintFor(q,val){
-  if(q.phrased&&q.tpl==='miss'&&val===q.a+q.b)return `Achtung: Der andere ${T('Summand')} muss <b>kleiner</b> sein als die ${T('Summe')}. Rechne ${T('Summe')} <b>minus</b> ${T('Summand')}.`;
-  if(q.phrased&&q.op==='-'&&val===q.a+q.b)return `Achtung, du hast plus gerechnet! Bei der ${T('Differenz')} musst du <b>subtrahieren</b> (minus).`;
-  if(q.phrased&&q.op==='+'&&val===Math.abs(q.a-q.b))return `Achtung, du hast minus gerechnet! Die ${T('Summe')} bekommst du durch <b>addieren</b> (plus).`;
-  if(q.carry)return 'In dieser Aufgabe gibt es einen <b>Übertrag</b>. Hast du ihn mitgerechnet? Fang rechts bei den Einern an.';
-  return 'Rechne Stelle für Stelle: zuerst die Einer, dann die Zehner, dann die Hunderter …';
+function colHint(q){
+  const exp=solve(q.a,q.b,q.op).carries,C=G.col;
+  const missing=exp.some((v,i)=>v&&!C.carry[i]);
+  if(q.carry&&missing)return 'In dieser Aufgabe gibt es einen <b>Übertrag</b>. Hast du die kleine <b style="color:var(--bad)">1</b> aufgeschrieben und mitgerechnet?';
+  if(q.carry)return 'Prüfe jede Stelle nochmal – und denk an den <b>Übertrag</b>. Fang rechts bei den Einern an.';
+  return 'Prüfe jede Stelle nochmal: zuerst die Einer, dann die Zehner, dann die Hunderter …';
 }
-function calcSolution(q,withCol){
-  const s=solve(q.a,q.b,q.op);let h='';
-  if(q.phrased)h+=`<div>Die Rechnung heißt: <b>${q.a} ${sym(q.op)} ${q.b}</b></div>`;
-  if(withCol)h+=columnHTML(q.a,q.b,q.op,{result:s.result,carries:s.carries});
-  return h+stepsHTML(s.steps);
-}
+function calcSolution(q){return stepsHTML(solve(q.a,q.b,q.op).steps);}
 function submit(){
-  const q=cur();if(G.locked||!G.typed||!inputReady(q))return;
-  const val=+G.typed,isCalc=q.type==='calc',unit=q.unit?' '+q.unit:'';
-  const showCol=()=>{if(isCalc&&!q.phrased){const s=solve(q.a,q.b,q.op);$('#colArea').innerHTML=columnHTML(q.a,q.b,q.op,{result:s.result,carries:s.carries});}};
+  const q=cur();if(G.locked||!inputReady(q))return;
+  const isCalc=q.type==='calc',unit=q.unit?' '+q.unit:'';
+  let val;
+  if(isCalc){
+    const r=colRead();
+    if(!r.s){feedback('hint','Tippe zuerst dein Ergebnis ein.','Beginne rechts bei den Einern.');return;}
+    if(r.gap){feedback('hint','Da fehlt noch eine Ziffer.','Fülle alle Stellen zwischen den Ziffern aus.');return;}
+    val=+r.s;
+  }else{if(!G.typed)return;val=+G.typed;}
+  const showCol=()=>{if(isCalc){const s=solve(q.a,q.b,q.op);$('#colArea').innerHTML=columnHTML(q.a,q.b,q.op,{result:s.result,carries:s.carries});const t=$('#colArea').nextElementSibling;if(t&&t.classList.contains('coltip'))t.remove();}};
   const full=q.pre?5:10;
   if(val===q.answer){
     G.locked=true;beep('ok');const first=G.tries===0,pts=first?full:Math.ceil(full/2);G.score+=pts;
     const bonus=finish(first&&G.clean);showCol();
-    const body=isCalc?(q.phrased?`<div>${eqText(q.a,q.b,q.op)}</div>`:(q.carry?'<div class="tip">Die kleinen roten Einsen sind die Überträge.</div>':'')):q.solution;
+    const body=isCalc?(q.carry?'<div class="tip">Die kleinen roten Einsen sind die Überträge.</div>':''):q.solution;
     feedback('ok',pick(PRAISE)+(first?` +${pts}`:` Im 2. Versuch geschafft! +${pts}`)+bonus,body);
     showNext();
   }else if(G.tries===0){
     G.tries=1;G.streak=0;renderTop();beep('hint');
-    feedback('hint','Fast! Versuch es nochmal.',isCalc?hintFor(q,val):q.hint(val));
-    G.typed='';updateTyped();const el=(isCalc&&!q.phrased)?$('#colArea'):$('#ansbox');el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake');
+    feedback('hint','Fast! Versuch es nochmal.',isCalc?colHint(q)+'<br><span class="tip">Tippe auf ein Kästchen, um es zu verbessern.</span>':q.hint(val));
+    let el;if(isCalc){el=$('#colArea');}else{G.typed='';updateTyped();el=$('#ansbox');}
+    el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake');
   }else{
     G.locked=true;beep('bad');finish(false);logWrong(q);showCol();
-    feedback('bad',`Die Lösung ist ${q.answer}${unit}. So geht's:`,isCalc?calcSolution(q,q.phrased):q.solution);
+    feedback('bad',`Die Lösung ist ${q.answer}${unit}. So geht's:`,isCalc?calcSolution(q):q.solution);
     showNext();
   }
+}
+function colKey(k){
+  const C=G.col,s=C.sel;
+  if(k==='ue'){const i=s.i;if(i<1)return;C.carry[i]=C.carry[i]?'':'1';C.sel={row:'r',i};}
+  else if(k==='del'){
+    if(s.row==='c'){C.carry[s.i]='';C.sel={row:'r',i:s.i};}
+    else if(C.res[s.i]!=null&&C.res[s.i]!=='')C.res[s.i]='';
+    else if(s.i>0){C.sel={row:'r',i:s.i-1};C.res[s.i-1]='';}
+  }else if(/^[0-9]$/.test(k)){
+    if(s.row==='c'){C.carry[s.i]=k;C.sel={row:'r',i:s.i};}
+    else{C.res[s.i]=k;if(s.i<C.W-1)C.sel={row:'r',i:s.i+1};}
+  }else if(k==='left'){if(s.i<C.W-1)C.sel={row:s.row,i:s.i+1};}
+  else if(k==='right'){if(s.i>(s.row==='c'?1:0))C.sel={row:s.row,i:s.i-1};}
+  updateTyped();
 }
 function key(k){
   const q=cur();if(G.locked||!inputReady(q))return;
   if(k==='ok')return submit();
+  if(q.type==='calc')return colKey(k);
+  if(k==='ue'||k==='left'||k==='right')return;
   if(k==='del')G.typed=G.typed.slice(0,-1);
-  else if(G.typed.length<maxLen(q)){if(G.typed==='0')G.typed='';G.typed+=k;}
+  else if(G.typed.length<7){if(G.typed==='0')G.typed='';G.typed+=k;}
   updateTyped();
 }
 function next(){G.i++;if(G.i>=G.qs.length)endGame();else{renderQ();window.scrollTo({top:0,behavior:'smooth'});}}
@@ -860,6 +917,8 @@ function renderLearn(){
 
 /* ---------- Ereignisse ---------- */
 document.addEventListener('click',e=>{
+  const cell=e.target.closest('[data-cell]');
+  if(cell&&G&&!G.locked&&inputReady(cur())&&cur().type==='calc'){G.col.sel={row:cell.dataset.cell[0],i:+cell.dataset.cell.slice(1)};updateTyped();return;}
   const t=e.target.closest('button');if(!t)return;
   if(t.dataset.jump){const el=document.getElementById(t.dataset.jump);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});return;}
   if(t.dataset.go){if(t.dataset.go==='learn')renderLearn();show(t.dataset.go);return;}
@@ -874,7 +933,9 @@ document.addEventListener('keydown',e=>{
   if(!$('#game').classList.contains('on')||!G)return;
   const q=cur();
   if(e.key==='Enter'){e.preventDefault();if(G.locked)next();else if(inputReady(q))submit();return;}
-  if(inputReady(q)){if(/^[0-9]$/.test(e.key))key(e.key);else if(e.key==='Backspace'){e.preventDefault();key('del');}}
+  if(inputReady(q)){if(/^[0-9]$/.test(e.key))key(e.key);else if(e.key==='Backspace'){e.preventDefault();key('del');}
+    else if(e.key==='ArrowLeft'){e.preventDefault();key('left');}else if(e.key==='ArrowRight'){e.preventDefault();key('right');}
+    else if(e.key.toLowerCase()==='u'||e.key.toLowerCase()==='ü'){key('ue');}}
   else{const opts=q.type==='choice'?q.options:(q.pre&&!G.preDone?q.pre.options:null);if(opts&&/^[1-5]$/.test(e.key)&&+e.key<=opts.length&&!G.locked)choose(+e.key-1);}
 });
 renderHome();
