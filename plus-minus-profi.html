@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
+
 :root{
   --bg:#fff8ec; --ink:#2b2340; --muted:#6b6280; --line:#eadfcb;
   --summand:#2563eb; --summe:#15803d; --minuend:#ea580c; --subtrahend:#9333ea; --differenz:#db2777;
@@ -161,6 +162,41 @@ button{font:inherit;color:inherit;cursor:pointer}
 @keyframes fall{to{transform:translateY(112vh) rotate(380deg)}}
 .iconbtn{background:#fff;border:2px solid var(--line);border-radius:12px;padding:6px 10px;font-weight:800;box-shadow:0 2px 0 var(--line)}
 .topbar{display:flex;justify-content:flex-end}
+
+/* --- Ergänzungen Checkliste --- */
+.sectitle{font-family:Fredoka,Nunito,system-ui,sans-serif;font-weight:600;font-size:1.15rem;margin:18px 2px 4px;display:flex;justify-content:space-between;align-items:baseline}
+.sectitle small{font-family:Nunito,system-ui,sans-serif;font-size:.8rem;color:var(--muted);font-weight:700}
+.topic{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:18px;padding:10px 12px;margin:8px 0;box-shadow:0 3px 0 var(--line);transition:transform .08s}
+.topic:active{transform:translateY(3px);box-shadow:0 0 0 var(--line)}
+.topic .nr{flex:none;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-family:Fredoka,Nunito,system-ui,sans-serif;font-weight:700;font-size:1.05rem}
+.topic .tx{flex:1;min-width:0}
+.topic b{font-family:Fredoka,Nunito,system-ui,sans-serif;font-weight:600;font-size:1.08rem;display:block}
+.topic span.d{color:var(--muted);font-size:.88rem;display:block;line-height:1.25}
+.state{flex:none;font-size:.75rem;font-weight:800;border-radius:999px;padding:3px 8px;white-space:nowrap;background:#f3f0ea;color:var(--muted)}
+.state.s3{background:#dcfce7;color:#15803d}.state.s2{background:#fef3c7;color:#a16207}.state.s1{background:#fee2e2;color:#b91c1c}
+.bigbtn{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:none;border-radius:20px;padding:14px 16px;margin:12px 0;color:#fff;background:linear-gradient(135deg,#6366f1,#db2777);box-shadow:0 5px 0 #4338ca}
+.bigbtn:active{transform:translateY(3px);box-shadow:0 2px 0 #4338ca}
+.bigbtn .ic{font-size:2rem}
+.bigbtn b{font-family:Fredoka,Nunito,system-ui,sans-serif;font-weight:600;font-size:1.25rem;display:block}
+.bigbtn span{font-size:.9rem;opacity:.92}
+.bigbtn small{display:block;font-weight:800;font-size:.8rem;opacity:.95}
+.expr{font-family:Fredoka,Nunito,system-ui,sans-serif;font-weight:600;font-size:clamp(1.6rem,7.5vw,2.2rem);text-align:center;margin:16px 0 4px;white-space:nowrap}
+.expr.sm{font-size:clamp(1.1rem,5.2vw,1.5rem);white-space:normal}
+.prompt.long{font-family:Nunito,system-ui,sans-serif;font-size:1.12rem;font-weight:700;text-align:left;line-height:1.5;background:#fffaf0;border:2px solid var(--line);border-radius:16px;padding:12px 14px}
+.sub{margin-top:14px;font-weight:800;text-align:center;font-size:1.05rem}
+.ansrow{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:6px}
+.ansrow .ansbox{margin:8px 0 4px;flex:0 1 220px}
+.unit{font-family:Fredoka,Nunito,system-ui,sans-serif;font-size:1.3rem;font-weight:600;color:var(--muted)}
+.prefb{margin-top:10px;border-radius:14px;padding:10px 12px;font-weight:600;line-height:1.4}
+.prefb:empty{display:none}
+.prefb.ok{background:#dcfce7}.prefb.bad{background:#fff1f2}
+.check{text-align:center;margin:8px 0;font-weight:800}
+.lnav{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 4px}
+.lnav button{border:2px solid var(--line);background:#fff;border-radius:999px;padding:5px 10px;font-weight:800;font-size:.85rem}
+table.words{width:100%;border-collapse:collapse;margin:8px 0;font-size:.95rem}
+table.words td{border:1px solid var(--line);padding:6px 8px;vertical-align:top}
+table.words td:first-child{font-family:Fredoka,Nunito,system-ui,sans-serif;font-size:1.4rem;text-align:center;width:44px}
+.hl{background:#fff3c4;border-radius:6px;padding:0 4px;font-weight:800}
 </style>
 </head>
 <body>
@@ -172,17 +208,19 @@ button{font:inherit;color:inherit;cursor:pointer}
     <div class="hero">
       <div class="logo"><span>+</span><span>−</span></div>
       <h1>Plus & Minus Profi</h1>
-      <p>Fachwörter lernen & schriftlich rechnen</p>
+      <p>Training für die Klassenarbeit Nr. 2</p>
       <div class="starsTotal">⭐ <span id="starsTotal">0</span> Sterne gesammelt</div>
     </div>
 
-    <button class="mode" data-go="learn"><div class="ic" style="background:#fef3c7">📖</div><div><b>Merkzettel</b><span class="d">Zuerst lernen: alle Fachwörter auf einen Blick</span></div></button>
-    <button class="mode" data-play="quiz"><div class="ic" style="background:#dbeafe">🏷️</div><div><b>Fachwörter-Quiz</b><span class="d">Summand, Minuend, Differenz & Co.</span><small class="rec" id="rec-quiz"></small></div></button>
-    <button class="mode" data-play="calc"><div class="ic" style="background:#dcfce7">✏️</div><div><b>Rechnen</b><span class="d">Schriftlich plus & minus – mit und ohne Übertrag</span><small class="rec" id="rec-calc"></small></div></button>
-    <button class="mode" data-play="mix"><div class="ic" style="background:#fce7f3">🏆</div><div><b>Profi-Mix</b><span class="d">Fachwörter + Rechnen + Textaufgaben</span><small class="rec" id="rec-mix"></small></div></button>
+    <button class="mode" data-go="learn"><div class="ic" style="background:#fef3c7">📖</div><div><b>Merkzettel</b><span class="d">Alles Wichtige zu den 7 Punkten der Checkliste</span></div></button>
+
+    <div class="sectitle">📋 Checkliste – Ich kann … <small>tippen zum Üben</small></div>
+    <div id="topics"></div>
+
+    <button class="bigbtn" data-play="test"><div class="ic">🏆</div><div><b>Probe-Klassenarbeit</b><span>14 Aufgaben aus allen 7 Bereichen</span><small id="rec-test"></small></div></button>
 
     <div class="box">
-      <h3>⚙️ Einstellungen fürs Rechnen</h3>
+      <h3>⚙️ Einstellungen für Nr. 4 (schriftlich)</h3>
       <div id="settings"></div>
     </div>
   </section>
@@ -191,7 +229,7 @@ button{font:inherit;color:inherit;cursor:pointer}
   <section id="learn" class="screen">
     <div class="gtop"><button class="iconbtn" data-go="home">← Menü</button></div>
     <div id="learnBody"></div>
-    <button class="btn" data-play="quiz">Jetzt üben: Fachwörter-Quiz 🏷️</button>
+    <button class="btn" data-go="home">Zurück zur Checkliste 📋</button>
   </section>
 
   <!-- GAME -->
@@ -218,10 +256,12 @@ const $=s=>document.querySelector(s);
 const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const rep=(n,f)=>Array.from({length:n},()=>f());
 const nDigit=n=>rnd(10**(n-1),10**n-1);
 const digitsOf=n=>String(n).split('').reverse().map(Number);
-const sym=op=>op==='+'?'+':'−';
-const res=(a,b,op)=>op==='+'?a+b:a-b;
+const sym=op=>(op==='+'?'+':'−');
+const res=(a,b,op)=>(op==='+'?a+b:a-b);
+const opf=(x,o,y)=>(o==='+'?x+y:x-y);
 const eqText=(a,b,op)=>`${a} ${sym(op)} ${b} = ${res(a,b,op)}`;
 const strip=h=>h.replace(/<[^>]+>/g,'');
 
@@ -229,10 +269,20 @@ const TERM_COL={Summand:'summand',Summanden:'summand',Summe:'summe',Minuend:'min
 const ART={Summand:'der',Summe:'die',Minuend:'der',Subtrahend:'der',Differenz:'die'};
 const T=name=>`<span class="t t-${TERM_COL[name]||''}">${name}</span>`;
 
+/* Rechenausdruck auswerten (Klammern zuerst, dann von links nach rechts) */
+function evalExpr(expr){
+  const steps=[];let e=expr,m;
+  while((m=e.match(/\((\d+) ([+−]) (\d+)\)/))){const v=opf(+m[1],m[2],+m[3]);steps.push(`Klammer zuerst: ${m[1]} ${m[2]} ${m[3]} = <b>${v}</b>`);e=e.replace(m[0],String(v));}
+  let t=e.split(' ');
+  while(t.length>1){const v=opf(+t[0],t[1],+t[2]);steps.push(`${t[0]} ${t[1]} ${t[2]} = <b>${v}</b>`);t=[String(v),...t.slice(3)];}
+  return {value:+t[0],steps};
+}
+const stepsHTML=st=>`<ol class="steps">${st.map(x=>`<li>${x}</li>`).join('')}</ol>`;
+
 /* ---------- Speicher ---------- */
 const KEY='plusMinusProfi.v1';
-let store={settings:{op:'beides',carry:'beides',digits:3},high:{},stars:0,sound:true};
-try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s){store=Object.assign(store,s);store.settings=Object.assign({op:'beides',carry:'beides',digits:3},s.settings||{});}}catch(e){}
+let store={settings:{op:'beides',carry:'beides',digits:3},high:{},stars:0,sound:true,topics:{}};
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s){store=Object.assign(store,s);store.settings=Object.assign({op:'beides',carry:'beides',digits:3},s.settings||{});store.topics=s.topics||{};store.high=s.high||{};}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){}}
 
 /* ---------- Ton ---------- */
@@ -248,10 +298,9 @@ function beep(kind){
   }catch(e){}
 }
 
-/* ---------- Aufgaben erzeugen ---------- */
+/* ---------- Schriftlich: Zahlen erzeugen ---------- */
 function addCarry(a,b){const A=digitsOf(a),B=digitsOf(b);for(let i=0;i<Math.max(A.length,B.length);i++){if((A[i]||0)+(B[i]||0)>=10)return true;}return false;}
 function subBorrow(a,b){const A=digitsOf(a),B=digitsOf(b);for(let i=0;i<B.length;i++){if(A[i]<B[i])return true;}return false;}
-
 function genAdd(n,carry){
   for(let t=0;t<3000;t++){
     const lb=(n>1&&Math.random()<.3)?n-1:n; let a,b;
@@ -286,8 +335,6 @@ function genSub(n,borrow){
   }
   return borrow?[52,27]:[58,23];
 }
-
-/* Lösungsweg Stelle für Stelle */
 const PLACES=['Einer','Zehner','Hunderter','Tausender','Zehntausender'];
 function solve(a,b,op){
   const A=digitsOf(a),B=digitsOf(b),steps=[],carries=[];let c=0;
@@ -351,7 +398,7 @@ function columnHTML(a,b,op,o={}){
   return `<div class="colwrap"><div class="col" style="grid-template-columns:repeat(${n},var(--cell))">${row(A,c.a||'')}${row(B,c.b||'',sym(op))}${carryRow}${resRow}</div></div>`;
 }
 
-/* ---------- Fragen: Fachwörter ---------- */
+/* ================= 1. FACHBEGRIFFE ================= */
 const DEFS=[
  {p:'Wie nennt man das Ergebnis einer <b>Addition</b>?',a:'Summe',o:['Summe','Differenz','Summand','Minuend'],e:`${T('Summand')} + ${T('Summand')} = ${T('Summe')}`},
  {p:'Wie nennt man das Ergebnis einer <b>Subtraktion</b>?',a:'Differenz',o:['Differenz','Summe','Subtrahend','Minuend'],e:`${T('Minuend')} − ${T('Subtrahend')} = ${T('Differenz')}`},
@@ -362,16 +409,11 @@ const DEFS=[
  {p:'Ein anderes Wort für <b>Minusrechnen</b> ist …',a:'Subtraktion',o:['Subtraktion','Addition','Multiplikation','Division'],e:'Subtraktion = Minusrechnen (−)'},
  {p:'„Zusammenzählen“ heißt in der Mathesprache …',a:'addieren',o:['addieren','subtrahieren','multiplizieren','dividieren'],e:'addieren = zusammenzählen = plus rechnen'},
  {p:'„Abziehen“ heißt in der Mathesprache …',a:'subtrahieren',o:['subtrahieren','addieren','multiplizieren','dividieren'],e:'subtrahieren = abziehen = minus rechnen'},
- {p:'Ergibt beim schriftlichen Rechnen eine Stelle 10 oder mehr, merkst du dir einen …',a:'Übertrag',o:['Übertrag','Rest','Summand','Überschlag'],e:'Du schreibst nur die Einerziffer hin und merkst dir 1 als <b>Übertrag</b> für die nächste Stelle.'},
- {p:'Bei welcher Stelle fängst du beim schriftlichen Rechnen an?',a:'bei den Einern',o:['bei den Einern','bei den Zehnern','bei den Hundertern','ganz links'],e:'Immer rechts anfangen: erst Einer, dann Zehner, dann Hunderter …'},
- {p:'Darf man bei der Addition die Summanden vertauschen?',a:'Ja, die Summe bleibt gleich',o:['Ja, die Summe bleibt gleich','Nein, die Summe ändert sich'],e:'Beispiel: 12 + 5 = 17 und 5 + 12 = 17.'},
- {p:'Darf man bei der Subtraktion Minuend und Subtrahend vertauschen?',a:'Nein, das Ergebnis ändert sich',o:['Nein, das Ergebnis ändert sich','Ja, die Differenz bleibt gleich'],e:'Beispiel: 12 − 5 = 7, aber 5 − 12 geht mit unseren Zahlen gar nicht.'},
  {p:'Die Summe ist immer … als jeder Summand (wenn kein Summand 0 ist).',a:'größer',o:['größer','kleiner','genauso groß'],e:'Beispiel: 30 + 12 = 42. Die Summe 42 ist größer als 30 und größer als 12.'},
  {p:'Die Differenz ist immer … als der Minuend (wenn der Subtrahend nicht 0 ist).',a:'kleiner',o:['kleiner','größer','genauso groß'],e:'Beispiel: 50 − 20 = 30. Die Differenz 30 ist kleiner als der Minuend 50.'},
- {p:'Mit der Umkehraufgabe kannst du dein Ergebnis …',a:'überprüfen',o:['überprüfen','runden','verdoppeln','abschreiben'],e:'Das nennt man <b>Probe</b>: Du rechnest rückwärts. Kommt die Startzahl heraus, stimmt dein Ergebnis.'},
- {p:'Die Umkehraufgabe einer Subtraktion ist eine …',a:'Addition',o:['Addition','Subtraktion'],e:'Beispiel: 50 − 20 = 30 → Probe: 30 + 20 = 50'},
- {p:'Die Umkehraufgabe einer Addition ist eine …',a:'Subtraktion',o:['Subtraktion','Addition'],e:'Beispiel: 30 + 20 = 50 → Probe: 50 − 20 = 30'},
  {p:'„Differenz“ bedeutet so viel wie …',a:'Unterschied',o:['Unterschied','Zusammenzählen','Hälfte','Rest beim Teilen'],e:'Die Differenz sagt dir, wie groß der Unterschied zwischen zwei Zahlen ist.'},
+ {p:'Ergibt beim schriftlichen Rechnen eine Stelle 10 oder mehr, merkst du dir einen …',a:'Übertrag',o:['Übertrag','Rest','Summand','Überschlag'],e:'Du schreibst nur die Einerziffer hin und merkst dir 1 als <b>Übertrag</b> für die nächste Stelle.'},
+ {p:'Die Umkehraufgabe einer Subtraktion ist eine …',a:'Addition',o:['Addition','Subtraktion'],e:'Beispiel: 50 − 20 = 30 → Probe: 30 + 20 = 50'},
 ];
 const GAPS=[
  [['Summand','+','Summand','=','?'],'Summe',`${T('Summand')} + ${T('Summand')} = ${T('Summe')}`],
@@ -380,8 +422,11 @@ const GAPS=[
  [['?','−','Subtrahend','=','Differenz'],'Minuend',`${T('Minuend')} − ${T('Subtrahend')} = ${T('Differenz')}`],
  [['Minuend','−','?','=','Differenz'],'Subtrahend',`${T('Minuend')} − ${T('Subtrahend')} = ${T('Differenz')}`],
 ];
+const ZU=[['Summe','Addition'],['Summand','Addition'],['addieren','Addition'],['Differenz','Subtraktion'],['Minuend','Subtraktion'],['Subtrahend','Subtraktion'],['subtrahieren','Subtraktion']];
 const ROLES=op=>op==='+'?['Summand','Summand','Summe']:['Minuend','Subtrahend','Differenz'];
 const smallPair=op=>op==='+'?genAdd(2,Math.random()<.5):genSub(2,Math.random()<.5);
+let used={};
+function uniq(key,len){used[key]=used[key]||new Set();const S=used[key];let i,t=0;do{i=rnd(0,len-1);t++;}while(S.has(i)&&S.size<len&&t<100);S.add(i);return i;}
 
 function qLabel(){
   const op=pick(['+','-']),[a,b]=smallPair(op),k=rnd(0,2),roles=ROLES(op),nums=[a,b,res(a,b,op)];
@@ -398,20 +443,25 @@ function qFind(){
       explain:eqHTML(a,b,op,{labels:true}),summary:`Bei ${eqText(a,b,op)} ist ${ART[roles[k]]} ${roles[k]} die ${nums[k]}`};
   }
 }
-let usedDefs=new Set();
 function qDef(){
-  let i;do{i=rnd(0,DEFS.length-1);}while(usedDefs.has(i)&&usedDefs.size<DEFS.length);usedDefs.add(i);
-  const d=DEFS[i];
+  const d=DEFS[uniq('def',DEFS.length)];
   return {type:'choice',prompt:d.p,options:shuffle(d.o),answer:d.a,explain:`<div>${d.e}</div>`,summary:`${strip(d.p)} → ${d.a}`};
 }
 function qGap(){
-  const [parts,ans,e]=pick(GAPS);
+  const [parts,ans,e]=GAPS[uniq('gap',GAPS.length)];
   const body='<div class="formula">'+parts.map(p=>p==='?'?'<span class="gap">?</span>':(p==='+'||p==='−'||p==='=')?`<span class="op">${p}</span>`:T(p)).join('')+'</div>';
   return {type:'choice',prompt:'Welches Wort fehlt?',body,options:shuffle(['Summand','Summe','Minuend','Subtrahend','Differenz']),answer:ans,
-    explain:`<div class="formula">${e}</div>`,summary:`${parts.join(' ').replace('?','___')} → ${ans}`,one:false};
+    explain:`<div class="formula">${e}</div>`,summary:`${parts.join(' ').replace('?','___')} → ${ans}`};
+}
+function qZu(){
+  const [w,op]=ZU[uniq('zu',ZU.length)];
+  const lab=op==='Addition'?'Addition (+)':'Subtraktion (−)';
+  return {type:'choice',prompt:`Zu welcher Rechenart gehört das Wort<br><b>„${w}“</b>?`,options:['Addition (+)','Subtraktion (−)'],answer:lab,
+    explain:op==='Addition'?`<div>Zur <b>Addition</b> gehören: ${T('Summand')}, ${T('Summe')}, addieren.</div>`:`<div>Zur <b>Subtraktion</b> gehören: ${T('Minuend')}, ${T('Subtrahend')}, ${T('Differenz')}, subtrahieren.</div>`,
+    summary:`„${w}“ gehört zur ${op}`};
 }
 function qUmkehr(){
-  const op=pick(['+','-']),[a,b]=op==='+'?genAdd(2,false):genSub(2,false),r=res(a,b,op);
+  let op,a,b;do{op=pick(['+','-']);[a,b]=op==='+'?genAdd(2,false):genSub(2,false);}while(a===b||res(a,b,op)===b);const r=res(a,b,op);
   let correct,wrongs,e;
   if(op==='-'){correct=`${r} + ${b} = ${a}`;wrongs=[`${a} + ${b} = ${a+b}`,`${a} + ${r} = ${a+r}`];e=`Rückwärts rechnen: ${T('Differenz')} + ${T('Subtrahend')} = ${T('Minuend')}`;}
   else{correct=`${r} − ${b} = ${a}`;wrongs=[`${r} + ${b} = ${r+b}`,`${a} + ${r} = ${a+r}`];e=`Rückwärts rechnen: ${T('Summe')} − ${T('Summand')} = anderer ${T('Summand')}`;}
@@ -427,14 +477,67 @@ function qSmall(){
     explain:`<div>${term} bedeutet <b>${op==='+'?'plus':'minus'}</b> rechnen:</div>${eqHTML(a,b,op,{labels:true})}`,summary:`${term} von ${a} und ${b} → ${eqText(a,b,op)}`};
 }
 
-/* ---------- Fragen: Rechnen ---------- */
+/* ================= 2. ZAHLENRÄTSEL ================= */
+function qRiddle(){
+  for(;;){
+    const f=uniq('rid',11);
+    let a=rnd(35,99),b=rnd(12,a-8),c=rnd(11,40);
+    let text,expr,wr,why;
+    if(f===0){text=`Addiere zu ${a} die Zahl ${b}.`;expr=`${a} + ${b}`;wr=[`${a} − ${b}`,`${b} − ${a}`];why='„Addiere“ heißt <b>plus</b>.';}
+    else if(f===1){text=`Subtrahiere ${b} von ${a}.`;expr=`${a} − ${b}`;wr=[`${b} − ${a}`,`${a} + ${b}`];why=`Achtung Reihenfolge! „Subtrahiere ${b} <b>von ${a}</b>“ heißt: ${a} − ${b}. Die Zahl nach „von“ steht vorne.`;}
+    else if(f===2){text=`Vermehre ${a} um ${b}.`;expr=`${a} + ${b}`;wr=[`${a} − ${b}`,`${b} − ${a}`];why='„Vermehren“ heißt mehr machen, also <b>plus</b>.';}
+    else if(f===3){text=`Vermindere ${a} um ${b}.`;expr=`${a} − ${b}`;wr=[`${a} + ${b}`,`${b} − ${a}`];why='„Vermindern“ heißt weniger machen, also <b>minus</b>.';}
+    else if(f===4){text=`Bilde die Differenz aus ${a} und ${b}.`;expr=`${a} − ${b}`;wr=[`${a} + ${b}`,`${b} − ${a}`];why='Differenz heißt <b>minus</b>. Die erste Zahl steht vorne.';}
+    else if(f===5){text=`Um wie viel ist ${a} größer als ${b}?`;expr=`${a} − ${b}`;wr=[`${a} + ${b}`,`${b} − ${a}`];why='„Um wie viel größer?“ fragt nach dem Unterschied: große Zahl <b>minus</b> kleine Zahl.';}
+    else{
+      a=rnd(60,150);b=rnd(12,45);
+      if(f===6){if(a+b<=c+5)continue;text=`Subtrahiere von der Summe aus ${a} und ${b} die Zahl ${c}.`;expr=`(${a} + ${b}) − ${c}`;wr=[`${c} − (${a} + ${b})`,`(${a} − ${b}) + ${c}`];why='Zuerst die <b>Summe</b> bilden (in Klammern), dann davon die Zahl abziehen.';}
+      else if(f===7){if(a<=b+c+5)continue;text=`Subtrahiere die Summe aus ${b} und ${c} von ${a}.`;expr=`${a} − (${b} + ${c})`;wr=[`(${b} + ${c}) − ${a}`,`${a} − ${b} + ${c}`];why=`Die <b>Summe</b> wird von ${a} abgezogen. Deshalb kommt die Summe in eine <b>Klammer</b> hinter das Minus.`;}
+      else if(f===8){text=`Addiere zur Differenz aus ${a} und ${b} die Zahl ${c}.`;expr=`(${a} − ${b}) + ${c}`;wr=[`${a} − (${b} + ${c})`,`(${b} − ${a}) + ${c}`];why='Zuerst die <b>Differenz</b> bilden (in Klammern), dann die Zahl dazu addieren.';}
+      else if(f===9){if(b<=c+3||a<=b-c)continue;text=`Subtrahiere die Differenz aus ${b} und ${c} von ${a}.`;expr=`${a} − (${b} − ${c})`;wr=[`(${b} − ${c}) − ${a}`,`${a} − ${b} − ${c}`];why=`Die <b>Differenz</b> wird von ${a} abgezogen. Sie kommt in eine <b>Klammer</b> hinter das Minus.`;}
+      else{text=`Addiere die Zahl ${c} zur Summe aus ${a} und ${b}.`;expr=`(${a} + ${b}) + ${c}`;wr=[`(${a} + ${b}) − ${c}`,`${a} + (${b} − ${c})`];why='Zuerst die <b>Summe</b> (in Klammern), dann noch die Zahl dazu.';}
+    }
+    const ev=evalExpr(expr);if(ev.value<1)continue;
+    const br=expr.includes('(');
+    return {type:'num',long:true,prompt:`🧩 ${text}`,
+      pre:{prompt:'Welche Rechenaufgabe passt?',options:shuffle([expr,...wr]),answer:expr,explain:why,next:`Jetzt rechne aus: <b>${expr}</b>`},
+      answer:ev.value,
+      hint:()=>br?'Rechne zuerst, was in der <b>Klammer</b> steht. Dann den Rest.':'Rechne Schritt für Schritt, z. B. erst die Zehner, dann die Einer.',
+      solution:stepsHTML(ev.steps),summary:`${text} → ${expr} = ${ev.value}`};
+  }
+}
+
+/* ================= 3. KOPFRECHNEN ================= */
+function splitParts(b){const s=String(b),parts=[];for(let i=0;i<s.length;i++){const v=+s[i]*10**(s.length-1-i);if(v)parts.push(v);}return parts;}
+function kopfSteps(a,b,op){
+  const parts=splitParts(b);if(parts.length===1)return [`${a} ${sym(op)} ${b} = <b>${res(a,b,op)}</b>`];
+  const st=[`Zerlege ${b} in ${parts.join(' + ')}`];let x=a;
+  parts.forEach(p=>{const y=opf(x,sym(op),p);st.push(`${x} ${sym(op)} ${p} = <b>${y}</b>`);x=y;});return st;
+}
+function qKopf(){
+  let a,b,op;const f=rnd(0,4);
+  for(;;){
+    if(f===0){a=rnd(21,79);b=rnd(12,49);op='+';if(a%10+b%10<10)continue;}
+    else if(f===1){a=rnd(41,99);b=rnd(12,a-10);op='-';if(a%10>=b%10)continue;}
+    else if(f===2){a=rnd(11,59)*10;b=rnd(11,39)*10;op=pick(['+','-']);if(op==='-'&&b>=a-20)continue;}
+    else if(f===3){a=rnd(120,880);b=rnd(12,89);op=pick(['+','-']);}
+    else{a=1000;b=rnd(11,99)*5;op='-';}
+    break;
+  }
+  const r=res(a,b,op);
+  return {type:'num',prompt:'🧠 Rechne im Kopf:',body:`<div class="expr">${a} ${sym(op)} ${b} = ?</div>`,answer:r,
+    hint:()=>`Tipp: Zerlege die zweite Zahl in ${splitParts(b).join(' + ')} und rechne Schritt für Schritt.`,
+    solution:stepsHTML(kopfSteps(a,b,op)),summary:eqText(a,b,op)};
+}
+
+/* ================= 4. SCHRIFTLICH ================= */
 function qCalc(phraseProb){
   const st=store.settings;
   const op=st.op==='plus'?'+':st.op==='minus'?'-':pick(['+','-']);
   const carry=st.carry==='mit'?true:st.carry==='ohne'?false:Math.random()<.5;
   const n=+st.digits||3;
   const [a,b]=op==='+'?genAdd(n,carry):genSub(n,carry);
-  const phrased=Math.random()<phraseProb;let prompt='Rechne schriftlich:',tpl='';
+  const phrased=Math.random()<phraseProb;let prompt='✏️ Rechne schriftlich:',tpl='';
   if(phrased){
     const P=op==='+'?[
       ['sum',`Berechne die ${T('Summe')} von <b>${a}</b> und <b>${b}</b>.`],
@@ -451,18 +554,120 @@ function qCalc(phraseProb){
   return {type:'calc',a,b,op,carry,phrased,tpl,prompt,answer:res(a,b,op),summary:eqText(a,b,op)};
 }
 
-function buildRound(mode){
-  usedDefs=new Set();
-  if(mode==='quiz')return shuffle([qLabel(),qLabel(),qLabel(),qFind(),qFind(),qDef(),qDef(),qGap(),qUmkehr(),qSmall()]);
-  if(mode==='calc')return Array.from({length:10},()=>qCalc(.3));
-  return shuffle([qLabel(),qFind(),qDef(),pick([qGap,qUmkehr])(),qSmall(),...Array.from({length:5},()=>qCalc(.5))]);
+/* ================= 5. KLAMMERN ================= */
+function klammerExpr(forms){
+  for(;;){
+    const f=pick(forms),a=rnd(8,20)*10,b=rnd(2,12)*5,c=rnd(2,12)*5,d=rnd(2,9)*5;let e,alt=null;
+    if(f===0)e=`${a} − (${b} + ${c})`;
+    else if(f===1){e=`${a} − ${b} + ${c}`;alt=a-(b+c);}
+    else if(f===2){if(b<=c)continue;e=`${a} − (${b} − ${c})`;}
+    else if(f===3)e=`(${a} + ${b}) − (${c} + ${d})`;
+    else if(f===4){if(b<=c)continue;e=`${a} + (${b} − ${c})`;}
+    else{e=`${a} − ${b} − ${c}`;alt=a-(b-c);}
+    const ev=evalExpr(e);if(ev.value<5)continue;
+    return {f,a,b,c,e,ev,alt};
+  }
 }
+function qKlammer(){
+  const k=klammerExpr([0,1,2,3,4,5]),br=k.e.includes('(');
+  return {type:'num',prompt:'( ) Rechne aus:',body:`<div class="expr">${k.e} = ?</div>`,answer:k.ev.value,
+    hint:val=>{
+      if(!br&&val===k.alt)return `Achtung: Hier gibt es <b>keine Klammer</b>! Dann rechnest du <b>von links nach rechts</b>: erst ${k.a} − ${k.b}.`;
+      return br?'Was in der <b>Klammer</b> steht, rechnest du <b>zuerst</b>!':'Ohne Klammer rechnest du <b>von links nach rechts</b>.';},
+    solution:(br?'':'<div>Keine Klammer → von links nach rechts.</div>')+stepsHTML(k.ev.steps),summary:`${k.e} = ${k.ev.value}`};
+}
+function qKlammerFirst(){
+  const k=klammerExpr([0,1,2,5]);let first,other;
+  if(k.f===0){first=`${k.b} + ${k.c}`;other=`${k.a} − ${k.b}`;}
+  else if(k.f===2){first=`${k.b} − ${k.c}`;other=`${k.a} − ${k.b}`;}
+  else if(k.f===1){first=`${k.a} − ${k.b}`;other=`${k.b} + ${k.c}`;}
+  else{first=`${k.a} − ${k.b}`;other=`${k.b} − ${k.c}`;}
+  const br=k.e.includes('(');
+  return {type:'choice',prompt:'Was rechnest du <b>zuerst</b>?',body:`<div class="expr">${k.e}</div>`,options:shuffle([first,other,'Das ist egal']),answer:first,one:true,
+    explain:`<div>${br?'Was in der <b>Klammer</b> steht, kommt zuerst.':'Ohne Klammer: <b>von links nach rechts</b>.'}</div>${stepsHTML(k.ev.steps)}`,summary:`Bei ${k.e} zuerst ${first}`};
+}
+
+/* ================= 6. RECHENGESETZE ================= */
+const LAWDEFS=[
+ {p:'Ein anderer Name für das <b>Kommutativgesetz</b> ist …',a:'Vertauschungsgesetz',o:['Vertauschungsgesetz','Verbindungsgesetz','Klammergesetz'],e:'Kommutativgesetz = <b>Vertauschungsgesetz</b>: Man darf die Zahlen vertauschen.'},
+ {p:'Ein anderer Name für das <b>Assoziativgesetz</b> ist …',a:'Verbindungsgesetz',o:['Verbindungsgesetz','Vertauschungsgesetz','Minusgesetz'],e:'Assoziativgesetz = <b>Verbindungsgesetz</b>: Man darf die Zahlen beliebig mit Klammern verbinden.'},
+ {p:'Für welche Rechenart gilt das <b>Kommutativgesetz</b>?',a:'nur für die Addition',o:['nur für die Addition','nur für die Subtraktion','für Addition und Subtraktion'],e:'12 + 5 = 5 + 12 ✔ aber 12 − 5 ≠ 5 − 12 ✘'},
+ {p:'Für welche Rechenart gilt das <b>Assoziativgesetz</b>?',a:'nur für die Addition',o:['nur für die Addition','nur für die Subtraktion','für Addition und Subtraktion'],e:'(20 + 5) + 3 = 20 + (5 + 3) ✔ aber (20 − 5) − 3 = 12 und 20 − (5 − 3) = 18 ✘'},
+ {p:'Welche Gleichung zeigt das <b>Kommutativgesetz</b>?',a:'a + b = b + a',o:['a + b = b + a','(a + b) + c = a + (b + c)','a − b = b − a'],e:'Kommutativgesetz: a + b = b + a (vertauschen)'},
+ {p:'Welche Gleichung zeigt das <b>Assoziativgesetz</b>?',a:'(a + b) + c = a + (b + c)',o:['(a + b) + c = a + (b + c)','a + b = b + a','(a − b) − c = a − (b − c)'],e:'Assoziativgesetz: (a + b) + c = a + (b + c) (Klammern versetzen)'},
+ {p:'Stimmt das?<br><b>20 − 5 = 5 − 20</b>',a:'Nein, bei Minus darf man nicht tauschen',o:['Nein, bei Minus darf man nicht tauschen','Ja, wegen des Kommutativgesetzes'],e:'Das Kommutativgesetz gilt nur für die Addition. 20 − 5 = 15, aber 5 − 20 geht mit unseren Zahlen gar nicht.'},
+];
+function qLawId(){
+  const a=rnd(12,89),b=rnd(12,89),c=rnd(12,89);
+  const L=pick([[`${a} + ${b} = ${b} + ${a}`,'Kommutativgesetz'],[`${a} + ${b} + ${c} = ${a} + ${c} + ${b}`,'Kommutativgesetz'],[`(${a} + ${b}) + ${c} = ${a} + (${b} + ${c})`,'Assoziativgesetz'],[`${a} + (${b} + ${c}) = (${a} + ${b}) + ${c}`,'Assoziativgesetz']]);
+  return {type:'choice',prompt:'Welches Rechengesetz siehst du hier?',body:`<div class="expr sm">${L[0]}</div>`,options:['Kommutativgesetz','Assoziativgesetz'],answer:L[1],one:true,
+    explain:L[1]==='Kommutativgesetz'?'<b>Kommutativgesetz</b> (Vertauschungsgesetz): Die Zahlen werden <b>vertauscht</b>.':'<b>Assoziativgesetz</b> (Verbindungsgesetz): Die Reihenfolge bleibt, nur die <b>Klammern</b> werden versetzt.',
+    summary:`${L[0]} → ${L[1]}`};
+}
+function qLawDef(){
+  const d=LAWDEFS[uniq('law',LAWDEFS.length)];
+  return {type:'choice',prompt:d.p,options:shuffle(d.o),answer:d.a,one:true,explain:`<div>${d.e}</div>`,summary:`${strip(d.p)} → ${d.a}`};
+}
+function qClever(){
+  for(;;){
+    const Tt=pick([100,100,200,1000]);const a=Tt===1000?rnd(101,899):rnd(11,Tt-11);const c=Tt-a;const b=Tt===1000?rnd(120,880):rnd(13,89);
+    if(a%10===0||(a+b)%10===0||(b+c)%10===0||a===c)continue;
+    const expr=`${a} + ${b} + ${c}`,r=a+b+c;
+    return {type:'num',prompt:'🔄 Rechne geschickt!',body:`<div class="expr">${expr} = ?</div>`,
+      pre:{prompt:'Welche zwei Zahlen rechnest du zuerst zusammen?',options:shuffle([`${a} + ${c}`,`${a} + ${b}`,`${b} + ${c}`]),answer:`${a} + ${c}`,
+        explain:`${a} + ${c} = ${Tt} – eine glatte Zahl! Damit geht es viel leichter.`,next:`Jetzt rechne aus: <b>${expr}</b>`},
+      answer:r,hint:()=>`Rechne zuerst ${a} + ${c} = ${Tt}. Dann noch + ${b}.`,
+      solution:stepsHTML([`Vertauschen (Kommutativgesetz): ${a} + ${c} + ${b}`,`Verbinden (Assoziativgesetz): (${a} + ${c}) + ${b}`,`${a} + ${c} = <b>${Tt}</b>`,`${Tt} + ${b} = <b>${r}</b>`]),
+      summary:`${expr} = (${a} + ${c}) + ${b} = ${r}`};
+  }
+}
+
+/* ================= 7. SACHAUFGABEN ================= */
+const SACH=[
+ ()=>{const a=rnd(150,480),b=rnd(80,a-30);return {t:`Lena hat ${a} € gespart. Sie kauft sich ein Fahrrad für ${b} €. Wie viel Geld hat sie danach noch?`,e:`${a} − ${b}`,u:'€',ans:r=>`Lena hat noch ${r} € übrig.`};},
+ ()=>{const a=rnd(350,900),b=rnd(25,180);return {t:`In der Schulbücherei stehen ${a} Bücher. Es kommen ${b} neue Bücher dazu. Wie viele Bücher sind es jetzt?`,e:`${a} + ${b}`,u:'Bücher',ans:r=>`Jetzt stehen ${r} Bücher in der Bücherei.`};},
+ ()=>{const a=rnd(120,350),b=rnd(20,90),c=rnd(15,80);return {t:`In einem Zug sitzen ${a} Fahrgäste. Am Bahnhof steigen ${b} Fahrgäste aus und ${c} Fahrgäste ein. Wie viele Fahrgäste sitzen jetzt im Zug?`,e:`${a} − ${b} + ${c}`,u:'Fahrgäste',ans:r=>`Jetzt sitzen ${r} Fahrgäste im Zug.`};},
+ ()=>{const a=rnd(120,480),b=rnd(120,480);return {t:`Beim Schulfest werden am Samstag ${a} Lose und am Sonntag ${b} Lose verkauft. Wie viele Lose werden insgesamt verkauft?`,e:`${a} + ${b}`,u:'Lose',ans:r=>`Insgesamt werden ${r} Lose verkauft.`};},
+ ()=>{const a=rnd(450,950),b=rnd(150,a-100);return {t:`Familie Yılmaz fährt ${a} km in den Urlaub. Nach ${b} km machen sie eine Pause. Wie viele Kilometer fehlen noch?`,e:`${a} − ${b}`,u:'km',ans:r=>`Es fehlen noch ${r} km.`};},
+ ()=>{const a=rnd(18,45),b=rnd(25,60),c=Math.ceil((a+b+5)/50)*50;return {t:`Tim kauft eine Hose für ${a} € und Schuhe für ${b} €. Er bezahlt mit ${c} €. Wie viel Wechselgeld bekommt er?`,e:`${c} − (${a} + ${b})`,u:'€',ans:r=>`Tim bekommt ${r} € Wechselgeld.`};},
+ ()=>{const a=rnd(120,250),b=rnd(45,a-30);return {t:`Ein Hochhaus ist ${a} m hoch, der Kirchturm daneben ist ${b} m hoch. Um wie viele Meter ist das Hochhaus höher?`,e:`${a} − ${b}`,u:'m',ans:r=>`Das Hochhaus ist ${r} m höher als der Kirchturm.`};},
+ ()=>{const a=rnd(20,32)*10,b=rnd(5,9)*10,c=rnd(5,9)*10;return {t:`Die Klassenfahrt kostet ${a} €. Ayla hat schon ${b} € und dann noch einmal ${c} € bezahlt. Wie viel muss sie noch bezahlen?`,e:`${a} − (${b} + ${c})`,u:'€',ans:r=>`Ayla muss noch ${r} € bezahlen.`};},
+ ()=>{const a=rnd(80,240),b=rnd(15,60),c=rnd(10,50);return {t:`Emir hat ${a} Sammelkarten. Zum Geburtstag bekommt er ${b} Karten geschenkt. ${c} Karten schenkt er seiner Schwester. Wie viele Karten hat Emir jetzt?`,e:`${a} + ${b} − ${c}`,u:'Karten',ans:r=>`Emir hat jetzt ${r} Sammelkarten.`};},
+ ()=>{const a=rnd(420,980),b=rnd(180,a-150);return {t:`An einer Schule lernen ${a} Kinder. ${b} davon sind Mädchen. Wie viele Jungen lernen an der Schule?`,e:`${a} − ${b}`,u:'Jungen',ans:r=>`An der Schule lernen ${r} Jungen.`};},
+];
+function distractors(expr){
+  const out=new Set(),idx=[];for(let i=0;i<expr.length;i++){if(expr[i]==='+'||expr[i]==='−')idx.push(i);}
+  idx.forEach(i=>out.add(expr.slice(0,i)+(expr[i]==='+'?'−':'+')+expr.slice(i+1)));
+  if(idx.length===1){const [x,,y]=expr.split(' ');out.add(`${y} − ${x}`);}
+  out.delete(expr);return shuffle([...out]).slice(0,2);
+}
+function qSach(){
+  const s=SACH[uniq('sach',SACH.length)](),ev=evalExpr(s.e),r=ev.value;
+  return {type:'num',long:true,prompt:`📝 ${s.t}`,unit:s.u,
+    pre:{prompt:'Welche Rechnung passt?',options:shuffle([s.e,...distractors(s.e)]),answer:s.e,explain:'Kommt etwas <b>dazu</b> → plus. Geht etwas <b>weg</b> oder wird nach dem <b>Unterschied</b> gefragt → minus.',next:`Jetzt rechne aus: <b>${s.e}</b>`},
+    answer:r,hint:()=>'Rechne genau nach – Schritt für Schritt. Bei Klammern: Klammer zuerst!',
+    solution:`<div><b>Rechnung:</b></div>${stepsHTML(ev.steps)}<div><b>Antwort:</b> ${s.ans(r)}</div>`,summary:`${s.e} = ${r} → ${s.ans(r)}`};
+}
+
+/* ================= Themen ================= */
+const TOPICS=[
+ {id:'t1',n:1,title:'Fachbegriffe',desc:'Summe, Summand, Minuend, Subtrahend, Differenz der Rechenart zuordnen',bg:'#dbeafe',col:'#2563eb',build:()=>shuffle([qLabel(),qLabel(),qFind(),qFind(),qDef(),qDef(),qGap(),qZu(),qZu(),pick([qSmall,qUmkehr])()])},
+ {id:'t2',n:2,title:'Zahlenrätsel',desc:'Die richtige Rechenaufgabe aufstellen (auch mit Klammern) und ausrechnen',bg:'#fef3c7',col:'#b45309',build:()=>rep(8,qRiddle)},
+ {id:'t3',n:3,title:'Kopfrechnen',desc:'Zahlen im Kopf addieren und subtrahieren',bg:'#fce7f3',col:'#db2777',build:()=>rep(10,qKopf)},
+ {id:'t4',n:4,title:'Schriftlich rechnen',desc:'Schriftlich addieren und subtrahieren, mit und ohne Übertrag',bg:'#dcfce7',col:'#15803d',build:()=>rep(10,()=>qCalc(.3))},
+ {id:'t5',n:5,title:'Klammern',desc:'Rechnungen mit Klammern durchführen',bg:'#ede9fe',col:'#7c3aed',build:()=>shuffle([...rep(7,qKlammer),...rep(3,qKlammerFirst)])},
+ {id:'t6',n:6,title:'Rechengesetze',desc:'Mit Kommutativ- und Assoziativgesetz geschickt rechnen',bg:'#e0f2fe',col:'#0369a1',build:()=>shuffle([...rep(3,qLawId),...rep(3,qLawDef),...rep(4,qClever)])},
+ {id:'t7',n:7,title:'Sachaufgaben',desc:'Sachaufgaben zur Addition und Subtraktion lösen',bg:'#ffedd5',col:'#c2410c',build:()=>rep(6,qSach)},
+];
+const TEST={id:'test',title:'Probe-Klassenarbeit',build:()=>[qZu(),qLabel(),qRiddle(),qRiddle(),qKopf(),qKopf(),qCalc(0),qCalc(.5),qKlammer(),qKlammer(),qLawId(),qClever(),qSach(),qSach()]};
+const topicById=id=>TOPICS.find(t=>t.id===id)||TEST;
+const STATE={3:['s3','😊 sicher'],2:['s2','🙂 teilweise sicher'],1:['s1','😟 unsicher'],0:['s1','😟 unsicher']};
 
 /* ---------- Spielablauf ---------- */
 let G=null;
 const PRAISE=['Super!','Klasse!','Richtig! 🎉','Spitze!','Genau so!','Toll gemacht!','Prima!','Stark! 💪'];
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id===id));window.scrollTo(0,0);if(id==='home')renderHome();}
-function startGame(mode){G={mode,qs:buildRound(mode),i:0,score:0,streak:0,best:0,first:0,wrong:[],tries:0,typed:'',locked:false};show('game');renderQ();}
+function startGame(mode){used={};G={mode,qs:topicById(mode).build(),i:0,score:0,streak:0,best:0,first:0,wrong:[],tries:0,typed:'',locked:false};show('game');renderQ();}
 const cur=()=>G.qs[G.i];
 function renderTop(){
   $('#prog').style.width=(G.i/G.qs.length*100)+'%';
@@ -470,41 +675,56 @@ function renderTop(){
   $('#score').textContent='⭐ '+G.score;
   $('#streak').textContent=G.streak>=2?'🔥'+G.streak:'';
 }
+const padHTML=()=>`<div class="pad" id="pad">${[1,2,3,4,5,6,7,8,9].map(d=>`<button data-k="${d}">${d}</button>`).join('')}<button class="del" data-k="del" aria-label="Löschen">⌫</button><button data-k="0">0</button><button class="ok" data-k="ok" aria-label="Prüfen">✓</button></div>`;
+const numInputHTML=q=>`<div class="ansrow"><div class="ansbox" id="ansbox"></div>${q.unit?`<span class="unit">${q.unit}</span>`:''}</div>`+padHTML();
+const optsHTML=(opts,one)=>`<div class="opts ${one||opts.some(o=>o.length>13)?'one':''}">${opts.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join('')}</div>`;
 function renderQ(){
-  const q=cur();G.tries=0;G.typed='';G.locked=false;renderTop();
-  let h=`<div class="prompt">${q.prompt}</div>`;
-  if(q.type==='choice'){
-    const one=q.one||q.options.some(o=>o.length>13);
-    h+=(q.body||'')+`<div class="opts ${one?'one':''}">${q.options.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join('')}</div>`;
-  }else{
-    h+=q.phrased?'<div class="ansbox" id="ansbox"></div>':'<div id="colArea"></div>';
-    h+=`<div class="pad" id="pad">${[1,2,3,4,5,6,7,8,9].map(d=>`<button data-k="${d}">${d}</button>`).join('')}<button class="del" data-k="del" aria-label="Löschen">⌫</button><button data-k="0">0</button><button class="ok" data-k="ok" aria-label="Prüfen">✓</button></div>`;
-  }
+  const q=cur();Object.assign(G,{tries:0,typed:'',locked:false,preDone:false,clean:true,logged:false});renderTop();
+  let h=`<div class="prompt ${q.long?'long':''}">${q.prompt}</div>${q.body||''}`;
+  if(q.type==='choice')h+=optsHTML(q.options,q.one);
+  else if(q.type==='calc')h+=(q.phrased?'<div class="ansbox" id="ansbox"></div>':'<div id="colArea"></div>')+padHTML();
+  else if(q.pre)h+=`<div class="sub">${q.pre.prompt}</div>${optsHTML(q.pre.options,true)}<div id="prefb" class="prefb"></div><div id="stage2"></div>`;
+  else h+=numInputHTML(q);
   h+=`<div id="fb" class="fb" aria-live="polite"></div><button id="next" class="btn next hidden">${G.i===G.qs.length-1?'Ergebnis ansehen 🏁':'Weiter ➜'}</button>`;
   $('#qcard').innerHTML=h;
-  if(q.type==='calc')updateTyped();
+  if(q.type!=='choice'&&!(q.pre&&!G.preDone))updateTyped();
 }
-function maxLen(q){return q.phrased?6:colWidth(q.a,q.b,q.op)-1;}
+function inputReady(q){return q&&(q.type==='calc'||(q.type==='num'&&(!q.pre||G.preDone)));}
+function maxLen(q){return q.type==='num'||q.phrased?7:colWidth(q.a,q.b,q.op)-1;}
 function updateTyped(){
   const q=cur();
-  if(q.phrased)$('#ansbox').innerHTML=G.typed||'<span class="ph">deine Antwort</span>';
-  else $('#colArea').innerHTML=columnHTML(q.a,q.b,q.op,{typed:G.typed,typing:true});
+  if(q.type==='calc'&&!q.phrased)$('#colArea').innerHTML=columnHTML(q.a,q.b,q.op,{typed:G.typed,typing:true});
+  else $('#ansbox').innerHTML=G.typed||'<span class="ph">deine Antwort</span>';
 }
 function feedback(kind,head,body=''){const fb=$('#fb');fb.className='fb '+kind;fb.innerHTML=`<span class="head">${head}</span>${body}`;}
 function showNext(){$('#next').classList.remove('hidden');const p=$('#pad');if(p)p.classList.add('off');setTimeout(()=>$('#next').scrollIntoView({behavior:'smooth',block:'nearest'}),60);}
-function gain(pts,first){
-  let bonus='';G.score+=pts;
-  if(first){G.first++;G.streak++;G.best=Math.max(G.best,G.streak);if(G.streak>=3&&G.streak%3===0){G.score+=5;bonus=`<span class="bonus">🔥 ${G.streak}er-Serie +5</span>`;}}
+function logWrong(q){if(!G.logged){G.logged=true;G.wrong.push(q.summary);}}
+function finish(clean){
+  let bonus='';
+  if(clean){G.first++;G.streak++;G.best=Math.max(G.best,G.streak);if(G.streak>=3&&G.streak%3===0){G.score+=5;bonus=`<span class="bonus">🔥 ${G.streak}er-Serie +5</span>`;}}
+  else G.streak=0;
   renderTop();return bonus;
 }
 function choose(i){
-  if(G.locked)return;G.locked=true;
-  const q=cur(),v=q.options[i],ok=v===q.answer;
+  const q=cur();
+  if(q.type==='num'&&q.pre&&!G.preDone)return choosePre(i);
+  if(G.locked||q.type!=='choice')return;G.locked=true;
+  const v=q.options[i],ok=v===q.answer;
   document.querySelectorAll('.opt').forEach((b,j)=>{b.disabled=true;if(q.options[j]===q.answer)b.classList.add('right');});
-  if(ok){beep('ok');const bonus=gain(10,true);feedback('ok',pick(PRAISE)+' +10'+bonus,q.explain);}
-  else{beep('bad');document.querySelectorAll('.opt')[i].classList.add('wrong');G.streak=0;renderTop();G.wrong.push({q:q.summary});
+  if(ok){beep('ok');G.score+=10;const bonus=finish(true);feedback('ok',pick(PRAISE)+' +10'+bonus,q.explain);}
+  else{beep('bad');document.querySelectorAll('.opt')[i].classList.add('wrong');finish(false);logWrong(q);
     feedback('bad','Nicht schlimm – richtig ist: '+q.answer,q.explain);}
   showNext();
+}
+function choosePre(i){
+  const q=cur(),p=q.pre,ok=p.options[i]===p.answer;G.preDone=true;
+  document.querySelectorAll('.opt').forEach((b,j)=>{b.disabled=true;if(p.options[j]===p.answer)b.classList.add('right');});
+  const fb=$('#prefb');
+  if(ok){beep('ok');G.score+=5;fb.className='prefb ok';fb.innerHTML=`<b>${pick(PRAISE)} +5</b> ${p.explain}`;}
+  else{beep('bad');document.querySelectorAll('.opt')[i].classList.add('wrong');G.clean=false;G.streak=0;renderTop();logWrong(q);
+    fb.className='prefb bad';fb.innerHTML=`<b>Richtig ist: ${p.answer}</b><br>${p.explain}`;}
+  $('#stage2').innerHTML=`<div class="sub">${p.next}</div>`+numInputHTML(q);updateTyped();
+  setTimeout(()=>$('#stage2').scrollIntoView({behavior:'smooth',block:'nearest'}),60);
 }
 function hintFor(q,val){
   if(q.phrased&&q.tpl==='miss'&&val===q.a+q.b)return `Achtung: Der andere ${T('Summand')} muss <b>kleiner</b> sein als die ${T('Summe')}. Rechne ${T('Summe')} <b>minus</b> ${T('Summand')}.`;
@@ -513,33 +733,35 @@ function hintFor(q,val){
   if(q.carry)return 'In dieser Aufgabe gibt es einen <b>Übertrag</b>. Hast du ihn mitgerechnet? Fang rechts bei den Einern an.';
   return 'Rechne Stelle für Stelle: zuerst die Einer, dann die Zehner, dann die Hunderter …';
 }
-function solutionHTML(q,withCol){
+function calcSolution(q,withCol){
   const s=solve(q.a,q.b,q.op);let h='';
   if(q.phrased)h+=`<div>Die Rechnung heißt: <b>${q.a} ${sym(q.op)} ${q.b}</b></div>`;
   if(withCol)h+=columnHTML(q.a,q.b,q.op,{result:s.result,carries:s.carries});
-  return h+`<ol class="steps">${s.steps.map(x=>`<li>${x}</li>`).join('')}</ol>`;
+  return h+stepsHTML(s.steps);
 }
 function submit(){
-  if(G.locked||!G.typed)return;
-  const q=cur(),val=+G.typed,s=solve(q.a,q.b,q.op);
+  const q=cur();if(G.locked||!G.typed||!inputReady(q))return;
+  const val=+G.typed,isCalc=q.type==='calc',unit=q.unit?' '+q.unit:'';
+  const showCol=()=>{if(isCalc&&!q.phrased){const s=solve(q.a,q.b,q.op);$('#colArea').innerHTML=columnHTML(q.a,q.b,q.op,{result:s.result,carries:s.carries});}};
+  const full=q.pre?5:10;
   if(val===q.answer){
-    G.locked=true;beep('ok');const first=G.tries===0;const bonus=gain(first?10:5,first);
-    if(!q.phrased)$('#colArea').innerHTML=columnHTML(q.a,q.b,q.op,{result:s.result,carries:s.carries});
-    feedback('ok',pick(PRAISE)+(first?' +10':' Im 2. Versuch geschafft! +5')+bonus,q.phrased?`<div>${eqText(q.a,q.b,q.op)}</div>`:(q.carry?'<div class="tip">Die kleinen roten Einsen sind die Überträge.</div>':''));
+    G.locked=true;beep('ok');const first=G.tries===0,pts=first?full:Math.ceil(full/2);G.score+=pts;
+    const bonus=finish(first&&G.clean);showCol();
+    const body=isCalc?(q.phrased?`<div>${eqText(q.a,q.b,q.op)}</div>`:(q.carry?'<div class="tip">Die kleinen roten Einsen sind die Überträge.</div>':'')):q.solution;
+    feedback('ok',pick(PRAISE)+(first?` +${pts}`:` Im 2. Versuch geschafft! +${pts}`)+bonus,body);
     showNext();
   }else if(G.tries===0){
     G.tries=1;G.streak=0;renderTop();beep('hint');
-    feedback('hint','Fast! Versuch es nochmal.',hintFor(q,val));
-    G.typed='';updateTyped();const el=q.phrased?$('#ansbox'):$('#colArea');el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake');
+    feedback('hint','Fast! Versuch es nochmal.',isCalc?hintFor(q,val):q.hint(val));
+    G.typed='';updateTyped();const el=(isCalc&&!q.phrased)?$('#colArea'):$('#ansbox');el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake');
   }else{
-    G.locked=true;beep('bad');G.wrong.push({q:q.summary});
-    if(!q.phrased)$('#colArea').innerHTML=columnHTML(q.a,q.b,q.op,{result:s.result,carries:s.carries});
-    feedback('bad',`Die Lösung ist ${q.answer}. So geht's:`,solutionHTML(q,q.phrased));
+    G.locked=true;beep('bad');finish(false);logWrong(q);showCol();
+    feedback('bad',`Die Lösung ist ${q.answer}${unit}. So geht's:`,isCalc?calcSolution(q,q.phrased):q.solution);
     showNext();
   }
 }
 function key(k){
-  const q=cur();if(!q||q.type!=='calc'||G.locked)return;
+  const q=cur();if(G.locked||!inputReady(q))return;
   if(k==='ok')return submit();
   if(k==='del')G.typed=G.typed.slice(0,-1);
   else if(G.typed.length<maxLen(q)){if(G.typed==='0')G.typed='';G.typed+=k;}
@@ -549,14 +771,16 @@ function next(){G.i++;if(G.i>=G.qs.length)endGame();else{renderQ();window.scroll
 
 function endGame(){
   const n=G.qs.length,pct=G.first/n,stars=pct>=.9?3:pct>=.7?2:pct>=.5?1:0;
-  store.stars+=stars;const rec=G.score>(store.high[G.mode]||0);if(rec)store.high[G.mode]=G.score;save();
-  const msgs=['Nicht aufgeben! Schau dir den Merkzettel an und probier es nochmal. 💪','Gut! Schau dir die Fehler unten an und versuch’s nochmal.','Super gemacht! Noch ein bisschen üben, dann bist du Profi.','Wow – du bist ein echter Plus-&-Minus-Profi! 🏆'];
+  store.stars+=stars;store.topics[G.mode]=stars;const rec=G.score>(store.high[G.mode]||0);if(rec)store.high[G.mode]=G.score;save();
+  const tp=topicById(G.mode),st=STATE[stars];
+  const msgs=['Nicht aufgeben! Schau dir den Merkzettel an und probier es nochmal. 💪','Gut! Schau dir die Fehler unten an und versuch’s nochmal.','Super gemacht! Noch ein bisschen üben, dann bist du Profi.','Wow – du bist ein echter Profi! 🏆'];
   let h=`<div class="bigstars">${[0,1,2].map(i=>`<span class="${i<stars?'':'off'}">⭐</span>`).join('')}</div>
    <div class="endmsg">${msgs[stars]}</div>
+   <div class="check">${tp.n?`Checkliste Nr. ${tp.n} – ${tp.title}:`:'Probe-Klassenarbeit:'} <span class="state ${st[0]}">${st[1]}</span></div>
    ${rec&&G.score>0?'<div class="newrec">🎉 Neuer Rekord!</div>':''}
-   <div class="stats"><div class="stat"><b>${G.score}</b><span>Punkte</span></div><div class="stat"><b>${G.first}/${n}</b><span>sofort richtig</span></div><div class="stat"><b>🔥${G.best}</b><span>beste Serie</span></div></div>`;
-  if(G.wrong.length)h+=`<h3 class="fred" style="margin:14px 0 4px">Das üben wir nochmal:</h3><ul class="mist">${G.wrong.map(w=>`<li>${w.q}</li>`).join('')}</ul>`;
-  h+=`<div class="row"><button class="btn ghost" data-go="home">Menü</button><button class="btn" data-play="${G.mode}">Nochmal 🔁</button></div>`;
+   <div class="stats"><div class="stat"><b>${G.score}</b><span>Punkte</span></div><div class="stat"><b>${G.first}/${n}</b><span>ohne Fehler</span></div><div class="stat"><b>🔥${G.best}</b><span>beste Serie</span></div></div>`;
+  if(G.wrong.length)h+=`<h3 class="fred" style="margin:14px 0 4px">Das üben wir nochmal:</h3><ul class="mist">${G.wrong.map(w=>`<li>${w}</li>`).join('')}</ul>`;
+  h+=`<div class="row"><button class="btn ghost" data-go="home">Checkliste</button><button class="btn" data-play="${G.mode}">Nochmal 🔁</button></div>`;
   $('#endcard').innerHTML=h;show('end');
   if(stars>=2){beep('win');confetti();}
 }
@@ -566,45 +790,78 @@ function confetti(){
   document.body.appendChild(box);setTimeout(()=>box.remove(),4200);
 }
 
-/* ---------- Startseite & Merkzettel ---------- */
+/* ---------- Startseite ---------- */
 const SETS=[['op','Rechenart',[['plus','➕ Plus'],['minus','➖ Minus'],['beides','beides']]],['carry','Übertrag',[['ohne','ohne'],['mit','mit'],['beides','gemischt']]],['digits','Zahlen',[[2,'2-stellig'],[3,'3-stellig'],[4,'4-stellig']]]];
 function renderHome(){
   $('#starsTotal').textContent=store.stars;
-  ['quiz','calc','mix'].forEach(m=>{$('#rec-'+m).textContent=store.high[m]?`🏅 Rekord: ${store.high[m]} Punkte`:'';});
   $('#soundBtn').textContent=store.sound?'🔊':'🔇';
+  $('#topics').innerHTML=TOPICS.map(t=>{const s=store.topics[t.id];const st=s==null?['','noch offen']:STATE[s];
+    return `<button class="topic" data-play="${t.id}"><div class="nr" style="background:${t.bg};color:${t.col}">${t.n}.</div><div class="tx"><b>${t.title}</b><span class="d">${t.desc}</span></div><span class="state ${st[0]}">${st[1]}</span></button>`;}).join('');
+  $('#rec-test').textContent=store.high.test?`🏅 Rekord: ${store.high.test} Punkte`:'';
   $('#settings').innerHTML=SETS.map(([k,label,vals])=>`<div class="setrow"><div class="setlab">${label}</div><div class="seg">${vals.map(([v,t])=>`<button data-set="${k}" data-v="${v}" class="${String(store.settings[k])===String(v)?'on':''}">${t}</button>`).join('')}</div></div>`).join('');
 }
+
+/* ---------- Merkzettel ---------- */
 function renderLearn(){
   const sa=solve(345,128,'+'),ss=solve(473,128,'-');
+  const nav=['Fachbegriffe','Zahlenrätsel','Kopfrechnen','Schriftlich','Klammern','Rechengesetze','Sachaufgaben'].map((t,i)=>`<button data-jump="L${i+1}">${i+1}. ${t}</button>`).join('');
   $('#learnBody').innerHTML=`
-  <div class="lcard"><h2>➕ Addition</h2>
-    <p><b>addieren</b> = zusammenzählen = plus rechnen</p>
+  <div class="lnav">${nav}</div>
+  <div class="lcard" id="L1"><h2>1. Fachbegriffe</h2>
+    <p><b>Addition</b> – <b>addieren</b> = zusammenzählen = plus</p>
     ${eqHTML(345,128,'+',{labels:true})}
     <div class="merk">${T('Summand')} + ${T('Summand')} = ${T('Summe')}</div>
-    <p class="tip">Die Zahlen, die man zusammenzählt, heißen <b>Summanden</b>. Das Ergebnis heißt <b>Summe</b>. Die Summanden darf man vertauschen.</p>
-  </div>
-  <div class="lcard"><h2>➖ Subtraktion</h2>
-    <p><b>subtrahieren</b> = abziehen = minus rechnen</p>
+    <p><b>Subtraktion</b> – <b>subtrahieren</b> = abziehen = minus</p>
     ${eqHTML(473,128,'-',{labels:true})}
     <div class="merk">${T('Minuend')} − ${T('Subtrahend')} = ${T('Differenz')}</div>
-    <p class="tip">🧠 Eselsbrücke: Im Alphabet kommt <b>M</b> vor <b>S</b> – also steht der <b>M</b>inuend vorne und der <b>S</b>ubtrahend dahinter.<br>„Differenz“ heißt <b>Unterschied</b>.</p>
+    <p class="tip">🧠 Eselsbrücke: Im Alphabet kommt <b>M</b> vor <b>S</b> – also steht der <b>M</b>inuend vorne und der <b>S</b>ubtrahend dahinter. „Differenz“ heißt <b>Unterschied</b>.</p>
   </div>
-  <div class="lcard"><h2>✏️ Schriftlich rechnen mit Übertrag</h2>
-    <p>Immer <b>rechts bei den Einern</b> anfangen. Ergibt eine Stelle 10 oder mehr, schreibst du nur die Einerziffer hin und merkst dir eine kleine <b style="color:var(--bad)">1</b> als <b>Übertrag</b> für die nächste Stelle.</p>
+  <div class="lcard" id="L2"><h2>2. Zahlenrätsel</h2>
+    <table class="words"><tr><td>+</td><td>addiere, vermehre um, Summe, zusammen, insgesamt</td></tr><tr><td>−</td><td>subtrahiere, vermindere um, Differenz, Unterschied, um wie viel größer/kleiner</td></tr></table>
+    <div class="merk">Subtrahiere 17 <span class="hl">von 63</span> → 63 − 17<br><span class="tip">Die Zahl nach „von“ steht vorne!</span></div>
+    <div class="merk">Subtrahiere <span class="hl">die Summe aus 20 und 15</span> von 80<br>→ 80 − (20 + 15) = 80 − 35 = 45</div>
+    <p class="tip">Wird eine Summe oder Differenz weiterverrechnet, kommt sie in eine <b>Klammer</b>.</p>
+  </div>
+  <div class="lcard" id="L3"><h2>3. Kopfrechnen</h2>
+    <p>Zerlege die zweite Zahl und rechne Schritt für Schritt:</p>
+    <div class="merk">47 + 38 → 47 + 30 = 77 → 77 + 8 = 85</div>
+    <div class="merk">83 − 29 → 83 − 20 = 63 → 63 − 9 = 54</div>
+    <p class="tip">Bei glatten Zahlen die Nullen kurz weglassen: 340 + 270 → 34 + 27 = 61 → 610</p>
+  </div>
+  <div class="lcard" id="L4"><h2>4. Schriftlich rechnen</h2>
+    <p>Stellengerecht untereinander schreiben (Einer unter Einer …) und <b>rechts bei den Einern</b> anfangen. Ergibt eine Stelle 10 oder mehr, merkst du dir eine kleine <b style="color:var(--bad)">1</b> als <b>Übertrag</b>.</p>
     <div class="twocol">${columnHTML(345,128,'+',{result:473,carries:sa.carries,colors:{a:'c-summand',b:'c-summand',r:'c-summe'}})}${columnHTML(473,128,'-',{result:345,carries:ss.carries,colors:{a:'c-minuend',b:'c-subtrahend',r:'c-differenz'}})}</div>
-    <p><b>Plus:</b></p><ol class="steps">${sa.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
-    <p><b>Minus:</b></p><ol class="steps">${ss.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
+    <p><b>Plus:</b></p>${stepsHTML(sa.steps)}
+    <p><b>Minus:</b></p>${stepsHTML(ss.steps)}
+    <div class="merk">Probe mit der Umkehraufgabe: 473 − 128 = 345 → 345 + 128 = 473 ✔</div>
   </div>
-  <div class="lcard"><h2>🔍 Probe mit der Umkehraufgabe</h2>
-    <p>Mit der <b>Umkehraufgabe</b> rechnest du rückwärts und prüfst, ob dein Ergebnis stimmt:</p>
-    <div class="merk">473 − 128 = 345 → Probe: 345 + 128 = 473 ✔</div>
-    <p class="tip">Minus wird mit Plus geprüft – und Plus mit Minus.</p>
+  <div class="lcard" id="L5"><h2>5. Klammern</h2>
+    <div class="merk">Was in der Klammer steht, rechnest du <b>zuerst</b>.</div>
+    <p>80 − (20 + 15) = 80 − 35 = <b>45</b></p>
+    <div class="merk">Ohne Klammer rechnest du <b>von links nach rechts</b>.</div>
+    <p>80 − 20 + 15 = 60 + 15 = <b>75</b></p>
+    <p class="tip">Gleiche Zahlen – anderes Ergebnis! Die Klammer macht den Unterschied.</p>
+  </div>
+  <div class="lcard" id="L6"><h2>6. Rechengesetze</h2>
+    <p><b>Kommutativgesetz</b> (Vertauschungsgesetz) – Zahlen vertauschen:</p>
+    <div class="merk">a + b = b + a &nbsp;&nbsp; z. B. 25 + 38 = 38 + 25</div>
+    <p><b>Assoziativgesetz</b> (Verbindungsgesetz) – Klammern versetzen:</p>
+    <div class="merk">(a + b) + c = a + (b + c)</div>
+    <p class="tip">⚠️ Beide Gesetze gelten nur für <b>Plus</b>, nicht für Minus!</p>
+    <p><b>Geschickt rechnen:</b> Suche Zahlen, die zusammen eine glatte Zahl ergeben.</p>
+    <div class="merk">38 + 59 + 62 = (38 + 62) + 59 = 100 + 59 = 159</div>
+  </div>
+  <div class="lcard" id="L7"><h2>7. Sachaufgaben</h2>
+    <p>Gehe immer in drei Schritten vor:</p>
+    <div class="merk">❓ <b>Frage:</b> Was soll ich herausfinden?<br>🧮 <b>Rechnung:</b> Kommt etwas dazu (+) oder geht etwas weg (−)?<br>💬 <b>Antwort:</b> Ganzer Satz mit Einheit (€, km, …).</div>
+    <p class="tip">Beispiel: Tim kauft eine Hose für 25 € und Schuhe für 40 €. Er bezahlt mit 100 €.<br>Rechnung: 100 − (25 + 40) = 100 − 65 = 35<br>Antwort: Tim bekommt 35 € Wechselgeld.</p>
   </div>`;
 }
 
 /* ---------- Ereignisse ---------- */
 document.addEventListener('click',e=>{
   const t=e.target.closest('button');if(!t)return;
+  if(t.dataset.jump){const el=document.getElementById(t.dataset.jump);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});return;}
   if(t.dataset.go){if(t.dataset.go==='learn')renderLearn();show(t.dataset.go);return;}
   if(t.dataset.play){startGame(t.dataset.play);return;}
   if(t.dataset.set){const k=t.dataset.set;store.settings[k]=k==='digits'?+t.dataset.v:t.dataset.v;save();renderHome();return;}
@@ -616,9 +873,9 @@ document.addEventListener('click',e=>{
 document.addEventListener('keydown',e=>{
   if(!$('#game').classList.contains('on')||!G)return;
   const q=cur();
-  if(e.key==='Enter'){e.preventDefault();if(G.locked)next();else if(q.type==='calc')submit();return;}
-  if(q.type==='calc'){if(/^[0-9]$/.test(e.key))key(e.key);else if(e.key==='Backspace'){e.preventDefault();key('del');}}
-  else if(/^[1-5]$/.test(e.key)&&+e.key<=q.options.length)choose(+e.key-1);
+  if(e.key==='Enter'){e.preventDefault();if(G.locked)next();else if(inputReady(q))submit();return;}
+  if(inputReady(q)){if(/^[0-9]$/.test(e.key))key(e.key);else if(e.key==='Backspace'){e.preventDefault();key('del');}}
+  else{const opts=q.type==='choice'?q.options:(q.pre&&!G.preDone?q.pre.options:null);if(opts&&/^[1-5]$/.test(e.key)&&+e.key<=opts.length&&!G.locked)choose(+e.key-1);}
 });
 renderHome();
 </script>

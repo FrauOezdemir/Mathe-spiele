@@ -33,4 +33,4 @@ Spielarten: Klassenduell (Team Blau gegen Team Orange) und Blitzrunde. Drei Nive
 
 | Spiel | Thema |
 |---|---|
-| [Plus & Minus Profi](plus-minus-profi.html) | Fachwörter (Summand, Summe, Minuend, Subtrahend, Differenz), schriftliches Addieren und Subtrahieren mit und ohne Übertrag, Umkehraufgabe |
+| [Plus & Minus Profi](plus-minus-profi.html) | Training zur Checkliste Klassenarbeit Nr. 2: Fachbegriffe, Zahlenrätsel (auch mit Klammern), Kopfrechnen, schriftlich addieren und subtrahieren, Klammern, Kommutativ- und Assoziativgesetz, Sachaufgaben; Probe-Klassenarbeit |
