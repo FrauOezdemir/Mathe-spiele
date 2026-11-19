@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>10E Einstieg Exponentialfunktionen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blau:#123F88; --blau-f:#DCE6F5; --gelb-r:#B07F00; --gelb-e:#8A6200; --gelb-f:#FFEDAA;
+  --rot:#C8170F; --rot-f:#FAD3CF; --vio:#5E35B1; --vio-f:#E2D8F7; --orange:#C25A12;
+  --ink:#1B1F24; --grau:#5F7488; --gitter:#8EA5C9; --bg:#F6F8FC;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:Lexend,system-ui,sans-serif}
+.app{display:flex;flex-direction:column;height:100vh;max-width:1600px;margin:0 auto;padding:14px 20px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+header .kurs{font-family:Fredoka;font-weight:600;color:#fff;background:var(--blau);border-radius:10px;padding:6px 12px;font-size:15px}
+header h1{font-family:Fredoka;font-weight:700;color:var(--blau);font-size:clamp(22px,2.6vw,36px);margin:0;flex:1}
+nav{display:flex;gap:6px}
+nav button{font-family:Fredoka;font-weight:600;font-size:16px;border:3px solid var(--blau);background:#fff;color:var(--blau);border-radius:10px;padding:6px 14px;cursor:pointer}
+nav button.on{background:var(--blau);color:#fff}
+.folie{display:none;flex:1;min-height:0}
+.folie.on{display:flex}
+.kasten{border:3.4px solid var(--blau);border-radius:14px;background:#fff;padding:16px 20px;position:relative}
+.kasten .etikett{position:absolute;top:-15px;left:16px;font-family:Fredoka;font-weight:600;font-size:15px;color:#fff;background:var(--blau);border-radius:8px;padding:2px 10px;display:flex;align-items:center;gap:6px}
+.kasten.gelb{border-color:var(--gelb-r);background:var(--gelb-f)}
+.kasten.gelb .etikett{background:var(--gelb-e)}
+.kasten.rot{border-color:var(--rot);background:var(--rot-f)}
+.kasten.rot .etikett{background:var(--rot)}
+.kasten.vio{border-color:var(--vio);background:var(--vio-f)}
+.kasten.vio .etikett{background:var(--vio)}
+.etikett svg{width:16px;height:16px}
+.big{font-size:clamp(20px,2.1vw,30px);line-height:1.35}
+.mid{font-size:clamp(17px,1.55vw,22px);line-height:1.45}
+b.blau{color:var(--blau)} b.or{color:var(--orange)}
+
+/* Folie 1 */
+#f1{flex-direction:column;gap:22px;justify-content:center}
+#f1 .reihe{display:grid;grid-template-columns:1.1fr 1fr;gap:26px;align-items:stretch}
+.zaehler{font-family:Fredoka;font-weight:700;color:var(--blau);font-size:clamp(40px,5.5vw,84px);letter-spacing:1px;font-variant-numeric:tabular-nums}
+.klein{color:var(--grau);font-size:15px}
+.vermutung{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+.vermutung button{font-family:Fredoka;font-weight:600;font-size:clamp(17px,1.6vw,24px);border:3px solid var(--blau);border-radius:12px;background:#fff;color:var(--blau);padding:12px 6px;cursor:pointer}
+.vermutung button.sel{background:var(--blau);color:#fff}
+.aufloesen{margin-top:12px;font-family:Fredoka;font-weight:600;font-size:18px;border:none;background:var(--orange);color:#fff;border-radius:10px;padding:8px 16px;cursor:pointer}
+#loesung1{display:none;margin-top:10px}
+
+/* Folie 2 */
+#f2{gap:18px}
+#f2 .links{width:340px;flex:none;display:flex;flex-direction:column;gap:14px;overflow:auto;padding-top:8px}
+#f2 .rechts{flex:1;display:flex;flex-direction:column;gap:12px;min-width:0}
+label.reg{display:block;font-weight:600;font-size:16px;margin-top:6px}
+label.reg span{float:right;font-family:Fredoka;color:var(--blau);font-size:20px}
+input[type=range]{width:100%;accent-color:var(--blau);height:28px}
+.presets{display:flex;flex-wrap:wrap;gap:6px}
+.presets button,.knopf{font-family:Fredoka;font-weight:600;font-size:15px;border:2.5px solid var(--blau);border-radius:9px;background:#fff;color:var(--blau);padding:5px 10px;cursor:pointer}
+.knopf.voll{background:var(--blau);color:#fff}
+.knopf.or{border-color:var(--orange);background:var(--orange);color:#fff}
+.faktor{font-family:Fredoka;font-size:clamp(20px,1.9vw,28px);color:var(--ink)}
+.faktor b{color:var(--orange)}
+.graphbox{flex:1;min-height:0;position:relative;background:#fff;border:3.4px solid var(--blau);border-radius:14px}
+canvas{width:100%;height:100%;display:block}
+.unten{display:grid;grid-template-columns:1fr 1fr;gap:12px;height:34%;min-height:170px}
+.tabelle{overflow:auto;background:#fff;border:3.4px solid var(--blau);border-radius:14px}
+table{border-collapse:collapse;width:100%;font-size:16px;font-variant-numeric:tabular-nums}
+th,td{border:1.6px solid var(--ink);padding:4px 8px;text-align:right}
+th{background:var(--blau-f);font-family:Fredoka;font-weight:600;position:sticky;top:0}
+td:first-child,th:first-child{text-align:center}
+tr.neu td{background:var(--gelb-f)}
+.check{display:flex;align-items:center;gap:8px;font-size:16px;margin-top:4px}
+.check input{width:22px;height:22px;accent-color:var(--orange)}
+.legende{position:absolute;top:10px;left:70px;font-size:15px;background:rgba(255,255,255,.92);padding:4px 8px;border-radius:8px}
+.legende i{display:inline-block;width:22px;height:4px;vertical-align:middle;margin-right:5px;border-radius:2px}
+
+/* Folie 3 */
+#f3{flex-direction:column;gap:26px;justify-content:center}
+#f3 .reihe{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.formel{font-family:Fredoka;font-weight:600;font-size:clamp(26px,2.8vw,42px);color:var(--blau);text-align:center;margin:10px 0}
+.luecke{display:inline-block;min-width:90px;border-bottom:3px solid var(--grau);text-align:center;color:transparent;transition:color .3s}
+.zeig .luecke{color:var(--orange)}
+
+/* Folie 4 */
+#f4{flex-direction:column;gap:14px;overflow:auto}
+.plan{display:grid;grid-template-columns:110px 1fr;gap:10px 16px;align-items:start}
+.zeit{font-family:Fredoka;font-weight:600;color:#fff;background:var(--blau);border-radius:10px;padding:8px;text-align:center;font-size:18px}
+.zeit.vio{background:var(--vio)} .zeit.haus{background:var(--gelb-e)}
+.plan .mid b{color:var(--blau)}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="kurs">Mathe 10E</div>
+  <h1 id="titel">Exponentielles Wachstum – Wie schnell wächst Afrika?</h1>
+  <nav>
+    <button data-f="f1" class="on">1 Einstieg</button>
+    <button data-f="f2">2 Simulation</button>
+    <button data-f="f3">3 Merke</button>
+    <button data-f="f4">4 Aufgaben</button>
+  </nav>
+</header>
+
+<!-- FOLIE 1 -->
+<section class="folie on" id="f1">
+  <div class="reihe">
+    <div class="kasten">
+      <div class="etikett"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Weltbevölkerung – live</div>
+      <div class="mid" style="margin-top:8px">Seit du diese Folie siehst, sind auf der Erde ungefähr so viele Menschen <b>dazugekommen</b>:</div>
+      <div class="zaehler" id="zaehler">0</div>
+      <div class="klein">Buch S. 66: Im Durchschnitt kommen pro Sekunde 2,6 Menschen hinzu.</div>
+      <div class="mid" style="margin-top:14px">Das sind pro Tag etwa <b class="blau">225 000</b> Menschen – so viele, wie in einer Großstadt wohnen.</div>
+    </div>
+    <div class="kasten gelb">
+      <div class="etikett"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><circle cx="11" cy="11" r="6"/><path d="M16 16l5 5"/></svg>Beispiel · Äthiopien (Buch S. 68)</div>
+      <div class="big" style="margin-top:8px">Äthiopien hat <b class="blau">102 Mio.</b> Einwohner.<br>Die Bevölkerung wächst <b class="or">jedes Jahr um 3 %</b>.</div>
+      <div class="mid" style="margin-top:12px"><b>Vermutung:</b> Nach wie vielen Jahren leben dort doppelt so viele Menschen?</div>
+      <div class="vermutung" id="verm">
+        <button>ca. 10 Jahre</button><button>ca. 24 Jahre</button><button>ca. 33 Jahre</button><button>ca. 50 Jahre</button>
+      </div>
+      <button class="aufloesen" id="aufl1">Auflösen</button>
+      <div id="loesung1" class="mid"></div>
+    </div>
+  </div>
+  <div class="kasten rot">
+    <div class="etikett"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/></svg>Denkfalle</div>
+    <div class="mid" style="margin-top:6px">„3 % von 102 Mio. sind 3,06 Mio. pro Jahr. Für 102 Mio. mehr braucht man also 102 : 3,06 ≈ 33 Jahre.“ – <b>Stimmt das?</b> Was wird dabei übersehen?</div>
+  </div>
+</section>
+
+<!-- FOLIE 2 -->
+<section class="folie" id="f2">
+  <div class="links">
+    <div class="kasten" style="padding-top:20px">
+      <div class="etikett">Einstellungen</div>
+      <div class="presets" style="margin-top:4px">
+        <button data-k="102" data-p="3">Äthiopien</button>
+        <button data-k="28" data-p="2">Ghana</button>
+        <button data-k="11" data-p="4">Südsudan</button>
+        <button data-k="7.1" data-p="-0.6">Bulgarien</button>
+      </div>
+      <label class="reg">Startwert k (Mio.) <span id="kWert"></span></label>
+      <input type="range" id="k" min="1" max="200" step="0.1" value="102">
+      <label class="reg">Wachstum pro Jahr p <span id="pWert"></span></label>
+      <input type="range" id="p" min="-10" max="10" step="0.1" value="3">
+      <label class="reg">Jahre <span id="nWert"></span></label>
+      <input type="range" id="n" min="0" max="60" step="1" value="0">
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="knopf or" id="play">▶ Jahr für Jahr</button>
+        <button class="knopf" id="reset">↺ Zurück</button>
+      </div>
+      <label class="check"><input type="checkbox" id="linear">Vergleich: jedes Jahr gleich viel dazu (linear)</label>
+      <label class="check"><input type="checkbox" id="doppelt">Verdopplung markieren</label>
+    </div>
+    <div class="kasten gelb" style="padding-top:20px">
+      <div class="etikett">Wachstumsfaktor</div>
+      <div class="faktor" id="faktor"></div>
+      <div class="mid" id="rechnung" style="margin-top:6px"></div>
+    </div>
+  </div>
+  <div class="rechts">
+    <div class="graphbox"><canvas id="cv"></canvas>
+      <div class="legende"><i style="background:var(--orange)"></i>exponentiell (· q pro Jahr) <span id="legLin" style="display:none;margin-left:12px"><i style="background:var(--blau)"></i>linear (+ gleich viel pro Jahr)</span></div>
+    </div>
+    <div class="unten">
+      <div class="tabelle"><table><thead><tr><th>Jahr</th><th>Rechnung</th><th>Einwohner (Mio.)</th></tr></thead><tbody id="tb"></tbody></table></div>
+      <div class="kasten vio" style="padding-top:20px;overflow:auto">
+        <div class="etikett"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2l3 7 7 .6-5.3 4.6 1.7 7.3L12 17.8 5.6 21.5l1.7-7.3L2 9.6 9 9z"/></svg>Denk nach</div>
+        <div class="mid" id="denk">Stelle p auf einen negativen Wert. Was passiert mit dem Graphen? Wie groß ist dann q?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOLIE 3 -->
+<section class="folie" id="f3">
+  <div class="reihe" id="merk">
+    <div class="kasten gelb">
+      <div class="etikett"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3z"/></svg>Merke · Wachstumsfaktor</div>
+      <div class="mid" style="margin-top:8px">Wächst eine Größe jedes Jahr um <b class="or">p %</b>, so multipliziert man jedes Jahr mit dem <b>Wachstumsfaktor</b></div>
+      <div class="formel">q = 1 + <span style="display:inline-flex;flex-direction:column;vertical-align:middle;font-size:.7em;line-height:1.1"><span style="border-bottom:3px solid">p</span><span>100</span></span></div>
+      <div class="mid">Zunahme 2 %: q = <span class="luecke">1,02</span> &nbsp;·&nbsp; Zunahme 3 %: q = <span class="luecke">1,03</span><br>Abnahme 0,6 %: q = <span class="luecke">0,994</span></div>
+    </div>
+    <div class="kasten gelb">
+      <div class="etikett"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3z"/></svg>Merke · nach x Jahren</div>
+      <div class="mid" style="margin-top:8px">Startwert <b>k</b>, Wachstumsfaktor <b>q</b>:</div>
+      <div class="formel">f(x) = k · q<sup>x</sup></div>
+      <div class="mid">Ghana: f(x) = 28 · 1,02<sup>x</sup><br>2020 (x = 4): 28 · 1,02<sup>4</sup> ≈ <span class="luecke">30,3</span> Mio.</div>
+      <div class="mid" style="margin-top:8px">Die Variable x steht im <b class="or">Exponenten</b> → <b>Exponentialfunktion</b>.</div>
+    </div>
+  </div>
+  <div class="kasten rot">
+    <div class="etikett"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/></svg>Achtung · Typischer Fehler</div>
+    <div class="mid" style="margin-top:6px">28 · 1,02<sup>4</sup> ≠ (28 · 1,02)<sup>4</sup> &nbsp;– zuerst die Potenz, dann mal k! &nbsp;&nbsp;&nbsp; Und: 3 % ≠ 1,3 – der Faktor ist <b>1,03</b>.</div>
+  </div>
+  <div style="text-align:center"><button class="knopf voll" id="zeigen" style="font-size:18px;padding:8px 18px">Lücken zeigen</button></div>
+</section>
+
+<!-- FOLIE 4 -->
+<section class="folie" id="f4">
+  <div class="kasten" style="padding-top:22px">
+    <div class="etikett"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M4 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4zM20 4h-5a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h6z"/></svg>Im Buch · heute</div>
+    <div class="plan" style="margin-top:6px">
+      <div class="zeit">S. 68<br>Nr. 1</div><div class="mid"><b>Äthiopien:</b> 102 Mio. Einwohner, Wachstum 3 % (Karte). Berechne die Einwohnerzahl 2017 und 2018.</div>
+      <div class="zeit">S. 68<br>Nr. 2</div><div class="mid"><b>Ghana-Tabelle:</b> Erkläre die Rechnung 28 · 1,02 · 1,02 · … = 28 · 1,02<sup>4</sup>. Wie kommt man auf 1,02?</div>
+      <div class="zeit">S. 68<br>Nr. 3</div><div class="mid">a) Erkläre Annas und Bens Überlegung zu y = 28 · 1,02<sup>x</sup>.<br>b) Gleichungen für Mali, Marokko, Kongo, Südsudan aufstellen &nbsp; c) Einwohner 2020 berechnen</div>
+      <div class="zeit">S. 68<br>Nr. 4</div><div class="mid"><b>Abnahme:</b> a) Bulgarien y = 7,1 · 0,994<sup>x</sup> begründen, 2020 berechnen &nbsp; b) Litauen: Gleichung aufstellen</div>
+      <div class="zeit vio">Schnelle</div><div class="mid">S. 69 Nr. 1 a–c: Wertetabelle für f(x) = 2<sup>x</sup> (x von −3 bis 3), Graph zeichnen, Schnittpunkt mit der y-Achse</div>
+      <div class="zeit haus">Haus&shy;aufgabe</div><div class="mid">S. 69 Nr. 1 d–g (Verlauf des Graphen von 2<sup>x</sup> beschreiben)</div>
+    </div>
+  </div>
+</section>
+</div>
+
+<script>
+// Navigation
+const titel={f1:'Exponentielles Wachstum – Wie schnell wächst Afrika?',f2:'Simulation: Wachstum Jahr für Jahr',f3:'Merke: Wachstumsfaktor und k · qˣ',f4:'Aufgaben für heute'};
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>zeige(b.dataset.f));
+function zeige(id){
+  document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x.dataset.f===id));
+  document.querySelectorAll('.folie').forEach(x=>x.classList.toggle('on',x.id===id));
+  document.getElementById('titel').textContent=titel[id];
+  if(id==='f2') zeichne();
+}
+document.addEventListener('keydown',e=>{
+  const ids=['f1','f2','f3','f4'];const cur=ids.findIndex(i=>document.getElementById(i).classList.contains('on'));
+  if(e.key==='ArrowRight'&&cur<3&&e.target.tagName!=='INPUT')zeige(ids[cur+1]);
+  if(e.key==='ArrowLeft'&&cur>0&&e.target.tagName!=='INPUT')zeige(ids[cur-1]);
+});
+const fq=x=>x.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:3});
+const fmt=(x,d=1)=>x.toLocaleString('de-DE',{minimumFractionDigits:d,maximumFractionDigits:d});
+
+// Folie 1: Zähler
+const t0=performance.now();
+setInterval(()=>{document.getElementById('zaehler').textContent=Math.floor((performance.now()-t0)/1000*2.6).toLocaleString('de-DE')},200);
+document.querySelectorAll('#verm button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#verm button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')});
+document.getElementById('aufl1').onclick=()=>{
+  let n=0,w=102;while(w<204){w*=1.03;n++}
+  const l=document.getElementById('loesung1');l.style.display='block';
+  l.innerHTML=`Nach <b class="or">${n} Jahren</b> (102 · 1,03<sup>${n}</sup> ≈ ${fmt(102*1.03**n)} Mio.) – also <b>schneller als 33 Jahre</b>!<br>Grund: Die 3 % werden jedes Jahr von einer <b>größeren</b> Zahl genommen.`;
+};
+
+// Folie 2: Simulation
+const $=id=>document.getElementById(id);
+const cv=$('cv'),ctx=cv.getContext('2d');
+let timer=null;
+function werte(){return{k:+$('k').value,p:+$('p').value,n:+$('n').value}}
+function aktual(){
+  const {k,p,n}=werte(),q=1+p/100;
+  $('kWert').textContent=fmt(k,1);
+  $('pWert').textContent=(p>0?'+':'')+fmt(p,1)+' %';
+  $('nWert').textContent=n;
+  $('faktor').innerHTML=`q = 1 ${p<0?'−':'+'} ${fmt(Math.abs(p),1)}/100 = <b>${fq(q)}</b>`;
+  $('rechnung').innerHTML=`f(x) = ${fmt(k,1)} · ${fq(q)}<sup>x</sup><br>Nach ${n} Jahren: <b>${fmt(k*q**n,2)} Mio.</b>`;
+  // Tabelle
+  let h='';
+  for(let i=0;i<=n;i++){
+    const r=i===0?fmt(k,1):(i<=3?fmt(k,1)+' · '+Array(i).fill(fq(q)).join(' · '):fmt(k,1)+' · '+fq(q)+'<sup>'+i+'</sup>');
+    h+=`<tr class="${i===n&&n>0?'neu':''}"><td>${i}</td><td>${r}</td><td>${fmt(k*q**i,2)}</td></tr>`;
+  }
+  $('tb').innerHTML=h;
+  const tb=document.querySelector('.tabelle');tb.scrollTop=tb.scrollHeight;
+  $('legLin').style.display=$('linear').checked?'inline':'none';
+  $('denk').innerHTML=p<0?`Abnahme! q = ${fq(q)} ist <b>kleiner als 1</b>. Wird die Einwohnerzahl jemals 0?`:
+     ($('linear').checked?'Vergleiche beide Kurven: Wann liegt die orange Kurve über der blauen? Warum?':'Stelle p auf einen negativen Wert. Was passiert mit dem Graphen? Wie groß ist dann q?');
+  zeichne();
+}
+function zeichne(){
+  const r=cv.getBoundingClientRect();if(!r.width)return;
+  const dpr=window.devicePixelRatio||1;cv.width=r.width*dpr;cv.height=r.height*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+  const W=r.width,H=r.height,L=62,R=18,T=18,B=40;
+  const {k,p,n}=werte(),q=1+p/100,N=60;
+  ctx.clearRect(0,0,W,H);
+  // y-Max
+  let ymax=Math.max(k*q**N,k*(1+p/100*N),k)*1.05; if($('doppelt').checked) ymax=Math.max(ymax,2.1*k);
+  ymax=Math.max(ymax,1);
+  const pot=10**Math.floor(Math.log10(ymax/5));let step=[1,2,5,10].map(m=>m*pot).find(s=>ymax/s<=8);
+  ymax=Math.ceil(ymax/step)*step;
+  const X=x=>L+(W-L-R)*x/N, Y=y=>H-B-(H-B-T)*y/ymax;
+  ctx.font='14px Lexend';ctx.lineWidth=1;
+  for(let x=0;x<=N;x+=5){ctx.strokeStyle='#8EA5C9';ctx.beginPath();ctx.moveTo(X(x),T);ctx.lineTo(X(x),H-B);ctx.stroke();ctx.fillStyle='#1B1F24';ctx.textAlign='center';ctx.fillText(x,X(x),H-B+20)}
+  for(let y=0;y<=ymax+1e-9;y+=step){ctx.strokeStyle='#8EA5C9';ctx.beginPath();ctx.moveTo(L,Y(y));ctx.lineTo(W-R,Y(y));ctx.stroke();ctx.fillStyle='#1B1F24';ctx.textAlign='right';ctx.fillText(fmt(y,step<1?1:0),L-8,Y(y)+5)}
+  ctx.strokeStyle='#1B1F24';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(L,T);ctx.lineTo(L,H-B);ctx.lineTo(W-R,H-B);ctx.stroke();
+  ctx.fillStyle='#1B1F24';ctx.textAlign='right';ctx.fillText('Jahre x',W-R,H-6);ctx.textAlign='left';ctx.fillText('Mio.',L+6,T+12);
+  // Verdopplung
+  if($('doppelt').checked&&p>0){
+    ctx.setLineDash([8,6]);ctx.strokeStyle='#C8170F';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(L,Y(2*k));ctx.lineTo(W-R,Y(2*k));ctx.stroke();
+    const td=Math.log(2)/Math.log(q);if(td<=N){ctx.beginPath();ctx.moveTo(X(td),Y(2*k));ctx.lineTo(X(td),H-B);ctx.stroke();
+      ctx.setLineDash([]);ctx.fillStyle='#C8170F';ctx.font='600 16px Lexend';ctx.textAlign='left';ctx.fillText('doppelt nach ≈ '+fmt(td,1)+' Jahren',Math.min(X(td)+8,W-260),Y(2*k)-10)}
+    ctx.setLineDash([]);
+  }
+  // linear
+  if($('linear').checked){ctx.strokeStyle='#123F88';ctx.lineWidth=3.5;ctx.beginPath();ctx.moveTo(X(0),Y(k));ctx.lineTo(X(N),Y(k+k*p/100*N));ctx.stroke()}
+  // exponentiell: blass ganze Kurve, kräftig bis n
+  ctx.strokeStyle='rgba(194,90,18,.25)';ctx.lineWidth=3;ctx.beginPath();
+  for(let x=0;x<=N;x+=0.25){const yy=Y(k*q**x);x?ctx.lineTo(X(x),yy):ctx.moveTo(X(x),yy)}ctx.stroke();
+  ctx.strokeStyle='#C25A12';ctx.lineWidth=4.5;ctx.beginPath();
+  for(let x=0;x<=n;x+=0.25){const yy=Y(k*q**x);x?ctx.lineTo(X(x),yy):ctx.moveTo(X(x),yy)}ctx.stroke();
+  for(let i=0;i<=n;i++){ctx.fillStyle='#C25A12';ctx.beginPath();ctx.arc(X(i),Y(k*q**i),i===n?7:4,0,7);ctx.fill()}
+  if(n>0){ctx.fillStyle='#C25A12';ctx.font='600 17px Lexend';ctx.textAlign='left';const tx=Math.min(X(n)+10,W-150);ctx.fillText(fmt(k*q**n,1)+' Mio.',tx,Math.max(Y(k*q**n)-10,T+16))}
+}
+['k','p','n'].forEach(id=>$(id).oninput=aktual);
+['linear','doppelt'].forEach(id=>$(id).onchange=aktual);
+document.querySelectorAll('.presets button').forEach(b=>b.onclick=()=>{$('k').value=b.dataset.k;$('p').value=b.dataset.p;$('n').value=0;stop();aktual()});
+function stop(){clearInterval(timer);timer=null;$('play').textContent='▶ Jahr für Jahr'}
+$('play').onclick=()=>{
+  if(timer){stop();return}
+  if(+$('n').value>=60)$('n').value=0;
+  $('play').textContent='⏸ Pause';
+  timer=setInterval(()=>{const n=+$('n').value;if(n>=60){stop();return}$('n').value=n+1;aktual()},450);
+};
+$('reset').onclick=()=>{stop();$('n').value=0;aktual()};
+window.addEventListener('resize',zeichne);
+$('zeigen').onclick=()=>{const m=$('merk');m.classList.toggle('zeig');$('zeigen').textContent=m.classList.contains('zeig')?'Lücken verstecken':'Lücken zeigen'};
+aktual();
+</script>
+</body>
+</html>

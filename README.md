@@ -29,6 +29,14 @@ Spielarten: Klassenduell (Team Blau gegen Team Orange) und Blitzrunde. Drei Nive
 | [Stromfresser-Duell](stromfresser-duell.html) | Leistung P = U · I, Energie E = P · t in Wh und kWh: Alltagsgeräte im Duell vergleichen (Klassenduell, Blitzrunde, drei Niveaus) |
 | [Stromzähler-Simulation](stromzaehler-simulation.html) | Acht Haushaltsgeräte mit eigenem Stromzähler, Timer und Zeitraffer; Säulen für P und E, Kurve E(t) |
 
+## Mathe 10E · Exponentialfunktionen
+
+| Spiel | Thema |
+|---|---|
+| [Einstieg: Wie schnell wächst Afrika?](einstieg-exponentialfunktionen.html) | Live-Zähler Weltbevölkerung, Vermutung Äthiopien, Simulation mit Wachstumsfaktor q = 1 + p/100, linear vs. exponentiell |
+| [Wachstumsfaktor-Blitz](wachstumsfaktor-blitz.html) | Prozent → Faktor q, Zunahme/Abnahme erkennen, k · qˣ berechnen (2 Teams, Klau-Chance) |
+| [Gleichungs-Challenge](gleichungs-challenge.html) | Situation, Tabelle, Graph der passenden Gleichung f(x) = k · qˣ zuordnen (2 Gruppen gleichzeitig, Joker) |
+
 ## Mathe 5 · Addition und Subtraktion
 
 | Spiel | Thema |
