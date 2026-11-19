@@ -94,7 +94,7 @@ function start(){
   $('main').innerHTML=`<div class="start"><img class="startbild" src="${IMG.koordinatensystem}" alt=""><h2>Gleichungs-Challenge</h2>
   <div class="regeln">Ordnet jeder <b>Situation</b>, jedem <b>Graphen</b> und jeder <b>Tabelle</b> die passende Funktionsgleichung zu.<br>
   1. Beide Teams spielen <b>gleichzeitig</b>: Je ein Teamsprecher tippt unten auf dem eigenen Feld A–D. Die Wahl bleibt <b>geheim</b>.<br>
-  2. Richtig: <b>2 Punkte</b>. Das <b>schnellere</b> richtige Team bekommt <b>+1 Bonus</b>.<br>
+  2. Richtig: <b>2 Punkte</b> + <b>Zeitbonus</b>: in den ersten 15 s +2, bis 30 s +1. Sind beide richtig, bekommt das <b>schnellere</b> Team noch <b>+1</b>.<br>
   3. Jedes Team hat <b>einen Joker „Doppelt oder nichts“</b>: richtig ×2, falsch −2.<br>
   4. ${RUNDEN.length} Runden, je ${ZEIT} Sekunden.</div>
   <p><button class="knopf" onclick="runden=mische(RUNDEN.slice(0,6)).concat(mische(RUNDEN.slice(6)));naechste()">Challenge starten!</button></p></div>`;
@@ -107,7 +107,7 @@ function naechste(){
   if(R.art==='Situation')auf=`<div class="text">${R.text}</div><div class="text" style="margin-top:14px;color:#6B7A8C;font-size:22px">Welche Gleichung beschreibt die Situation?</div>`;
   if(R.art==='Tabelle')auf=`<table><tr><td>x</td>${R.tab[0].map(v=>`<td>${v}</td>`).join('')}</tr><tr><td>f(x)</td>${R.tab[1].map(v=>`<td>${v}</td>`).join('')}</tr></table><div class="text" style="text-align:center;color:#6B7A8C;font-size:22px">Welche Gleichung passt zur Wertetabelle?</div>`;
   if(R.art==='Graph')auf=`<canvas id="cv"></canvas>`;
-  $('main').innerHTML=`<div class="oben"><div class="info">Runde ${nr} / ${runden.length}</div><div class="uhrzahl" id="uhr">${ZEIT}</div></div>
+  $('main').innerHTML=`<div class="oben"><div class="info">Runde ${nr} / ${runden.length}</div><div id="bonus" style="font-family:Fredoka;font-size:24px;color:var(--rot)">Jetzt richtig: 4 Punkte</div><div class="uhrzahl" id="uhr">${ZEIT}</div></div>
   <div class="mitte"><div class="aufgabe"><span class="typ">${R.art}</span>${auf}</div>
   <div class="optionen">${opts.map((o,i)=>`<div class="opt" id="o${i}"><span class="bu">${'ABCD'[i]}</span><span>${o.t}</span><span class="marke" id="m${i}"></span></div>`).join('')}</div></div>
   <div class="erkl" id="erkl">${R.e}</div>
@@ -116,7 +116,7 @@ function naechste(){
   <div style="text-align:center"><button class="knopf rot" id="aufl" onclick="aufloesen()">Auflösen</button></div>`;
   if(R.art==='Graph')requestAnimationFrame(()=>zeichne(R.k,R.q));
   t=ZEIT;clearInterval(timer);const t0=Date.now();
-  timer=setInterval(()=>{t=ZEIT-Math.floor((Date.now()-t0)/1000);$('uhr').textContent=Math.max(0,t);if(t<=0){clearInterval(timer);aufloesen()}},250);
+  timer=setInterval(()=>{t=ZEIT-Math.floor((Date.now()-t0)/1000);$('uhr').textContent=Math.max(0,t);{const v=ZEIT-t;$('bonus').textContent='Jetzt richtig: '+(v<=15?4:(v<=30?3:2))+' Punkte';}if(t<=0){clearInterval(timer);aufloesen()}},250);
   window._t0=t0;cart(null);
 }
 function waehle(T,i,b){
@@ -136,7 +136,7 @@ function aufloesen(){
   let schnell=null;if(ok.A&&ok.B)schnell=zeitWahl.A<zeitWahl.B?'A':'B';else if(ok.A)schnell='A';else if(ok.B)schnell='B';
   ['A','B'].forEach(T=>{
     let p=0;
-    if(ok[T]){p=2+(schnell===T&&ok.A&&ok.B?1:0);}
+    if(ok[T]){const s=zeitWahl[T]/1000;p=2+(s<=15?2:(s<=30?1:0))+(schnell===T&&ok.A&&ok.B?1:0);}
     if(jokerAn[T]){joker[T]=false;p=ok[T]?p*2:-2;}
     punkte[T]+=p;
     if(wahl[T]!==null)$('m'+wahl[T]).insertAdjacentHTML('beforeend',`<span style="background:var(--${T})">${T}</span>`);
