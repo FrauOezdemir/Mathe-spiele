@@ -34,3 +34,9 @@ Spielarten: Klassenduell (Team Blau gegen Team Orange) und Blitzrunde. Drei Nive
 | Spiel | Thema |
 |---|---|
 | [Plus & Minus Profi](plus-minus-profi.html) | Training zur Checkliste Klassenarbeit Nr. 2: Fachbegriffe, Zahlenrätsel (auch mit Klammern), Kopfrechnen, schriftlich addieren und subtrahieren, Klammern, Kommutativ- und Assoziativgesetz, Sachaufgaben; Probe-Klassenarbeit |
+
+## Klasse 6 · Klassengemeinschaft
+
+| Spiel | Thema |
+|---|---|
+| [Escape-Room: Der Klassenschatz](escape-room-klassenschatz.html) | Klassengemeinschaft: 6 Teams auf iPads knacken je 3 Schlösser (Werte sortieren, Freundschafts-Memory, Team-Puzzle) und öffnen die Klassen-Truhe nur gemeinsam |
