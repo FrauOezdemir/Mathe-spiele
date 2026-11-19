@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dur-Moll-Spiele</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--musik:#6A4BB5;--kunst:#D9541E;--dur:#F2A516;--moll:#3F6DB5;--ink:#2b2633;--bg:#F6F1FB;--card:#fff;--line:#e3dcec}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:Nunito,system-ui,sans-serif;color:var(--ink);background:var(--bg);display:flex;flex-direction:column;min-height:100vh}
+h1,h2,h3,.big{font-family:Fredoka,Nunito,sans-serif}
+button{font-family:inherit;cursor:pointer;border:none;border-radius:14px;font-weight:800}
+button:focus-visible{outline:4px solid #000;outline-offset:2px}
+.top{display:flex;align-items:center;gap:12px;padding:10px 18px;background:var(--musik);color:#fff;flex-wrap:wrap}
+.top .logo{font-family:Fredoka;font-size:22px;font-weight:700;margin-right:auto}
+.chip{background:rgba(255,255,255,.18);color:#fff;padding:6px 12px;font-size:14px;border-radius:999px}
+.chip.on{background:#fff;color:var(--musik)}
+.chip.done{background:rgba(255,255,255,.4)}
+main{flex:1;display:flex;flex-direction:column;align-items:center;padding:18px;gap:16px;width:100%;max-width:1200px;margin:0 auto}
+.card{background:var(--card);border-radius:22px;padding:22px 26px;box-shadow:0 2px 0 var(--line),0 8px 28px rgba(80,50,120,.08);width:100%}
+.how{font-size:20px;line-height:1.45}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:center}
+.play{background:var(--musik);color:#fff;font-size:24px;padding:16px 28px;display:inline-flex;align-items:center;gap:10px}
+.play.alt{background:var(--kunst)}
+.play.ghost{background:#efe9f7;color:var(--musik)}
+.reveal{background:#2b2633;color:#fff;font-size:22px;padding:14px 26px}
+.next{background:#0F7B6C;color:#fff;font-size:22px;padding:14px 26px}
+.answer{font-family:Fredoka;font-size:64px;font-weight:700;text-align:center;line-height:1.1;padding:8px 0}
+.answer.dur{color:var(--dur)}.answer.moll{color:var(--moll)}
+.answer small{display:block;font-size:24px;color:var(--ink);font-family:Nunito;font-weight:700;margin-top:6px}
+.counter{font-size:16px;font-weight:800;color:#6b6475}
+.title{font-size:40px;margin:0;color:var(--musik)}
+.timer{font-family:Fredoka;font-size:120px;font-weight:700;color:var(--kunst);text-align:center;line-height:1}
+.teams{display:grid;gap:12px;width:100%}
+.team{border-radius:18px;padding:12px 14px;color:#fff;display:flex;flex-direction:column;gap:8px;align-items:center}
+.team .nm{font-family:Fredoka;font-size:22px;font-weight:700;text-align:center}
+.team .sc{font-family:Fredoka;font-size:44px;font-weight:700;line-height:1}
+.team .ok{background:#fff;color:var(--ink);font-size:18px;padding:10px 14px;width:100%}
+.team .ok.on{background:#1f9d55;color:#fff}
+.team .adj{display:flex;gap:6px}
+.team .adj button{background:rgba(255,255,255,.25);color:#fff;width:34px;height:30px;font-size:18px;padding:0}
+.kb{width:100%;max-width:760px;height:auto;display:block;margin:0 auto}
+.steps{display:flex;gap:6px;justify-content:center;margin-top:6px}
+.steps span{font-family:Fredoka;font-size:28px;font-weight:700;width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#efe9f7;color:var(--musik)}
+.steps span.h{background:var(--kunst);color:#fff}
+.start label{font-weight:800;font-size:18px}
+.start input{font:inherit;font-size:20px;padding:10px 12px;border:2px solid var(--line);border-radius:12px;width:100%}
+.seg button{background:#efe9f7;color:var(--musik);font-size:22px;padding:10px 22px}
+.seg button.on{background:var(--musik);color:#fff}
+.teach{background:#FFF7E6;border:2px dashed var(--dur);border-radius:16px;padding:14px 18px;font-size:16px;line-height:1.5}
+.teach b{color:#9a5b00}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;width:100%}
+.legend{display:flex;gap:18px;justify-content:center;font-size:20px;font-weight:800}
+.podium{display:flex;align-items:flex-end;justify-content:center;gap:14px;margin-top:10px}
+.podium div{border-radius:16px 16px 0 0;color:#fff;width:180px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:12px 8px;font-family:Fredoka;font-weight:700}
+.conf{position:fixed;top:-20px;width:12px;height:18px;border-radius:3px;animation:fall linear forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+.hide{display:none!important}
+.small{font-size:15px;color:#6b6475}
+@media (max-width:700px){.answer{font-size:44px}.title{font-size:30px}.how{font-size:17px}}
+</style>
+</head>
+<body>
+<div class="top">
+  <button class="logo" id="home" style="background:none;color:#fff;padding:0;text-align:left">🎵 Dur-Moll-Spiele</button>
+  <div id="chips" class="row" style="justify-content:flex-end"></div>
+</div>
+<main id="app"></main>
+<div style="padding:0 18px 18px"><div id="teams" class="teams" style="max-width:1200px;margin:0 auto"></div></div>
+
+<script>
+// ---------- Audio ----------
+let ctx=null, master=null, live=[], timers=[];
+function ac(){
+  if(!ctx){
+    ctx=new (window.AudioContext||window.webkitAudioContext)();
+    const comp=ctx.createDynamicsCompressor();
+    master=ctx.createGain(); master.gain.value=0.55;
+    master.connect(comp); comp.connect(ctx.destination);
+  }
+  if(ctx.state==='suspended') ctx.resume();
+  return ctx;
+}
+const hz=m=>440*Math.pow(2,(m-69)/12);
+function note(m,t,dur,vel=0.32){
+  const c=ac(), g=c.createGain(), o1=c.createOscillator(), o2=c.createOscillator(), g2=c.createGain();
+  o1.type='triangle'; o1.frequency.value=hz(m);
+  o2.type='sine'; o2.frequency.value=hz(m)*2; g2.gain.value=0.25;
+  o1.connect(g); o2.connect(g2); g2.connect(g); g.connect(master);
+  g.gain.setValueAtTime(0.0001,t);
+  g.gain.exponentialRampToValueAtTime(vel,t+0.012);
+  g.gain.exponentialRampToValueAtTime(vel*0.45,t+0.25);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+dur+0.55);
+  o1.start(t); o2.start(t); o1.stop(t+dur+0.6); o2.stop(t+dur+0.6);
+  live.push(o1,o2);
+  const now=c.currentTime;
+  timers.push(setTimeout(()=>light(m,true),Math.max(0,(t-now)*1000)));
+  timers.push(setTimeout(()=>light(m,false),Math.max(0,(t-now+dur)*1000)));
+}
+function stopAll(){
+  live.forEach(o=>{try{o.stop()}catch(e){}}); live=[];
+  timers.forEach(clearTimeout); timers=[];
+  document.querySelectorAll('.kb .k').forEach(k=>k.classList.remove('lit'));
+  document.querySelectorAll('.kb rect[data-m]').forEach(k=>k.setAttribute('fill',k.dataset.base));
+}
+const DUR=[0,2,4,5,7,9,11], MOLL=[0,2,3,5,7,8,10];
+function triad(root,minor){return [root,root+(minor?3:4),root+7]}
+function playChord(root,minor,fast){
+  stopAll(); const c=ac(); let t=c.currentTime+0.08; const tr=triad(root,minor), step=fast?0.28:0.42;
+  tr.forEach((m,i)=>note(m,t+i*step,step*0.95));
+  const tt=t+3*step+0.15;
+  tr.forEach(m=>note(m,tt,1.6,0.24)); note(root-12,tt,1.6,0.22);
+  return (tt-c.currentTime+1.7)*1000;
+}
+function playScale(root,minor){
+  stopAll(); const c=ac(); let t=c.currentTime+0.08; const sc=minor?MOLL:DUR;
+  const ms=[...sc.map(s=>root+s),root+12];
+  ms.forEach((m,i)=>note(m,t+i*0.5,0.46));
+  return (ms.length*0.5+0.7)*1000;
+}
+function deg(d,minor,root){const sc=minor?MOLL:DUR, o=Math.floor(d/7), i=((d%7)+7)%7; return root+sc[i]+12*o}
+function playSong(song,minor,root=60,beat=0.36){
+  stopAll(); const c=ac(); let t=c.currentTime+0.08;
+  const tr=triad(root-12,minor);
+  tr.forEach(m=>note(m,t,beat*3.5,0.13));
+  song.notes.forEach(([d,b])=>{note(deg(d,minor,root),t,beat*b*0.92,0.3); t+=beat*b});
+  triad(root-12,minor).forEach(m=>note(m,t,1.5,0.18)); note(root,t,1.5,0.2);
+  return (t-c.currentTime+1.6)*1000;
+}
+
+// ---------- Musik-Daten (alles gemeinfreie Volkslieder / Klassik) ----------
+const SONGS=[
+ {name:'Alle meine Entchen',notes:[[0,1],[1,1],[2,1],[3,1],[4,2],[4,2],[5,1],[5,1],[5,1],[5,1],[4,4],[5,1],[5,1],[5,1],[5,1],[4,4],[3,1],[3,1],[3,1],[3,1],[2,2],[2,2],[1,1],[1,1],[1,1],[1,1],[0,4]]},
+ {name:'Bruder Jakob',notes:[[0,1],[1,1],[2,1],[0,1],[0,1],[1,1],[2,1],[0,1],[2,1],[3,1],[4,2],[2,1],[3,1],[4,2],[4,.5],[5,.5],[4,.5],[3,.5],[2,1],[0,1],[4,.5],[5,.5],[4,.5],[3,.5],[2,1],[0,1],[0,1],[-3,1],[0,2],[0,1],[-3,1],[0,2]]},
+ {name:'Hänschen klein',notes:[[4,1],[2,1],[2,2],[3,1],[1,1],[1,2],[0,1],[1,1],[2,1],[3,1],[4,1],[4,1],[4,2],[4,1],[2,1],[2,2],[3,1],[1,1],[1,2],[0,1],[2,1],[4,1],[4,1],[0,4]]},
+ {name:'Morgen kommt der Weihnachtsmann',notes:[[0,1],[0,1],[4,1],[4,1],[5,1],[5,1],[4,2],[3,1],[3,1],[2,1],[2,1],[1,1],[1,1],[0,2],[4,1],[4,1],[3,1],[3,1],[2,1],[2,1],[1,2]]},
+ {name:'Ode an die Freude (Beethoven)',notes:[[2,1],[2,1],[3,1],[4,1],[4,1],[3,1],[2,1],[1,1],[0,1],[0,1],[1,1],[2,1],[2,1.5],[1,.5],[1,2],[2,1],[2,1],[3,1],[4,1],[4,1],[3,1],[2,1],[1,1],[0,1],[0,1],[1,1],[2,1],[1,1.5],[0,.5],[0,2]]}
+];
+const NAMES_MAJ=['C','Des','D','Es','E','F','Fis','G','As','A','B','H'];
+const NAMES_MIN=['c','cis','d','es','e','f','fis','g','gis','a','b','h'];
+const keyName=(root,minor)=>minor?NAMES_MIN[root%12]+'-Moll':NAMES_MAJ[root%12]+'-Dur';
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function modes(n){const h=Math.ceil(n/2);return shuffle([...Array(h).fill(false),...Array(n-h).fill(true)])}
+
+// ---------- Runden ----------
+const ROUNDS=[
+ {id:'akkord',title:'Runde 1: Akkord-Detektive',min:7,pts:1,
+  how:'Hört den Akkord genau an. Jedes Team berät sich leise. Auf <b>„3 – 2 – 1“</b> zeigt euer Team-Kapitän: <b>Daumen hoch 👍 = Dur</b> · <b>Daumen runter 👎 = Moll</b>.',
+  tip:'8 Akkorde · 1 Punkt pro richtiger Antwort. Akkord darf 2× gespielt werden.',
+  make:()=>modes(8).map(m=>({minor:m,root:rnd(57,67)}))},
+ {id:'zwilling',title:'Runde 2: Lieder-Zwillinge',min:7,pts:2,
+  how:'Ihr hört ein bekanntes Lied zweimal: <b>Version A</b> und <b>Version B</b>. Eine Version ist in <b>Moll</b>. Welche? Zeigt <b>1 Finger = A</b> oder <b>2 Finger = B</b>.',
+  tip:'5 Lieder · 2 Punkte. Frage nach dem Auflösen: „Wie hat sich die Moll-Version angefühlt?“',
+  make:()=>shuffle(SONGS).map(s=>({song:s,mollIs:Math.random()<.5?'A':'B'}))},
+ {id:'freeze',title:'Runde 3: Freeze-Tanz',min:5,pts:1,
+  how:'Alle stehen auf! Klingt die Musik nach <b>Dur</b>: <b>tanzt</b> 💃. Klingt sie nach <b>Moll</b>: werdet zur <b>Statue</b> 🗿. Bleibt so, bis die Musik aufhört!',
+  tip:'6 Lieder · keine Pflichtpunkte. Optional +1 für das Team, das am besten reagiert hat. Ruhig mit Stopp-Pausen spielen.',
+  make:()=>modes(6).map(m=>({minor:m,song:SONGS[rnd(0,SONGS.length-1)],root:rnd(58,64)}))},
+ {id:'treppe',title:'Runde 4: Tonleiter-Treppe',min:5,pts:1,
+  how:'Ihr hört eine Tonleiter: 8 Töne von unten nach oben. Ist es eine <b>Dur</b>- oder eine <b>Moll</b>-Tonleiter? Tipp: Achtet besonders auf den <b>3. Ton</b>!',
+  tip:'6 Tonleitern · 1 Punkt. Nach dem Auflösen zeigt die Treppe, wo die Halbtonschritte (H) liegen.',
+  make:()=>modes(6).map(m=>({minor:m,root:rnd(57,65)}))},
+ {id:'blitz',title:'Runde 5: Blitz-Finale ⚡',min:5,pts:2,
+  how:'Jetzt wird es schnell! Nach dem Akkord habt ihr nur <b>5 Sekunden</b>. Dann zeigen alle Kapitäne gleichzeitig: 👍 Dur oder 👎 Moll. <b>Doppelte Punkte!</b>',
+  tip:'10 Akkorde · 2 Punkte · nur 1× hören.',
+  make:()=>modes(10).map(m=>({minor:m,root:rnd(55,69)}))}
+];
+
+// ---------- Zustand ----------
+const COLORS=['#D9541E','#6A4BB5','#0F7B6C','#C2368A'];
+const DEFAULT=['Team Sonne','Team Mond','Team Stern','Team Blitz'];
+let S={screen:'home',nTeams:4,teams:[],r:0,i:0,items:[],revealed:false,awarded:{},done:[]};
+
+// ---------- Tastatur ----------
+const KB_LO=53,KB_HI=79;
+function keyboardSVG(){
+  const isBlack=m=>[1,3,6,8,10].includes(m%12);
+  const whites=[];for(let m=KB_LO;m<=KB_HI;m++) if(!isBlack(m)) whites.push(m);
+  const W=40,H=150,w=whites.length*W;
+  let s=`<svg class="kb" viewBox="0 0 ${w} ${H+2}" role="img" aria-label="Klaviatur: Gespielte Töne leuchten auf">`;
+  whites.forEach((m,i)=>{s+=`<rect data-m="${m}" data-base="#ffffff" x="${i*W+1}" y="1" width="${W-2}" height="${H}" rx="6" fill="#ffffff" stroke="#2b2633" stroke-width="2"/>`;
+    if(m%12===0) s+=`<text x="${i*W+W/2}" y="${H-12}" text-anchor="middle" font-size="16" font-family="Nunito" font-weight="800" fill="#6b6475">C</text>`});
+  for(let m=KB_LO;m<=KB_HI;m++) if(isBlack(m)){const idx=whites.indexOf(m-1);
+    s+=`<rect data-m="${m}" data-base="#2b2633" x="${(idx+1)*W-13}" y="1" width="26" height="${H*0.62}" rx="4" fill="#2b2633"/>`}
+  return s+'</svg>';
+}
+function light(m,on){
+  const el=document.querySelector(`.kb rect[data-m="${m}"]`); if(!el) return;
+  el.setAttribute('fill',on?'#F2A516':el.dataset.base);
+}
+
+// ---------- Rendering ----------
+const app=document.getElementById('app');
+function chips(){
+  const c=document.getElementById('chips');
+  if(!KL.includes(S.screen)||S.screen==='start'){c.innerHTML='';return}
+  c.innerHTML=ROUNDS.map((r,k)=>`<button class="chip ${S.screen==='round'&&S.r===k?'on':''} ${S.done.includes(k)?'done':''}" data-jump="${k}">${k+1}. ${r.title.split(': ')[1]}</button>`).join('')
+   +`<button class="chip ${S.screen==='end'?'on':''}" data-end="1">🏆 Sieger</button>`;
+  c.querySelectorAll('[data-jump]').forEach(b=>b.onclick=()=>startRound(+b.dataset.jump));
+  c.querySelector('[data-end]').onclick=()=>{stopAll();S.screen='end';render()};
+}
+function teamsBar(){
+  const el=document.getElementById('teams');
+  if(!KL.includes(S.screen)||S.screen==='start'||S.fromTeacher){el.innerHTML='';return}
+  el.style.gridTemplateColumns=`repeat(${S.teams.length},minmax(0,1fr))`;
+  const r=ROUNDS[S.r], key=S.r+'-'+S.i, canAward=S.screen==='round'&&S.revealed&&S.phase==='item';
+  const lab=r.id==='freeze'?`+${r.pts} super reagiert`:`✓ richtig (+${r.pts})`;
+  el.innerHTML=S.teams.map((t,k)=>`<div class="team" style="background:${t.color}">
+     <div class="nm">${esc(t.name)}</div><div class="sc" aria-live="polite">${t.score}</div>
+     ${canAward?`<button class="ok ${(S.awarded[key]||[]).includes(k)?'on':''}" data-aw="${k}">${lab}</button>`:''}
+     <div class="adj"><button data-adj="${k}" data-d="-1" aria-label="Punkt abziehen">−</button><button data-adj="${k}" data-d="1" aria-label="Punkt dazu">+</button></div></div>`).join('');
+  el.querySelectorAll('[data-aw]').forEach(b=>b.onclick=()=>{
+    const k=+b.dataset.aw, a=S.awarded[key]||(S.awarded[key]=[]);
+    if(a.includes(k)){a.splice(a.indexOf(k),1);S.teams[k].score-=r.pts}else{a.push(k);S.teams[k].score+=r.pts}
+    teamsBar();});
+  el.querySelectorAll('[data-adj]').forEach(b=>b.onclick=()=>{S.teams[+b.dataset.adj].score=Math.max(0,S.teams[+b.dataset.adj].score+ +b.dataset.d);teamsBar()});
+}
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+const KL=['start','round','end'];
+function render(){
+  chips();
+  document.getElementById('chips').classList.toggle('hide',!KL.includes(S.screen)||S.fromTeacher);
+  if(S.screen==='home') renderHome();
+  else if(S.screen==='solo') renderSoloStart();
+  else if(S.screen==='teacher') renderTeacher();
+  else if(S.screen==='start') renderStart();
+  else if(S.screen==='round') S.phase==='intro'?renderIntro():S.phase==='outro'?renderOutro():renderItem();
+  else renderEnd();
+  teamsBar();
+}
+
+function renderStart(){
+  app.innerHTML=`<div class="card start" style="display:flex;flex-direction:column;gap:16px">
+    <h1 class="title">Dur-Moll-Spielshow 🎵</h1>
+    <div class="how">5 Runden · ca. 30 Minuten · Ihr spielt in Teams gegeneinander. Ihr braucht nur eure Ohren und eure Daumen!</div>
+    <div class="legend"><span style="color:var(--dur)">👍 ☀️ Dur = oft hell, fröhlich</span><span style="color:var(--moll)">👎 🌧️ Moll = oft dunkel, traurig</span></div>
+    <div><label>Wie viele Teams?</label><div class="row seg" style="justify-content:flex-start;margin-top:6px">
+      ${[2,3,4].map(n=>`<button data-n="${n}" class="${S.nTeams===n?'on':''}">${n}</button>`).join('')}</div></div>
+    <div class="grid2">${Array.from({length:S.nTeams},(_,k)=>`<div><label for="tn${k}" style="color:${COLORS[k]}">Team ${k+1}</label>
+      <input id="tn${k}" value="${esc((S.teams[k]&&S.teams[k].name)||DEFAULT[k])}" maxlength="22"></div>`).join('')}</div>
+    <div class="row" style="justify-content:flex-start">
+      <button class="play ghost" id="test">🔊 Ton-Test</button>
+      <button class="next" id="go" style="font-size:26px;padding:16px 34px">Los geht's! ▶</button></div>
+    <div class="teach"><b>Für die Lehrkraft:</b> Laptop an die Lautsprecher anschließen und erst den Ton-Test machen. Teams mit 4–6 Kindern bilden, jedes Team wählt eine/n Kapitän/in, der/die die Antwort zeigt. Kein Handy und kein Tablet nötig. Die Musik spielt die Seite selbst – ihr müsst kein Instrument spielen. Nach jeder Frage: <b>Auflösen</b> drücken, dann bei den Teams auf <b>✓ richtig</b> tippen. Mit + und − könnt ihr Punkte korrigieren.<br>
+    <b>Ablauf:</b> ${ROUNDS.map(r=>`${r.title.split(':')[1].trim()} (${r.min} Min.)`).join(' · ')} · Siegerehrung (1 Min.)</div>
+  </div>`;
+  app.querySelectorAll('[data-n]').forEach(b=>b.onclick=()=>{saveNames();S.nTeams=+b.dataset.n;render()});
+  document.getElementById('test').onclick=()=>playChord(60,false);
+  document.getElementById('go').onclick=()=>{saveNames();S.teams=S.teams.slice(0,S.nTeams);startRound(0)};
+}
+function saveNames(){
+  for(let k=0;k<S.nTeams;k++){const v=document.getElementById('tn'+k);const name=(v&&v.value.trim())||DEFAULT[k];
+    if(!S.teams[k]) S.teams[k]={name,color:COLORS[k],score:0}; else S.teams[k].name=name;}
+}
+function startRound(k){stopAll();S.screen='round';S.r=k;S.i=0;S.items=ROUNDS[k].make();S.revealed=false;S.phase='intro';render()}
+
+function renderIntro(){
+  const r=ROUNDS[S.r];
+  app.innerHTML=`<div class="card" style="display:flex;flex-direction:column;gap:16px">
+    <div class="counter">Runde ${S.r+1} von ${ROUNDS.length} · ca. ${r.min} Minuten</div>
+    <h2 class="title">${r.title}</h2><div class="how">${r.how}</div>
+    <div class="teach"><b>Für die Lehrkraft:</b> ${r.tip}</div>
+    <div class="row"><button class="next" id="go">Erste Frage ▶</button></div></div>`;
+  document.getElementById('go').onclick=()=>{S.phase='item';render()};
+}
+function renderOutro(){
+  const last=S.r===ROUNDS.length-1;
+  app.innerHTML=`<div class="card" style="text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center">
+    <h2 class="title">Runde ${S.r+1} geschafft! 🎉</h2>
+    <div class="how">Schaut auf die Punkte unten. Wer führt?</div>
+    <button class="next" id="go">${last?'Zur Siegerehrung 🏆':'Nächste Runde ▶'}</button></div>`;
+  document.getElementById('go').onclick=()=>{if(!S.done.includes(S.r))S.done.push(S.r);last?(S.screen='end',render()):startRound(S.r+1)};
+}
+
+let tick=null;
+function renderItem(){
+  clearInterval(tick);
+  const r=ROUNDS[S.r], it=S.items[S.i], n=S.items.length;
+  let play='', ans='';
+  if(r.id==='akkord'||r.id==='blitz'){
+    play=`<button class="play" id="p1">▶ Akkord ${r.id==='blitz'?'':'spielen'}</button>${r.id==='akkord'?'<button class="play ghost" id="p1b">↻ Nochmal</button>':''}`;
+    ans=it.minor?`<div class="answer moll">MOLL 👎🌧️<small>${keyName(it.root,true)}-Akkord</small></div>`
+                :`<div class="answer dur">DUR 👍☀️<small>${keyName(it.root,false)}-Akkord</small></div>`;
+  } else if(r.id==='zwilling'){
+    play=`<button class="play" id="pA">▶ Version A</button><button class="play alt" id="pB">▶ Version B</button>`;
+    ans=`<div class="answer moll">Version ${it.mollIs} war Moll 🌧️<small>„${it.song.name}“ · Version ${it.mollIs==='A'?'B':'A'} war Dur ☀️</small></div>`;
+  } else if(r.id==='freeze'){
+    play=`<button class="play" id="p1">▶ Musik!</button><button class="play ghost" id="stop">■ Stopp</button>`;
+    ans=it.minor?`<div class="answer moll">MOLL – Statue! 🗿<small>„${it.song.name}“ in Moll</small></div>`
+                :`<div class="answer dur">DUR – Tanzen! 💃<small>„${it.song.name}“ in Dur</small></div>`;
+  } else if(r.id==='treppe'){
+    play=`<button class="play" id="p1">▶ Tonleiter</button><button class="play ghost" id="p1b">↻ Nochmal</button>`;
+    const st=it.minor?['G','H','G','G','H','G','G']:['G','G','H','G','G','G','H'];
+    ans=`<div class="answer ${it.minor?'moll':'dur'}">${it.minor?'MOLL 👎':'DUR 👍'}<small>${keyName(it.root,it.minor)}-Tonleiter · G = Ganzton, H = Halbton</small></div>
+         <div class="steps">${st.map(x=>`<span class="${x==='H'?'h':''}">${x}</span>`).join('')}</div>
+         <div class="small" style="text-align:center;margin-top:6px">${it.minor?'Bei Moll liegt der erste Halbton schon zwischen Ton 2 und 3.':'Bei Dur liegen die Halbtöne zwischen Ton 3–4 und 7–8.'}</div>`;
+  }
+  app.innerHTML=`<div class="card" style="display:flex;flex-direction:column;gap:14px">
+    <div class="row" style="justify-content:space-between"><div class="counter">${r.title} · Frage ${S.i+1} von ${n}${r.pts>1?` · ${r.pts} Punkte`:''}</div>
+      <button class="play ghost" id="rules" style="font-size:15px;padding:8px 14px">Regeln</button></div>
+    <div class="how hide" id="ruletext">${r.how}</div>
+    <div class="row">${play}</div>
+    <div id="clock" class="timer hide" aria-live="assertive"></div>
+    ${keyboardSVG()}
+    <div id="ans" class="${S.revealed?'':'hide'}">${ans}</div>
+    <div class="row">${S.revealed?`<button class="next" id="nx">${S.i<n-1?'Nächste Frage ▶':'Runde beenden ▶'}</button>`:`<button class="reveal" id="rv">Auflösen 👀</button>`}</div>
+  </div>`;
+  const $=id=>document.getElementById(id);
+  $('rules').onclick=()=>$('ruletext').classList.toggle('hide');
+  if(r.id==='akkord'){$('p1').onclick=()=>playChord(it.root,it.minor);$('p1b').onclick=()=>playChord(it.root,it.minor)}
+  if(r.id==='blitz'){$('p1').onclick=()=>{const ms=playChord(it.root,it.minor,true);$('p1').disabled=true;$('p1').style.opacity=.5;
+      timers.push(setTimeout(()=>countdown(5),ms-900))}}
+  if(r.id==='zwilling'){$('pA').onclick=()=>playSong(it.song,it.mollIs==='A');$('pB').onclick=()=>playSong(it.song,it.mollIs==='B')}
+  if(r.id==='freeze'){$('p1').onclick=()=>playSong(it.song,it.minor,it.root,0.3);$('stop').onclick=stopAll}
+  if(r.id==='treppe'){$('p1').onclick=()=>playScale(it.root,it.minor);$('p1b').onclick=()=>playScale(it.root,it.minor)}
+  if($('rv')) $('rv').onclick=()=>{clearInterval(tick);S.revealed=true;render()};
+  if($('nx')) $('nx').onclick=()=>{stopAll();if(S.i<n-1){S.i++;S.revealed=false;render()}else{S.phase='outro';render()}};
+}
+function countdown(sec){
+  const el=document.getElementById('clock'); if(!el||S.revealed) return;
+  el.classList.remove('hide'); let s=sec; el.textContent=s;
+  tick=setInterval(()=>{s--; if(s>0){el.textContent=s} else {clearInterval(tick); el.textContent='Daumen hoch! 👍👎';el.style.fontSize='64px';
+    const c=ac(); note(84,c.currentTime+0.02,0.15,0.2); note(84,c.currentTime+0.22,0.15,0.2);}},1000);
+}
+function renderEnd(){
+  stopAll();
+  const rank=[...S.teams].sort((a,b)=>b.score-a.score);
+  const hs=[170,230,130,100];
+  const order=rank.length>=3?[rank[1],rank[0],rank[2],...rank.slice(3)]:[rank[1],rank[0]].filter(Boolean);
+  app.innerHTML=`<div class="card" style="text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center">
+    <h2 class="title">Siegerehrung 🏆</h2>
+    <div class="how">${rank[0]&&rank[1]&&rank[0].score===rank[1].score?'Gleichstand an der Spitze – ihr seid alle Ton-Detektive!':`Gewonnen hat <b style="color:${rank[0].color}">${esc(rank[0].name)}</b> mit ${rank[0].score} Punkten!`}</div>
+    <div class="podium">${order.map(t=>{const p=rank.indexOf(t);return `<div style="background:${t.color};height:${hs[p]||90}px"><span style="font-size:28px">${['🥇','🥈','🥉','4.'][p]}</span><span>${esc(t.name)}</span><span style="font-size:30px">${t.score}</span></div>`}).join('')}</div>
+    ${S.fromTeacher?'':`<div class="teach" style="text-align:left;width:100%"><b>Abschluss-Frage an die Klasse (1 Min.):</b> „Woran erkennt ihr Moll?“ – Erwartung: klingt oft dunkler, trauriger, geheimnisvoller; der 3. Ton ist tiefer als bei Dur.</div>`}
+    <div class="row"><button class="play ghost" id="again">${S.fromTeacher?'Zurück zur Bestenliste':'Neues Spiel'}</button></div></div>`;
+  document.getElementById('again').onclick=()=>{if(S.fromTeacher){S.fromTeacher=false;S.teams=[];route();return}S={screen:'start',nTeams:S.nTeams,teams:S.teams.map(t=>({...t,score:0})),r:0,i:0,items:[],revealed:false,awarded:{},done:[]};render()};
+  for(let k=0;k<70;k++){const d=document.createElement('div');d.className='conf';d.style.left=Math.random()*100+'vw';
+    d.style.background=[...COLORS,'#F2A516'][k%5];d.style.animationDuration=(2+Math.random()*2.5)+'s';d.style.animationDelay=Math.random()*1.2+'s';
+    document.body.appendChild(d);setTimeout(()=>d.remove(),5200)}
+  const c=ac(); [60,64,67,72].forEach((m,i)=>note(m,c.currentTime+0.1+i*0.15,0.6,0.25));
+}
+// ================= EINZEL-TURNIER (Tablets) =================
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const sr=(R,a,b)=>a+Math.floor(R()*(b-a+1));
+function sshuffle(R,a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(R()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function smodes(R,n){const h=Math.ceil(n/2);return sshuffle(R,[...Array(h).fill(false),...Array(n-h).fill(true)])}
+const KNOW=[
+ {q:'Musik, die oft hell und fröhlich klingt, steht meistens in …',o:['Dur','Moll'],a:0,ex:'Dur klingt oft hell und fröhlich.'},
+ {q:'Musik, die oft dunkel oder traurig klingt, steht meistens in …',o:['Dur','Moll'],a:1,ex:'Moll klingt oft dunkel, traurig oder geheimnisvoll.'},
+ {q:'Wie viele Töne hat eine Tonleiter – mit dem Ton ganz oben?',o:['5','7','8','12'],a:2,ex:'C D E F G A H C: das sind 8 Töne.'},
+ {q:'Wie heißt der kleinste Schritt zwischen zwei Nachbartasten?',o:['Ganzton','Halbton','Dreiklang','Akkord'],a:1,ex:'Zwei Nachbartasten liegen einen Halbton auseinander.'},
+ {q:'Ein Dreiklang besteht aus …',o:['2 Tönen','3 Tönen','4 Tönen','8 Tönen'],a:1,ex:'Drei-Klang: 3 Töne klingen zusammen.'},
+ {q:'Welcher Ton im Dreiklang ist bei Moll tiefer als bei Dur?',o:['der 1. Ton','der mittlere Ton','der oberste Ton','keiner'],a:1,ex:'Bei Moll ist der mittlere Ton (die Terz) einen Halbton tiefer.'},
+ {q:'Wo liegen in der C-Dur-Tonleiter die Halbtöne?',o:['E–F und H–C','C–D und G–A','D–E und A–H','F–G und A–H'],a:0,ex:'Zwischen E–F und H–C liegt keine schwarze Taste: Halbtöne!'},
+ {q:'Zwischen welchen weißen Tasten liegt KEINE schwarze Taste?',o:['C und D','E und F','G und A','F und G'],a:1,ex:'E–F (und H–C) haben keine schwarze Taste dazwischen.'},
+ {q:'Die C-Dur-Tonleiter spielt man auf …',o:['nur weißen Tasten','nur schwarzen Tasten','weißen und schwarzen Tasten'],a:0,ex:'C-Dur braucht keine schwarze Taste.'},
+ {q:'Stimmt das? Moll-Musik ist immer traurig.',o:['Ja, immer','Nein, sie kann auch spannend oder geheimnisvoll klingen'],a:1,ex:'Moll klingt oft traurig, aber nicht immer.'},
+ {q:'Wie heißt im Deutschen die weiße Taste zwischen A und C?',o:['B','H','D','G'],a:1,ex:'Im Deutschen heißt sie H.'}
+];
+const SETS={A:11,B:23,C:37};
+function makeQuiz(seed,practice){
+  const R=rng(seed), qs=[];
+  const nc=practice?2:5, ns=practice?1:3, nl=practice?1:3, nk=practice?2:4;
+  smodes(R,nc).forEach(m=>{const root=sr(R,55,67);qs.push({type:'chord',minor:m,root,a:m?1:0,o:['Dur ☀️','Moll 🌧️'],q:'Hör dir den Akkord an. Klingt er nach Dur oder nach Moll?',ex:`Das war ein ${keyName(root,m)}-Akkord.`})});
+  sshuffle(R,SONGS).slice(0,ns).forEach(s=>{const mollA=R()<.5;qs.push({type:'song',song:s,mollA,a:mollA?0:1,o:['Version A','Version B'],q:`„${s.name}“ kommt zweimal. Welche Version ist in Moll?`,ex:`Version ${mollA?'A':'B'} war Moll, Version ${mollA?'B':'A'} war Dur.`})});
+  smodes(R,nl).forEach(m=>{const root=sr(R,57,65);qs.push({type:'scale',minor:m,root,a:m?1:0,o:['Dur-Tonleiter ☀️','Moll-Tonleiter 🌧️'],q:'Hör dir die Tonleiter an. Ist sie Dur oder Moll? Tipp: Achte auf den 3. Ton.',ex:m?'Moll: G H G G H G G – der 3. Ton ist tiefer.':'Dur: G G H G G G H.'})});
+  sshuffle(R,KNOW).slice(0,nk).forEach(k=>qs.push({type:'know',...k}));
+  // gemischte Reihenfolge, aber nie mit Wissensfrage enden
+  let out=sshuffle(R,qs); if(out[out.length-1].type==='know'){const j=out.findIndex(x=>x.type!=='know');[out[j],out[out.length-1]]=[out[out.length-1],out[j]]}
+  return out;
+}
+function playQ(q){
+  if(q.type==='chord') return playChord(q.root,q.minor);
+  if(q.type==='scale') return playScale(q.root,q.minor);
+  if(q.type==='song'){
+    const a=playSong(q.song,q.mollA,60,0.3); setBadge('A spielt …');
+    timers.push(setTimeout(()=>{const b=playSongNoStop(q.song,!q.mollA,60,0.3);setBadge('B spielt …');timers.push(setTimeout(()=>setBadge(''),b))},a+300));
+    return a+300+songLen(q.song,0.3);
+  }
+  return 0;
+}
+function songLen(s,beat){return (s.notes.reduce((t,n)=>t+n[1],0)*beat+1.7)*1000}
+function playSongNoStop(song,minor,root,beat){const keep=[...live];const ms=(()=>{const c=ac();let t=c.currentTime+0.08;
+  triad(root-12,minor).forEach(m=>note(m,t,beat*3.5,0.13));
+  song.notes.forEach(([d,b])=>{note(deg(d,minor,root),t,beat*b*0.92,0.3);t+=beat*b});
+  triad(root-12,minor).forEach(m=>note(m,t,1.5,0.18));note(root,t,1.5,0.2);return (t-c.currentTime+1.6)*1000})();return ms}
+function setBadge(t){const e=document.getElementById('badge');if(e){e.textContent=t;e.classList.toggle('hide',!t)}}
+function checkCode(name,score,set){let h=5381;const s=name.trim().toLowerCase()+'|'+score+'|'+set+'|tonarten';for(const ch of s)h=((h<<5)+h+ch.charCodeAt(0))>>>0;
+  const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let c='';for(let i=0;i<4;i++){c+=A[h%32];h=Math.floor(h/32)}return c}
+
+let SO=null, soTick=null;
+const SHAPES=[['#E21B3C','▲'],['#1368CE','◆'],['#D89E00','●'],['#26890C','■']];
+function renderSoloStart(){
+  stopAll();
+  app.innerHTML=`<div class="card" style="display:flex;flex-direction:column;gap:16px">
+   <h1 class="title">Dur-Moll-Turnier 🎧</h1>
+   <div class="how">Jeder spielt für sich. Je <b>schneller</b> und <b>richtiger</b> du antwortest, desto mehr Punkte bekommst du. Ab 3 richtigen Antworten hintereinander gibt es einen <b>Bonus</b>! 🔥</div>
+   <div class="teach" style="background:#EEF6FF;border-color:var(--moll)"><b style="color:var(--moll)">Wichtig:</b> Setz deine <b>Kopfhörer</b> auf. Gib nur <b>deinen eigenen Vornamen</b> ein – keine anderen Namen, keine Spitznamen.</div>
+   <div><label for="soName" style="font-weight:800;font-size:18px">Dein Vorname</label>
+     <input id="soName" maxlength="16" autocomplete="off" style="font:inherit;font-size:24px;padding:12px;border:2px solid var(--line);border-radius:12px;width:100%;margin-top:6px" value="${SO&&SO.name?esc(SO.name):''}"></div>
+   <div><label style="font-weight:800;font-size:18px">Spielcode (steht an der Tafel)</label>
+     <div class="row seg" style="justify-content:flex-start;margin-top:6px">${Object.keys(SETS).map(k=>`<button data-set="${k}" class="${SO&&SO.set===k?'on':''}" style="font-size:28px;padding:10px 30px">${k}</button>`).join('')}</div></div>
+   <div class="row" style="justify-content:flex-start">
+     <button class="play ghost" id="test">🔊 Ton-Test</button>
+     <button class="play alt" id="prac">Übungsrunde (6 Fragen)</button>
+     <button class="next" id="go" style="font-size:24px;padding:16px 30px">Turnier starten ▶</button></div>
+   <div id="err" class="small" style="color:#C0392B;font-weight:800" aria-live="polite"></div></div>`;
+  let set=SO&&SO.set||null;
+  app.querySelectorAll('[data-set]').forEach(b=>b.onclick=()=>{set=b.dataset.set;app.querySelectorAll('[data-set]').forEach(x=>x.classList.toggle('on',x===b))});
+  document.getElementById('test').onclick=()=>playChord(60,false);
+  const begin=practice=>{const name=document.getElementById('soName').value.trim();
+    if(name.length<2){document.getElementById('err').textContent='Bitte gib deinen Vornamen ein.';return}
+    if(!practice&&!set){document.getElementById('err').textContent='Bitte wähle den Spielcode von der Tafel.';return}
+    SO={name,set,practice,qs:makeQuiz(practice?Math.floor(Math.random()*1e9):SETS[set],practice),i:0,score:0,streak:0,correct:0,state:'q'};
+    soQuestion();};
+  document.getElementById('prac').onclick=()=>begin(true);
+  document.getElementById('go').onclick=()=>begin(false);
+}
+function soQuestion(){
+  clearInterval(soTick); stopAll();
+  const q=SO.qs[SO.i], n=SO.qs.length, limit=q.type==='know'?20:15;
+  SO.state='q'; SO.replays=0;
+  app.innerHTML=`<div class="card" style="display:flex;flex-direction:column;gap:14px">
+   <div class="row" style="justify-content:space-between"><div class="counter">${SO.practice?'Übung':'Turnier '+SO.set} · Frage ${SO.i+1} von ${n}</div>
+     <div class="counter">${esc(SO.name)} · <span id="soSc" style="color:var(--musik);font-size:20px">${SO.score}</span> Punkte ${SO.streak>=2?'🔥'+SO.streak:''}</div></div>
+   <div class="how" style="font-size:24px;font-weight:800;text-align:center">${q.q}</div>
+   ${q.type!=='know'?`<div class="row"><span id="badge" class="chip hide" style="background:var(--kunst);font-size:18px"></span><button class="play ghost" id="rep">↻ Nochmal hören (1×)</button></div>${keyboardSVG()}`:''}
+   <div style="height:14px;background:#efe9f7;border-radius:99px;overflow:hidden"><div id="bar" style="height:100%;width:100%;background:var(--musik);transition:width .2s linear"></div></div>
+   <div id="wait" class="small" style="text-align:center;font-weight:800">${q.type==='know'?'':'Hör genau zu …'}</div>
+   <div class="grid2" id="opts" style="grid-template-columns:repeat(${q.o.length>2?2:2},1fr)">${q.o.map((t,k)=>`<button data-o="${k}" style="background:${SHAPES[k][0]};color:#fff;font-size:26px;padding:22px 14px;min-height:90px;display:flex;gap:12px;align-items:center;justify-content:flex-start;text-align:left"><span style="font-size:30px">${SHAPES[k][1]}</span>${t}</button>`).join('')}</div>
+   <div id="fb"></div></div>`;
+  const len=playQ(q);
+  SO.t0=performance.now()+len; SO.limit=limit;
+  const tickF=()=>{const el=document.getElementById('bar');if(!el)return;const t=(performance.now()-SO.t0)/1000;
+    const w=document.getElementById('wait'); if(w&&q.type!=='know') w.textContent=t<0?'Hör genau zu …':'Jetzt antworten!';
+    el.style.width=(t<0?100:Math.max(0,100*(1-t/limit)))+'%';
+    if(t>=limit&&SO.state==='q') soAnswer(-1);};
+  soTick=setInterval(tickF,200);
+  const rep=document.getElementById('rep');
+  if(rep) rep.onclick=()=>{if(SO.replays>=1||SO.state!=='q')return;SO.replays++;rep.disabled=true;rep.style.opacity=.4;playQ(q)};
+  app.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{if(SO.state==='q')soAnswer(+b.dataset.o)});
+}
+function soAnswer(k){
+  clearInterval(soTick); SO.state='a';
+  const q=SO.qs[SO.i], ok=k===q.a, t=Math.max(0,(performance.now()-SO.t0)/1000);
+  let pts=0, bonus=0;
+  if(ok){pts=Math.round(400+600*Math.max(0,1-t/SO.limit));SO.streak++;SO.correct++;if(SO.streak>=3)bonus=100;SO.score+=pts+bonus}else SO.streak=0;
+  app.querySelectorAll('[data-o]').forEach(b=>{const i=+b.dataset.o;b.disabled=true;b.style.opacity=i===q.a||i===k?1:.3;if(i===q.a)b.style.outline='6px solid #1f9d55'});
+  const sc=document.getElementById('soSc'); if(sc) sc.textContent=SO.score;
+  const fb=document.getElementById('fb');
+  fb.innerHTML=`<div style="border-radius:16px;padding:16px;text-align:center;background:${ok?'#E6F6EC':'#FDECEA'}">
+    <div class="big" style="font-size:40px;font-weight:700;color:${ok?'#1f9d55':'#C0392B'}">${ok?`Richtig! +${pts}${bonus?` 🔥+${bonus}`:''}`:(k<0?'Zeit ist um! ⏰':'Leider falsch')}</div>
+    <div class="how" style="font-size:19px">${q.ex}</div>
+    <button class="next" id="nx" style="margin-top:10px">${SO.i<SO.qs.length-1?'Weiter ▶':'Zum Ergebnis 🏁'}</button></div>`;
+  if(ok){const c=ac();note(79,c.currentTime+0.02,0.12,0.15);note(84,c.currentTime+0.14,0.2,0.15)}
+  document.getElementById('nx').onclick=()=>{if(SO.i<SO.qs.length-1){SO.i++;soQuestion()}else soEnd()};
+  document.getElementById('nx').focus();
+}
+function soEnd(){
+  stopAll(); const n=SO.qs.length;
+  const code=SO.practice?'':checkCode(SO.name,SO.score,SO.set);
+  const stars=SO.correct>=n-1?'⭐⭐⭐':SO.correct>=n*0.6?'⭐⭐':'⭐';
+  app.innerHTML=`<div class="card" style="text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center">
+    <h2 class="title">${SO.practice?'Übung geschafft!':'Turnier geschafft!'} ${stars}</h2>
+    <div class="how">${esc(SO.name)}, du hast <b>${SO.correct} von ${n}</b> Fragen richtig.</div>
+    <div class="answer" style="color:var(--musik)">${SO.score}<small>Punkte</small></div>
+    ${SO.practice?`<button class="next" id="back">Jetzt das Turnier spielen ▶</button>`:
+     `<div style="border:4px dashed var(--kunst);border-radius:18px;padding:14px 22px"><div class="small" style="font-weight:800">Ergebnis-Karte · Spielcode ${SO.set}</div>
+       <div class="big" style="font-size:30px;font-weight:700">${esc(SO.name)} · ${SO.score} Punkte</div>
+       <div class="big" style="font-size:24px">Prüfcode: <b style="letter-spacing:4px;color:var(--kunst)">${code}</b></div></div>
+      <div class="how">Lass diese Seite offen und zeig sie der Lehrkraft. 🙋</div>`}</div>`;
+  const b=document.getElementById('back'); if(b) b.onclick=()=>{SO.practice=false;renderSoloStart()};
+  if(!SO.practice) for(let k=0;k<50;k++){const d=document.createElement('div');d.className='conf';d.style.left=Math.random()*100+'vw';
+    d.style.background=[...COLORS,'#F2A516'][k%5];d.style.animationDuration=(2+Math.random()*2.5)+'s';document.body.appendChild(d);setTimeout(()=>d.remove(),5000)}
+}
+
+// ================= LEHRKRAFT / VERTRETUNG =================
+let BL=[]; try{BL=JSON.parse(localStorage.getItem('dm_bestenliste')||'[]')}catch(e){BL=[]}
+const saveBL=()=>{try{localStorage.setItem('dm_bestenliste',JSON.stringify(BL))}catch(e){}};
+let TSET='A';
+function renderTeacher(){
+  stopAll();
+  const sorted=[...BL].sort((a,b)=>b.score-a.score);
+  app.innerHTML=`<div class="card" style="display:flex;flex-direction:column;gap:16px">
+   <h1 class="title">Für die Vertretung 👩‍🏫</h1>
+   <div class="grid2" style="grid-template-columns:auto 1fr;align-items:start">
+     <div style="text-align:center"><svg viewBox="0 0 41 41" width="220" height="220" role="img" aria-label="QR-Code zum Turnier" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path d="M2,2h1v1h-1zM3,2h1v1h-1zM4,2h1v1h-1zM5,2h1v1h-1zM6,2h1v1h-1zM7,2h1v1h-1zM8,2h1v1h-1zM10,2h1v1h-1zM11,2h1v1h-1zM12,2h1v1h-1zM13,2h1v1h-1zM15,2h1v1h-1zM17,2h1v1h-1zM21,2h1v1h-1zM22,2h1v1h-1zM23,2h1v1h-1zM24,2h1v1h-1zM25,2h1v1h-1zM27,2h1v1h-1zM28,2h1v1h-1zM29,2h1v1h-1zM30,2h1v1h-1zM32,2h1v1h-1zM33,2h1v1h-1zM34,2h1v1h-1zM35,2h1v1h-1zM36,2h1v1h-1zM37,2h1v1h-1zM38,2h1v1h-1zM2,3h1v1h-1zM8,3h1v1h-1zM12,3h1v1h-1zM13,3h1v1h-1zM14,3h1v1h-1zM16,3h1v1h-1zM17,3h1v1h-1zM18,3h1v1h-1zM21,3h1v1h-1zM27,3h1v1h-1zM32,3h1v1h-1zM38,3h1v1h-1zM2,4h1v1h-1zM4,4h1v1h-1zM5,4h1v1h-1zM6,4h1v1h-1zM8,4h1v1h-1zM12,4h1v1h-1zM16,4h1v1h-1zM18,4h1v1h-1zM19,4h1v1h-1zM23,4h1v1h-1zM24,4h1v1h-1zM25,4h1v1h-1zM26,4h1v1h-1zM29,4h1v1h-1zM32,4h1v1h-1zM34,4h1v1h-1zM35,4h1v1h-1zM36,4h1v1h-1zM38,4h1v1h-1zM2,5h1v1h-1zM4,5h1v1h-1zM5,5h1v1h-1zM6,5h1v1h-1zM8,5h1v1h-1zM10,5h1v1h-1zM11,5h1v1h-1zM12,5h1v1h-1zM15,5h1v1h-1zM17,5h1v1h-1zM18,5h1v1h-1zM20,5h1v1h-1zM22,5h1v1h-1zM25,5h1v1h-1zM27,5h1v1h-1zM28,5h1v1h-1zM30,5h1v1h-1zM32,5h1v1h-1zM34,5h1v1h-1zM35,5h1v1h-1zM36,5h1v1h-1zM38,5h1v1h-1zM2,6h1v1h-1zM4,6h1v1h-1zM5,6h1v1h-1zM6,6h1v1h-1zM8,6h1v1h-1zM10,6h1v1h-1zM11,6h1v1h-1zM12,6h1v1h-1zM13,6h1v1h-1zM14,6h1v1h-1zM17,6h1v1h-1zM18,6h1v1h-1zM19,6h1v1h-1zM20,6h1v1h-1zM24,6h1v1h-1zM25,6h1v1h-1zM27,6h1v1h-1zM28,6h1v1h-1zM29,6h1v1h-1zM30,6h1v1h-1zM32,6h1v1h-1zM34,6h1v1h-1zM35,6h1v1h-1zM36,6h1v1h-1zM38,6h1v1h-1zM2,7h1v1h-1zM8,7h1v1h-1zM10,7h1v1h-1zM11,7h1v1h-1zM14,7h1v1h-1zM15,7h1v1h-1zM16,7h1v1h-1zM17,7h1v1h-1zM19,7h1v1h-1zM21,7h1v1h-1zM23,7h1v1h-1zM26,7h1v1h-1zM27,7h1v1h-1zM32,7h1v1h-1zM38,7h1v1h-1zM2,8h1v1h-1zM3,8h1v1h-1zM4,8h1v1h-1zM5,8h1v1h-1zM6,8h1v1h-1zM7,8h1v1h-1zM8,8h1v1h-1zM10,8h1v1h-1zM12,8h1v1h-1zM14,8h1v1h-1zM16,8h1v1h-1zM18,8h1v1h-1zM20,8h1v1h-1zM22,8h1v1h-1zM24,8h1v1h-1zM26,8h1v1h-1zM28,8h1v1h-1zM30,8h1v1h-1zM32,8h1v1h-1zM33,8h1v1h-1zM34,8h1v1h-1zM35,8h1v1h-1zM36,8h1v1h-1zM37,8h1v1h-1zM38,8h1v1h-1zM10,9h1v1h-1zM13,9h1v1h-1zM14,9h1v1h-1zM15,9h1v1h-1zM16,9h1v1h-1zM17,9h1v1h-1zM23,9h1v1h-1zM24,9h1v1h-1zM25,9h1v1h-1zM26,9h1v1h-1zM28,9h1v1h-1zM30,9h1v1h-1zM2,10h1v1h-1zM6,10h1v1h-1zM8,10h1v1h-1zM9,10h1v1h-1zM10,10h1v1h-1zM12,10h1v1h-1zM13,10h1v1h-1zM15,10h1v1h-1zM16,10h1v1h-1zM17,10h1v1h-1zM18,10h1v1h-1zM21,10h1v1h-1zM22,10h1v1h-1zM23,10h1v1h-1zM24,10h1v1h-1zM28,10h1v1h-1zM29,10h1v1h-1zM31,10h1v1h-1zM32,10h1v1h-1zM33,10h1v1h-1zM34,10h1v1h-1zM35,10h1v1h-1zM38,10h1v1h-1zM6,11h1v1h-1zM7,11h1v1h-1zM9,11h1v1h-1zM14,11h1v1h-1zM16,11h1v1h-1zM19,11h1v1h-1zM20,11h1v1h-1zM21,11h1v1h-1zM25,11h1v1h-1zM27,11h1v1h-1zM28,11h1v1h-1zM29,11h1v1h-1zM30,11h1v1h-1zM34,11h1v1h-1zM35,11h1v1h-1zM37,11h1v1h-1zM2,12h1v1h-1zM4,12h1v1h-1zM5,12h1v1h-1zM6,12h1v1h-1zM8,12h1v1h-1zM10,12h1v1h-1zM11,12h1v1h-1zM12,12h1v1h-1zM13,12h1v1h-1zM14,12h1v1h-1zM15,12h1v1h-1zM17,12h1v1h-1zM19,12h1v1h-1zM21,12h1v1h-1zM23,12h1v1h-1zM25,12h1v1h-1zM28,12h1v1h-1zM29,12h1v1h-1zM35,12h1v1h-1zM36,12h1v1h-1zM3,13h1v1h-1zM4,13h1v1h-1zM6,13h1v1h-1zM9,13h1v1h-1zM10,13h1v1h-1zM11,13h1v1h-1zM12,13h1v1h-1zM13,13h1v1h-1zM14,13h1v1h-1zM15,13h1v1h-1zM17,13h1v1h-1zM18,13h1v1h-1zM19,13h1v1h-1zM21,13h1v1h-1zM22,13h1v1h-1zM23,13h1v1h-1zM25,13h1v1h-1zM26,13h1v1h-1zM28,13h1v1h-1zM29,13h1v1h-1zM31,13h1v1h-1zM32,13h1v1h-1zM33,13h1v1h-1zM34,13h1v1h-1zM36,13h1v1h-1zM37,13h1v1h-1zM4,14h1v1h-1zM5,14h1v1h-1zM6,14h1v1h-1zM7,14h1v1h-1zM8,14h1v1h-1zM10,14h1v1h-1zM13,14h1v1h-1zM14,14h1v1h-1zM16,14h1v1h-1zM19,14h1v1h-1zM22,14h1v1h-1zM23,14h1v1h-1zM24,14h1v1h-1zM30,14h1v1h-1zM31,14h1v1h-1zM32,14h1v1h-1zM33,14h1v1h-1zM35,14h1v1h-1zM36,14h1v1h-1zM37,14h1v1h-1zM38,14h1v1h-1zM7,15h1v1h-1zM9,15h1v1h-1zM10,15h1v1h-1zM14,15h1v1h-1zM15,15h1v1h-1zM16,15h1v1h-1zM17,15h1v1h-1zM18,15h1v1h-1zM20,15h1v1h-1zM23,15h1v1h-1zM25,15h1v1h-1zM28,15h1v1h-1zM29,15h1v1h-1zM30,15h1v1h-1zM31,15h1v1h-1zM34,15h1v1h-1zM35,15h1v1h-1zM2,16h1v1h-1zM8,16h1v1h-1zM9,16h1v1h-1zM11,16h1v1h-1zM12,16h1v1h-1zM13,16h1v1h-1zM14,16h1v1h-1zM17,16h1v1h-1zM19,16h1v1h-1zM22,16h1v1h-1zM25,16h1v1h-1zM26,16h1v1h-1zM27,16h1v1h-1zM28,16h1v1h-1zM29,16h1v1h-1zM32,16h1v1h-1zM33,16h1v1h-1zM34,16h1v1h-1zM35,16h1v1h-1zM36,16h1v1h-1zM2,17h1v1h-1zM4,17h1v1h-1zM5,17h1v1h-1zM6,17h1v1h-1zM10,17h1v1h-1zM13,17h1v1h-1zM14,17h1v1h-1zM15,17h1v1h-1zM16,17h1v1h-1zM17,17h1v1h-1zM19,17h1v1h-1zM20,17h1v1h-1zM22,17h1v1h-1zM23,17h1v1h-1zM24,17h1v1h-1zM25,17h1v1h-1zM29,17h1v1h-1zM31,17h1v1h-1zM33,17h1v1h-1zM34,17h1v1h-1zM36,17h1v1h-1zM38,17h1v1h-1zM2,18h1v1h-1zM3,18h1v1h-1zM4,18h1v1h-1zM5,18h1v1h-1zM6,18h1v1h-1zM7,18h1v1h-1zM8,18h1v1h-1zM10,18h1v1h-1zM11,18h1v1h-1zM14,18h1v1h-1zM20,18h1v1h-1zM23,18h1v1h-1zM24,18h1v1h-1zM25,18h1v1h-1zM32,18h1v1h-1zM33,18h1v1h-1zM35,18h1v1h-1zM36,18h1v1h-1zM37,18h1v1h-1zM2,19h1v1h-1zM6,19h1v1h-1zM7,19h1v1h-1zM9,19h1v1h-1zM10,19h1v1h-1zM12,19h1v1h-1zM13,19h1v1h-1zM14,19h1v1h-1zM15,19h1v1h-1zM18,19h1v1h-1zM21,19h1v1h-1zM22,19h1v1h-1zM25,19h1v1h-1zM28,19h1v1h-1zM29,19h1v1h-1zM30,19h1v1h-1zM34,19h1v1h-1zM35,19h1v1h-1zM37,19h1v1h-1zM3,20h1v1h-1zM4,20h1v1h-1zM5,20h1v1h-1zM6,20h1v1h-1zM7,20h1v1h-1zM8,20h1v1h-1zM9,20h1v1h-1zM10,20h1v1h-1zM14,20h1v1h-1zM16,20h1v1h-1zM18,20h1v1h-1zM19,20h1v1h-1zM20,20h1v1h-1zM22,20h1v1h-1zM24,20h1v1h-1zM25,20h1v1h-1zM26,20h1v1h-1zM28,20h1v1h-1zM29,20h1v1h-1zM31,20h1v1h-1zM33,20h1v1h-1zM34,20h1v1h-1zM36,20h1v1h-1zM2,21h1v1h-1zM11,21h1v1h-1zM12,21h1v1h-1zM15,21h1v1h-1zM16,21h1v1h-1zM19,21h1v1h-1zM20,21h1v1h-1zM23,21h1v1h-1zM24,21h1v1h-1zM28,21h1v1h-1zM29,21h1v1h-1zM30,21h1v1h-1zM31,21h1v1h-1zM32,21h1v1h-1zM33,21h1v1h-1zM34,21h1v1h-1zM36,21h1v1h-1zM37,21h1v1h-1zM4,22h1v1h-1zM5,22h1v1h-1zM7,22h1v1h-1zM8,22h1v1h-1zM10,22h1v1h-1zM11,22h1v1h-1zM12,22h1v1h-1zM13,22h1v1h-1zM15,22h1v1h-1zM16,22h1v1h-1zM17,22h1v1h-1zM19,22h1v1h-1zM20,22h1v1h-1zM21,22h1v1h-1zM22,22h1v1h-1zM23,22h1v1h-1zM26,22h1v1h-1zM29,22h1v1h-1zM31,22h1v1h-1zM32,22h1v1h-1zM33,22h1v1h-1zM35,22h1v1h-1zM36,22h1v1h-1zM5,23h1v1h-1zM6,23h1v1h-1zM7,23h1v1h-1zM9,23h1v1h-1zM11,23h1v1h-1zM12,23h1v1h-1zM15,23h1v1h-1zM17,23h1v1h-1zM18,23h1v1h-1zM19,23h1v1h-1zM20,23h1v1h-1zM21,23h1v1h-1zM23,23h1v1h-1zM25,23h1v1h-1zM28,23h1v1h-1zM29,23h1v1h-1zM30,23h1v1h-1zM33,23h1v1h-1zM34,23h1v1h-1zM2,24h1v1h-1zM6,24h1v1h-1zM7,24h1v1h-1zM8,24h1v1h-1zM11,24h1v1h-1zM14,24h1v1h-1zM17,24h1v1h-1zM20,24h1v1h-1zM22,24h1v1h-1zM23,24h1v1h-1zM24,24h1v1h-1zM25,24h1v1h-1zM26,24h1v1h-1zM29,24h1v1h-1zM32,24h1v1h-1zM33,24h1v1h-1zM34,24h1v1h-1zM35,24h1v1h-1zM36,24h1v1h-1zM37,24h1v1h-1zM3,25h1v1h-1zM4,25h1v1h-1zM5,25h1v1h-1zM9,25h1v1h-1zM10,25h1v1h-1zM12,25h1v1h-1zM13,25h1v1h-1zM16,25h1v1h-1zM17,25h1v1h-1zM18,25h1v1h-1zM21,25h1v1h-1zM22,25h1v1h-1zM23,25h1v1h-1zM26,25h1v1h-1zM33,25h1v1h-1zM34,25h1v1h-1zM36,25h1v1h-1zM3,26h1v1h-1zM4,26h1v1h-1zM5,26h1v1h-1zM7,26h1v1h-1zM8,26h1v1h-1zM10,26h1v1h-1zM12,26h1v1h-1zM14,26h1v1h-1zM17,26h1v1h-1zM18,26h1v1h-1zM22,26h1v1h-1zM23,26h1v1h-1zM24,26h1v1h-1zM26,26h1v1h-1zM29,26h1v1h-1zM31,26h1v1h-1zM32,26h1v1h-1zM33,26h1v1h-1zM35,26h1v1h-1zM36,26h1v1h-1zM37,26h1v1h-1zM38,26h1v1h-1zM2,27h1v1h-1zM7,27h1v1h-1zM9,27h1v1h-1zM10,27h1v1h-1zM12,27h1v1h-1zM13,27h1v1h-1zM14,27h1v1h-1zM15,27h1v1h-1zM19,27h1v1h-1zM20,27h1v1h-1zM21,27h1v1h-1zM23,27h1v1h-1zM25,27h1v1h-1zM26,27h1v1h-1zM29,27h1v1h-1zM30,27h1v1h-1zM31,27h1v1h-1zM34,27h1v1h-1zM5,28h1v1h-1zM6,28h1v1h-1zM7,28h1v1h-1zM8,28h1v1h-1zM10,28h1v1h-1zM12,28h1v1h-1zM16,28h1v1h-1zM17,28h1v1h-1zM19,28h1v1h-1zM20,28h1v1h-1zM21,28h1v1h-1zM25,28h1v1h-1zM29,28h1v1h-1zM30,28h1v1h-1zM31,28h1v1h-1zM33,28h1v1h-1zM35,28h1v1h-1zM4,29h1v1h-1zM5,29h1v1h-1zM7,29h1v1h-1zM10,29h1v1h-1zM11,29h1v1h-1zM12,29h1v1h-1zM13,29h1v1h-1zM15,29h1v1h-1zM16,29h1v1h-1zM17,29h1v1h-1zM18,29h1v1h-1zM19,29h1v1h-1zM20,29h1v1h-1zM21,29h1v1h-1zM22,29h1v1h-1zM23,29h1v1h-1zM24,29h1v1h-1zM25,29h1v1h-1zM26,29h1v1h-1zM28,29h1v1h-1zM29,29h1v1h-1zM30,29h1v1h-1zM33,29h1v1h-1zM34,29h1v1h-1zM35,29h1v1h-1zM36,29h1v1h-1zM37,29h1v1h-1zM2,30h1v1h-1zM3,30h1v1h-1zM5,30h1v1h-1zM8,30h1v1h-1zM10,30h1v1h-1zM11,30h1v1h-1zM15,30h1v1h-1zM16,30h1v1h-1zM19,30h1v1h-1zM22,30h1v1h-1zM23,30h1v1h-1zM24,30h1v1h-1zM25,30h1v1h-1zM26,30h1v1h-1zM30,30h1v1h-1zM31,30h1v1h-1zM32,30h1v1h-1zM33,30h1v1h-1zM34,30h1v1h-1zM36,30h1v1h-1zM10,31h1v1h-1zM12,31h1v1h-1zM13,31h1v1h-1zM14,31h1v1h-1zM15,31h1v1h-1zM16,31h1v1h-1zM17,31h1v1h-1zM18,31h1v1h-1zM22,31h1v1h-1zM25,31h1v1h-1zM27,31h1v1h-1zM30,31h1v1h-1zM34,31h1v1h-1zM2,32h1v1h-1zM3,32h1v1h-1zM4,32h1v1h-1zM5,32h1v1h-1zM6,32h1v1h-1zM7,32h1v1h-1zM8,32h1v1h-1zM10,32h1v1h-1zM11,32h1v1h-1zM14,32h1v1h-1zM15,32h1v1h-1zM17,32h1v1h-1zM18,32h1v1h-1zM19,32h1v1h-1zM22,32h1v1h-1zM23,32h1v1h-1zM25,32h1v1h-1zM28,32h1v1h-1zM30,32h1v1h-1zM32,32h1v1h-1zM34,32h1v1h-1zM2,33h1v1h-1zM8,33h1v1h-1zM13,33h1v1h-1zM16,33h1v1h-1zM17,33h1v1h-1zM18,33h1v1h-1zM19,33h1v1h-1zM20,33h1v1h-1zM21,33h1v1h-1zM22,33h1v1h-1zM23,33h1v1h-1zM26,33h1v1h-1zM30,33h1v1h-1zM34,33h1v1h-1zM35,33h1v1h-1zM36,33h1v1h-1zM37,33h1v1h-1zM2,34h1v1h-1zM4,34h1v1h-1zM5,34h1v1h-1zM6,34h1v1h-1zM8,34h1v1h-1zM10,34h1v1h-1zM11,34h1v1h-1zM12,34h1v1h-1zM14,34h1v1h-1zM20,34h1v1h-1zM22,34h1v1h-1zM23,34h1v1h-1zM24,34h1v1h-1zM25,34h1v1h-1zM26,34h1v1h-1zM30,34h1v1h-1zM31,34h1v1h-1zM32,34h1v1h-1zM33,34h1v1h-1zM34,34h1v1h-1zM35,34h1v1h-1zM36,34h1v1h-1zM37,34h1v1h-1zM2,35h1v1h-1zM4,35h1v1h-1zM5,35h1v1h-1zM6,35h1v1h-1zM8,35h1v1h-1zM11,35h1v1h-1zM12,35h1v1h-1zM15,35h1v1h-1zM18,35h1v1h-1zM21,35h1v1h-1zM22,35h1v1h-1zM23,35h1v1h-1zM24,35h1v1h-1zM25,35h1v1h-1zM27,35h1v1h-1zM28,35h1v1h-1zM29,35h1v1h-1zM31,35h1v1h-1zM32,35h1v1h-1zM33,35h1v1h-1zM35,35h1v1h-1zM36,35h1v1h-1zM38,35h1v1h-1zM2,36h1v1h-1zM4,36h1v1h-1zM5,36h1v1h-1zM6,36h1v1h-1zM8,36h1v1h-1zM12,36h1v1h-1zM15,36h1v1h-1zM16,36h1v1h-1zM18,36h1v1h-1zM23,36h1v1h-1zM24,36h1v1h-1zM25,36h1v1h-1zM26,36h1v1h-1zM27,36h1v1h-1zM30,36h1v1h-1zM32,36h1v1h-1zM36,36h1v1h-1zM2,37h1v1h-1zM8,37h1v1h-1zM11,37h1v1h-1zM12,37h1v1h-1zM13,37h1v1h-1zM15,37h1v1h-1zM19,37h1v1h-1zM20,37h1v1h-1zM21,37h1v1h-1zM23,37h1v1h-1zM25,37h1v1h-1zM26,37h1v1h-1zM31,37h1v1h-1zM34,37h1v1h-1zM36,37h1v1h-1zM37,37h1v1h-1zM2,38h1v1h-1zM3,38h1v1h-1zM4,38h1v1h-1zM5,38h1v1h-1zM6,38h1v1h-1zM7,38h1v1h-1zM8,38h1v1h-1zM10,38h1v1h-1zM11,38h1v1h-1zM12,38h1v1h-1zM13,38h1v1h-1zM14,38h1v1h-1zM15,38h1v1h-1zM16,38h1v1h-1zM17,38h1v1h-1zM18,38h1v1h-1zM19,38h1v1h-1zM21,38h1v1h-1zM22,38h1v1h-1zM23,38h1v1h-1zM24,38h1v1h-1zM25,38h1v1h-1zM26,38h1v1h-1zM28,38h1v1h-1zM29,38h1v1h-1zM31,38h1v1h-1zM33,38h1v1h-1zM36,38h1v1h-1zM37,38h1v1h-1zM38,38h1v1h-1z" fill="#2b2633"/></svg><div class="small" style="font-weight:800">QR-Code mit dem Tablet scannen</div><div class="small" style="max-width:240px;word-break:break-all">frauoezdemir.github.io/Mathe-spiele/dur-moll-spiele.html</div></div>
+     <div style="display:flex;flex-direction:column;gap:10px">
+       <div class="how">Heute spielt jedes Kind <b>allein auf seinem Tablet</b> (mit Kopfhörern) ein Hör-Turnier zu Dur und Moll. Die Seite spielt die Töne selbst und kontrolliert die Antworten. Keine Vorkenntnisse nötig.</div>
+       <div class="row" style="justify-content:flex-start;gap:16px"><span style="font-weight:800;font-size:20px">Spielcode für die Tafel:</span>
+         <div class="row seg" style="justify-content:flex-start">${Object.keys(SETS).map(k=>`<button data-ts="${k}" class="${TSET===k?'on':''}">${k}</button>`).join('')}</div>
+         <span class="big" style="font-size:72px;font-weight:700;color:var(--kunst);line-height:1">${TSET}</span></div>
+       <div class="small">Mit demselben Code bekommen alle Kinder dieselben Fragen in derselben Reihenfolge. Für eine zweite Runde einfach einen neuen Buchstaben an die Tafel schreiben.</div>
+     </div></div>
+   <div class="teach"><b>Ablauf (ca. 30 Minuten):</b><br>
+     1. <b>5 Min.</b> Tablets und Kopfhörer verteilen, QR-Code scannen, auf <b>„Einzel-Turnier“</b> tippen. Regel: <b>nur Tablets, keine Handys</b>, nur den <b>eigenen Vornamen</b> eingeben.<br>
+     2. <b>3 Min.</b> Übungsrunde (6 Fragen, zählt nicht).<br>
+     3. <b>10 Min.</b> Turnier mit Spielcode an der Tafel (15 Fragen).<br>
+     4. <b>4 Min.</b> Kinder zeigen ihre Ergebnis-Karte. Die besten 5 unten eintragen (der Prüfcode zeigt, ob die Punktzahl echt ist).<br>
+     5. <b>8 Min.</b> Siegerehrung, dann zweite Turnierrunde mit neuem Spielcode, wenn noch Zeit ist.<br>
+     <b>Ohne Kopfhörer?</b> Dann lieber zusammen die <b>Klassen-Spielshow</b> (Startseite) am Smartboard in Teams spielen.</div>
+   <div style="display:flex;flex-direction:column;gap:10px">
+     <h3 style="margin:0;font-size:26px;color:var(--musik)">Bestenliste</h3>
+     <form id="addf" class="row" style="justify-content:flex-start">
+       <input id="bn" placeholder="Vorname" maxlength="16" style="font:inherit;font-size:18px;padding:10px;border:2px solid var(--line);border-radius:10px;width:170px">
+       <input id="bs" placeholder="Punkte" inputmode="numeric" style="font:inherit;font-size:18px;padding:10px;border:2px solid var(--line);border-radius:10px;width:120px">
+       <input id="bc" placeholder="Prüfcode" maxlength="4" style="font:inherit;font-size:18px;padding:10px;border:2px solid var(--line);border-radius:10px;width:120px;text-transform:uppercase">
+       <button class="next" type="submit" style="font-size:18px;padding:10px 18px">Eintragen</button>
+       <span id="bmsg" class="small" style="font-weight:800" aria-live="polite"></span></form>
+     <table style="width:100%;border-collapse:collapse;font-size:20px">${sorted.map((r,k)=>`<tr style="border-bottom:1px solid var(--line)"><td style="padding:6px;width:50px;font-weight:800">${k+1}.</td><td>${esc(r.name)}</td><td style="font-weight:800;color:var(--musik)">${r.score}</td><td class="small">Code ${r.set} ${r.ok?'✅':'⚠️ Prüfcode passt nicht'}</td><td><button data-del="${BL.indexOf(r)}" class="play ghost" style="font-size:14px;padding:4px 10px" aria-label="Löschen">✕</button></td></tr>`).join('')||'<tr><td class="small">Noch keine Einträge.</td></tr>'}</table>
+     <div class="row" style="justify-content:flex-start"><button class="play" id="pod">🏆 Siegerehrung zeigen</button><button class="play ghost" id="clr">Liste leeren</button></div>
+   </div></div>`;
+  app.querySelectorAll('[data-ts]').forEach(b=>b.onclick=()=>{TSET=b.dataset.ts;renderTeacher()});
+  document.getElementById('addf').onsubmit=e=>{e.preventDefault();
+    const name=document.getElementById('bn').value.trim(), score=parseInt(document.getElementById('bs').value,10), code=document.getElementById('bc').value.trim().toUpperCase();
+    if(!name||isNaN(score)){document.getElementById('bmsg').textContent='Name und Punkte eingeben.';return}
+    const ok=Object.keys(SETS).some(s=>checkCode(name,score,s)===code);
+    const set=Object.keys(SETS).find(s=>checkCode(name,score,s)===code)||TSET;
+    BL.push({name,score,set,ok});saveBL();renderTeacher();};
+  app.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{BL.splice(+b.dataset.del,1);saveBL();renderTeacher()});
+  document.getElementById('clr').onclick=()=>{if(!BL.length)return;BL=[];saveBL();renderTeacher()};
+  document.getElementById('pod').onclick=()=>{if(!BL.length)return;
+    S.teams=[...BL].filter(r=>r.ok).sort((a,b)=>b.score-a.score).slice(0,5).map((r,k)=>({name:r.name,score:r.score,color:COLORS[k%4]}));
+    if(!S.teams.length)return; S.screen='end'; S.fromTeacher=true; render()};
+}
+function renderHome(){
+  stopAll();
+  app.innerHTML=`<div class="card" style="display:flex;flex-direction:column;gap:18px">
+   <h1 class="title">Dur-Moll-Spiele 🎵</h1>
+   <div class="grid2">
+     <button class="play" id="h1" style="flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:22px;font-size:26px">🎧 Einzel-Turnier<span style="font-size:16px;font-weight:700">Für Schüler/innen: jeder auf seinem Tablet, mit Punkten wie bei Kahoot</span></button>
+     <button class="play alt" id="h2" style="flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:22px;font-size:26px">👩‍🏫 Lehrkraft / Vertretung<span style="font-size:16px;font-weight:700">Spielcode, QR-Code, Ablauf und Bestenliste</span></button>
+     <button class="play ghost" id="h3" style="flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:22px;font-size:26px">🏟️ Klassen-Spielshow<span style="font-size:16px;font-weight:700">Alle zusammen am Smartboard, in Teams</span></button>
+   </div></div>`;
+  document.getElementById('h1').onclick=()=>go('turnier');
+  document.getElementById('h2').onclick=()=>go('lehrkraft');
+  document.getElementById('h3').onclick=()=>go('klasse');
+}
+function go(h){ if(location.hash.replace('#','')!==h) location.hash=h; else route(); }
+function route(){
+  const h=location.hash.replace('#','');
+  stopAll(); clearInterval(soTick);
+  if(h==='turnier'){S.screen='solo';}
+  else if(h==='lehrkraft'){S.screen='teacher';}
+  else if(h==='klasse'){S.screen='start';}
+  else S.screen='home';
+  render();
+}
+window.addEventListener('hashchange',route);
+
+document.getElementById('home').onclick=()=>go('');
+route();
+</script>
+</body>
+</html>

@@ -48,3 +48,9 @@ Spielarten: Klassenduell (Team Blau gegen Team Orange) und Blitzrunde. Drei Nive
 | Spiel | Thema |
 |---|---|
 | [Escape-Room: Der Klassenschatz](escape-room-klassenschatz.html) | Klassengemeinschaft: 6 Teams auf iPads knacken je 3 Schlösser (Werte sortieren, Freundschafts-Memory, Team-Puzzle) und öffnen die Klassen-Truhe nur gemeinsam |
+
+## Musik 5 · Werkstatt Tonarten
+
+| Spiel | Thema |
+|---|---|
+| [Dur-Moll-Spiele](dur-moll-spiele.html) | Dur und Moll hören: Einzel-Turnier am Tablet (Spielcode A/B/C, Tempo-Punkte, Prüfcode), Klassen-Spielshow in Teams, Lehrkraft-Seite mit QR-Code und Bestenliste |
