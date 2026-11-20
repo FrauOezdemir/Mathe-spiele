@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Koordinaten-Profi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Lexend:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#123F88;--blue2:#164A9C;--orange:#C25A12;--red:#C8170F;--green:#1E7B34;--yel:#FFEDAA;--yelb:#B07F00;--bg:#F3F6FB;--ink:#1B1F24}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);font-family:Lexend,system-ui,sans-serif;color:var(--ink)}
+button{font-family:Fredoka,system-ui,sans-serif;cursor:pointer}
+.screen{display:none;min-height:100%;padding:14px;max-width:1100px;margin:0 auto}
+.screen.on{display:block}
+h1{font-family:Fredoka;font-weight:600;color:var(--blue);font-size:clamp(28px,5vw,46px);margin:8px 0 4px;text-align:center}
+.sub{text-align:center;color:#333;margin:0 0 18px}
+.card{background:#fff;border:3px solid var(--blue);border-radius:16px;padding:16px;margin:12px auto;max-width:720px}
+.card h2{font-family:Fredoka;margin:0 0 10px;color:var(--blue);font-size:20px}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.choice{border:3px solid var(--blue);background:#fff;border-radius:14px;padding:12px;text-align:left;font-size:17px;color:var(--blue)}
+.choice small{display:block;font-family:Lexend;font-size:13px;color:#333;margin-top:4px}
+.choice.sel{background:var(--blue);color:#fff}.choice.sel small{color:#dfe7f5}
+.big{display:block;margin:18px auto 6px;background:var(--blue2);color:#fff;border:0;border-radius:14px;font-size:22px;padding:12px 40px}
+.merke{background:var(--yel);border:3px solid var(--yelb);border-radius:14px;padding:12px 14px;max-width:720px;margin:12px auto;font-size:15px;line-height:1.5}
+.merke b.x{color:var(--blue)} .merke b.y{color:var(--orange)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.pill{font-family:Fredoka;background:#fff;border:2px solid var(--blue);border-radius:999px;padding:4px 12px;color:var(--blue);font-size:16px}
+.pill.st{border-color:var(--orange);color:var(--orange)}
+.home{background:#fff;border:2px solid #555;border-radius:10px;padding:4px 10px;font-size:15px}
+.game{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;align-items:flex-start}
+#board{background:#fff;border:3px solid var(--blue);border-radius:14px;touch-action:none;max-width:100%;height:auto}
+.panel{flex:1;min-width:280px;max-width:420px}
+.task{font-family:Fredoka;font-size:22px;color:var(--blue);margin:4px 0 10px}
+.coords{display:flex;align-items:center;justify-content:center;gap:6px;font-family:Fredoka;font-size:34px;margin:8px 0}
+.field{min-width:78px;height:62px;border:3px solid;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;cursor:pointer;position:relative}
+.field .lab{position:absolute;top:-11px;font-size:13px;color:#fff;border-radius:6px;padding:0 6px;font-family:Fredoka}
+.field.x{border-color:var(--blue);color:var(--blue)} .field.x .lab{background:var(--blue)}
+.field.y{border-color:var(--orange);color:var(--orange)} .field.y .lab{background:var(--orange)}
+.field.act{box-shadow:0 0 0 4px #ffd54a}
+.keys{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.keys button{font-size:24px;height:52px;border-radius:12px;border:2px solid #555;background:#fff}
+.keys .ok{grid-column:span 2;background:var(--green);color:#fff;border:0}
+.keys .minus{background:#EEF2F8}
+.fb{min-height:74px;border-radius:14px;padding:10px 14px;margin-top:12px;font-size:16px;line-height:1.4;display:none}
+.fb.good{display:block;background:#DDF2E1;border:3px solid var(--green)}
+.fb.bad{display:block;background:#FAD3CF;border:3px solid var(--red)}
+.fb.swap{display:block;background:#FFEDAA;border:3px solid var(--yelb)}
+.fb .t{font-family:Fredoka;font-size:20px;display:flex;align-items:center;gap:8px}
+.next{margin-top:10px;background:var(--blue2);color:#fff;border:0;border-radius:12px;font-size:20px;padding:8px 22px;display:none}
+.hint{background:none;border:0;color:var(--blue);text-decoration:underline;font-size:15px;margin-top:8px;font-family:Lexend}
+.prog{height:10px;background:#dfe5ef;border-radius:6px;overflow:hidden;margin:2px 0 10px}
+.prog i{display:block;height:100%;background:var(--green);width:0;transition:width .3s}
+.res{font-family:Fredoka;font-size:60px;color:var(--blue);text-align:center;margin:6px 0}
+.stars{text-align:center;font-size:44px;letter-spacing:6px;color:#E0A100}
+table.sum{margin:8px auto;border-collapse:collapse;font-size:16px}
+table.sum td{padding:4px 12px;border-bottom:1px solid #ccc}
+.setinfo{font-size:15px;color:#333;margin-top:6px}
+@media (max-width:640px){.coords{font-size:28px}.field{min-width:66px;height:54px}}
+</style>
+</head>
+<body>
+
+<!-- START -->
+<section id="start" class="screen on">
+  <h1>Koordinaten-Profi</h1>
+  <p class="sub">Punkte im Koordinatensystem ablesen und eintragen</p>
+
+  <div class="merke">
+    <b>Merke:</b> Ein Punkt heißt <b>P (<b class="x">x</b> | <b class="y">y</b>)</b>.<br>
+    ① Zuerst <b class="x">x</b>: vom Ursprung nach <b class="x">rechts oder links</b>.<br>
+    ② Dann <b class="y">y</b>: nach <b class="y">oben oder unten</b>.<br>
+    Eselsbrücke: <b>Erst laufen, dann springen.</b> Und im Alphabet kommt x vor y.
+  </div>
+
+  <div class="card">
+    <h2>1. Was willst du üben?</h2>
+    <div class="choices" id="modes">
+      <button class="choice sel" data-m="lesen">🔍 Ablesen<small>Ein Punkt ist eingezeichnet. Tippe seine Koordinaten ein.</small></button>
+      <button class="choice" data-m="setzen">📍 Eintragen<small>Die Koordinaten sind gegeben. Tippe den Punkt ins Gitter.</small></button>
+      <button class="choice" data-m="mix">🔀 Gemischt<small>Abwechselnd ablesen und eintragen.</small></button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>2. Welche Stufe?</h2>
+    <div class="choices" id="levels">
+      <button class="choice sel" data-l="1">Stufe 1 ●○○<small>Nur positive Zahlen (0 bis 6)</small></button>
+      <button class="choice" data-l="2">Stufe 2 ●●○<small>Auch negative Zahlen (−6 bis 6)</small></button>
+      <button class="choice" data-l="3">Stufe 3 ●●●<small>Mit Punkten auf den Achsen</small></button>
+    </div>
+  </div>
+  <button class="big" id="go">Los geht's ▶</button>
+</section>
+
+<!-- SPIEL -->
+<section id="play" class="screen">
+  <div class="top">
+    <button class="home" id="toHome">⌂ Start</button>
+    <span class="pill" id="round">Aufgabe 1 / 10</span>
+    <span class="pill" id="score">✓ 0</span>
+    <span class="pill st" id="streak">🔥 0</span>
+  </div>
+  <div class="prog"><i id="bar"></i></div>
+  <div class="game">
+    <svg id="board" viewBox="0 0 520 520" width="520" height="520"></svg>
+    <div class="panel">
+      <div class="task" id="task"></div>
+      <div id="readUI">
+        <div class="coords">P (
+          <div class="field x act" id="fx" data-f="x"><span class="lab">x</span><span id="vx"></span></div> |
+          <div class="field y" id="fy" data-f="y"><span class="lab">y</span><span id="vy"></span></div> )
+        </div>
+        <div class="keys" id="keys">
+          <button>7</button><button>8</button><button>9</button><button class="minus">−</button>
+          <button>4</button><button>5</button><button>6</button><button>⌫</button>
+          <button>1</button><button>2</button><button>3</button><button>0</button>
+          <button class="ok" id="check">Prüfen ✓</button><button id="clr" style="grid-column:span 2">Löschen</button>
+        </div>
+      </div>
+      <div id="setUI" class="setinfo" style="display:none">Tippe auf den Gitterpunkt, an dem der Punkt liegt.</div>
+      <div class="fb" id="fb"></div>
+      <button class="next" id="next">Weiter ▶</button><br>
+      <button class="hint" id="hintBtn">💡 Tipp anzeigen</button>
+    </div>
+  </div>
+</section>
+
+<!-- ERGEBNIS -->
+<section id="end" class="screen">
+  <h1>Geschafft!</h1>
+  <div class="res" id="resNum"></div>
+  <div class="stars" id="stars"></div>
+  <table class="sum" id="sum"></table>
+  <div class="merke" id="endTip" style="display:none"></div>
+  <button class="big" id="again">Nochmal spielen</button>
+  <button class="big" id="up" style="background:var(--green)">Nächste Stufe ▶</button>
+</section>
+
+<script>
+const $=s=>document.querySelector(s);
+const NS="http://www.w3.org/2000/svg";
+const BLUE="#123F88",OR="#C25A12",RED="#C8170F",GREEN="#1E7B34";
+let mode="lesen",level=1,N=10;
+let tasks=[],idx=0,score=0,streak=0,best=0,swaps=0,firstTry=true,cur=null,active="x",inp={x:"",y:""},done=false,tries=0;
+
+document.querySelectorAll("#modes .choice").forEach(b=>b.onclick=()=>{document.querySelectorAll("#modes .choice").forEach(c=>c.classList.remove("sel"));b.classList.add("sel");mode=b.dataset.m});
+document.querySelectorAll("#levels .choice").forEach(b=>b.onclick=()=>{document.querySelectorAll("#levels .choice").forEach(c=>c.classList.remove("sel"));b.classList.add("sel");level=+b.dataset.l});
+function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("on"));$("#"+id).classList.add("on");window.scrollTo(0,0)}
+
+// ---------- Aufgaben erzeugen ----------
+function rnd(a,b){return a+Math.floor(Math.random()*(b-a+1))}
+function makeTasks(){
+  const out=[],seen=new Set();
+  while(out.length<N){
+    let x,y;
+    if(level==1){x=rnd(1,6);y=rnd(1,6)}
+    else if(level==2){x=rnd(-6,6);y=rnd(-6,6);if(x==0||y==0)continue}
+    else{ if(Math.random()<0.35){ if(Math.random()<0.5){x=0;y=rnd(-6,6)}else{y=0;x=rnd(-6,6)} } else {x=rnd(-6,6);y=rnd(-6,6)} }
+    if(x==y)continue;                         // sonst merkt man Vertauschen nicht
+    if(level>=2 && out.length<N/2 && Math.sign(x)==Math.sign(y) && Math.random()<0.5)continue; // mehr gemischte Vorzeichen
+    const k=x+","+y; if(seen.has(k))continue; seen.add(k);
+    let m=mode=="mix"?(out.length%2?"setzen":"lesen"):mode;
+    out.push({x,y,m});
+  }
+  return out;
+}
+function lim(){return level==1?{a:-1,b:7}:{a:-7,b:7}}
+
+// ---------- Koordinatensystem ----------
+let G={};
+function drawGrid(){
+  const svg=$("#board");svg.innerHTML="";
+  const L=lim(),n=L.b-L.a,pad=34,size=520-2*pad,u=size/n;
+  G={a:L.a,b:L.b,u,pad,X:x=>pad+(x-L.a)*u,Y:y=>pad+(L.b-y)*u};
+  const el=(t,at,txt)=>{const e=document.createElementNS(NS,t);for(const k in at)e.setAttribute(k,at[k]);if(txt!=null)e.textContent=txt;svg.appendChild(e);return e};
+  for(let i=L.a;i<=L.b;i++){
+    el("line",{x1:G.X(i),y1:G.Y(L.a),x2:G.X(i),y2:G.Y(L.b),stroke:"#666","stroke-width":1});
+    el("line",{x1:G.X(L.a),y1:G.Y(i),x2:G.X(L.b),y2:G.Y(i),stroke:"#666","stroke-width":1});
+  }
+  // Achsen
+  el("line",{x1:G.X(L.a)-6,y1:G.Y(0),x2:G.X(L.b)+14,y2:G.Y(0),stroke:BLUE,"stroke-width":3.5});
+  el("line",{x1:G.X(0),y1:G.Y(L.a)+6,x2:G.X(0),y2:G.Y(L.b)-14,stroke:OR,"stroke-width":3.5});
+  el("path",{d:`M${G.X(L.b)+22} ${G.Y(0)} l-12 -7 v14z`,fill:BLUE});
+  el("path",{d:`M${G.X(0)} ${G.Y(L.b)-22} l-7 12 h14z`,fill:OR});
+  el("text",{x:G.X(L.b)+8,y:G.Y(0)+26,fill:BLUE,"font-family":"Fredoka","font-size":22,"font-weight":600},"x");
+  el("text",{x:G.X(0)+10,y:G.Y(L.b)-6,fill:OR,"font-family":"Fredoka","font-size":22,"font-weight":600},"y");
+  const st={"font-family":"Lexend","font-size":17,"paint-order":"stroke",stroke:"#fff","stroke-width":2.5};
+  for(let i=L.a;i<=L.b;i++){
+    if(i!=0){
+      el("text",Object.assign({x:G.X(i),y:G.Y(0)+19,"text-anchor":"middle",fill:BLUE},st),String(i).replace("-","−"));
+      el("text",Object.assign({x:G.X(0)-6,y:G.Y(i)+5,"text-anchor":"end",fill:OR},st),String(i).replace("-","−"));
+    }
+  }
+  el("text",Object.assign({x:G.X(0)+5,y:G.Y(0)+19,fill:"#000"},st),"0");
+  G.layer=el("g",{});
+}
+function dot(x,y,col,label,r=9){
+  const g=G.layer;
+  const c=document.createElementNS(NS,"circle");c.setAttribute("cx",G.X(x));c.setAttribute("cy",G.Y(y));c.setAttribute("r",r);c.setAttribute("fill",col);c.setAttribute("stroke","#fff");c.setAttribute("stroke-width",2.5);g.appendChild(c);
+  if(label){const t=document.createElementNS(NS,"text");t.setAttribute("x",G.X(x)+12);t.setAttribute("y",G.Y(y)-10);t.setAttribute("fill",col);t.setAttribute("font-family","Fredoka");t.setAttribute("font-size",24);t.setAttribute("font-weight",600);t.setAttribute("paint-order","stroke");t.setAttribute("stroke","#fff");t.setAttribute("stroke-width",4);t.textContent=label;g.appendChild(t)}
+  return c;
+}
+function cross(x,y,col){
+  const g=G.layer,s=9;
+  for(const d of [[-s,-s,s,s],[-s,s,s,-s]]){const l=document.createElementNS(NS,"line");l.setAttribute("x1",G.X(x)+d[0]);l.setAttribute("y1",G.Y(y)+d[1]);l.setAttribute("x2",G.X(x)+d[2]);l.setAttribute("y2",G.Y(y)+d[3]);l.setAttribute("stroke",col);l.setAttribute("stroke-width",4);l.setAttribute("stroke-linecap","round");g.appendChild(l)}
+}
+// Weg animieren: erst x (blau, waagerecht), dann y (orange, senkrecht)
+function path(x,y){
+  const g=G.layer;
+  const mk=(x1,y1,x2,y2,col,delay)=>{
+    const l=document.createElementNS(NS,"line");
+    l.setAttribute("x1",G.X(x1));l.setAttribute("y1",G.Y(y1));l.setAttribute("x2",G.X(x2));l.setAttribute("y2",G.Y(y2));
+    l.setAttribute("stroke",col);l.setAttribute("stroke-width",6);l.setAttribute("stroke-linecap","round");
+    const len=Math.hypot(G.X(x2)-G.X(x1),G.Y(y2)-G.Y(y1))||1;
+    l.style.strokeDasharray=len;l.style.strokeDashoffset=len;l.style.transition=`stroke-dashoffset .8s ease ${delay}s`;
+    g.appendChild(l);requestAnimationFrame(()=>requestAnimationFrame(()=>l.style.strokeDashoffset=0));
+  };
+  mk(0,0,x,0,BLUE,0); mk(x,0,x,y,OR,.9);
+}
+function fmt(v){return String(v).replace("-","−")}
+
+// ---------- Runde ----------
+function start(){tasks=makeTasks();idx=0;score=0;streak=0;best=0;swaps=0;show("play");load()}
+function load(){
+  cur=tasks[idx];done=false;firstTry=true;tries=0;inp={x:"",y:""};setActive("x");
+  drawGrid();
+  $("#round").textContent=`Aufgabe ${idx+1} / ${N}`;$("#score").textContent=`✓ ${score}`;$("#streak").textContent=`🔥 ${streak}`;
+  $("#bar").style.width=(idx/N*100)+"%";
+  $("#fb").className="fb";$("#fb").innerHTML="";$("#next").style.display="none";
+  if(cur.m=="lesen"){
+    $("#task").innerHTML="Lies die Koordinaten von <b>P</b> ab.";
+    $("#readUI").style.display="";$("#setUI").style.display="none";
+    dot(cur.x,cur.y,RED,"P");
+  }else{
+    $("#task").innerHTML=`Trage den Punkt ein: <b>P (<span style="color:${BLUE}">${fmt(cur.x)}</span> | <span style="color:${OR}">${fmt(cur.y)}</span>)</b>`;
+    $("#readUI").style.display="none";$("#setUI").style.display="";
+  }
+  render();
+}
+function setActive(f){active=f;$("#fx").classList.toggle("act",f=="x");$("#fy").classList.toggle("act",f=="y")}
+function render(){$("#vx").textContent=inp.x.replace("-","−");$("#vy").textContent=inp.y.replace("-","−")}
+$("#fx").onclick=()=>setActive("x");$("#fy").onclick=()=>setActive("y");
+$("#keys").addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b||done)return;const k=b.textContent;
+  if(b.id=="check"){check();return}
+  if(b.id=="clr"){inp={x:"",y:""};setActive("x");render();return}
+  if(k=="⌫"){inp[active]=inp[active].slice(0,-1)}
+  else if(k=="−"){inp[active]=inp[active].startsWith("-")?inp[active].slice(1):"-"+inp[active]}
+  else if(/\d/.test(k)){ if(inp[active].replace("-","").length<1){inp[active]+=k; if(active=="x")setActive("y")} else {inp[active]=(inp[active].startsWith("-")?"-":"")+k} }
+  render();
+});
+document.addEventListener("keydown",e=>{
+  if(!$("#play").classList.contains("on"))return;
+  if(e.key=="Enter"){done?$("#next").click():(cur.m=="lesen"&&check());return}
+  if(cur.m!="lesen"||done)return;
+  if(/^\d$/.test(e.key)){inp[active]=(inp[active].startsWith("-")?"-":"")+e.key;if(active=="x")setActive("y")}
+  else if(e.key=="-"){inp[active]=inp[active].startsWith("-")?inp[active].slice(1):"-"+inp[active]}
+  else if(e.key=="Backspace"){inp[active]=inp[active].slice(0,-1)}
+  else if(e.key=="Tab"){e.preventDefault();setActive(active=="x"?"y":"x")}
+  render();
+});
+$("#board").addEventListener("pointerdown",e=>{
+  if(!cur||cur.m!="setzen"||done)return;
+  const r=$("#board").getBoundingClientRect(),sx=520/r.width;
+  const px=(e.clientX-r.left)*sx,py=(e.clientY-r.top)*sx;
+  const x=Math.round((px-G.pad)/G.u+G.a),y=Math.round(G.b-(py-G.pad)/G.u);
+  if(x<G.a||x>G.b||y<G.a||y>G.b)return;
+  judge(x,y);
+});
+function check(){
+  if(inp.x===""||inp.x==="-"||inp.y===""||inp.y==="-"){fb("bad","✏️ Fast …","Trage <b>beide</b> Zahlen ein: zuerst <b style='color:"+BLUE+"'>x</b>, dann <b style='color:"+OR+"'>y</b>.");return}
+  judge(+inp.x,+inp.y);
+}
+function judge(x,y){
+  tries++;
+  if(cur.m=="setzen")cross(x,y,"#555");
+  if(x==cur.x&&y==cur.y){
+    done=true; if(firstTry){score++;streak++;best=Math.max(best,streak)}
+    if(cur.m=="setzen"){G.layer.innerHTML="";dot(cur.x,cur.y,GREEN,"P")}
+    path(cur.x,cur.y);
+    const lob=["Super!","Richtig!","Klasse!","Stark!","Genau!"][rnd(0,4)];
+    fb("good","✅ "+lob,`P (<b style="color:${BLUE}">${fmt(cur.x)}</b> | <b style="color:${OR}">${fmt(cur.y)}</b>): erst ${fmt(Math.abs(cur.x))} nach ${cur.x>=0?"rechts":"links"}, dann ${fmt(Math.abs(cur.y))} nach ${cur.y>=0?"oben":"unten"}.`.replace("erst 0 nach rechts, ","erst gar nicht zur Seite, ").replace(", dann 0 nach oben"," und gar nicht nach oben oder unten"));
+    $("#next").style.display="inline-block";
+  }else{
+    firstTry=false;streak=0;
+    if(x==cur.y&&y==cur.x){
+      swaps++;
+      fb("swap","🔄 x und y vertauscht!",`Du hast <b>(${fmt(x)} | ${fmt(y)})</b> geschrieben. Richtig ist die andere Reihenfolge.<br>Zuerst <b style="color:${BLUE}">x: nach rechts oder links</b>, dann <b style="color:${OR}">y: nach oben oder unten</b>. Schau dir den Weg an und versuch es nochmal.`);
+      path(cur.x,cur.y);
+    }else if(x==-cur.x&&y==cur.y || x==cur.x&&y==-cur.y || x==-cur.x&&y==-cur.y){
+      fb("bad","➖ Vorzeichen prüfen!",`Links vom Ursprung ist <b style="color:${BLUE}">x negativ</b>, unterhalb ist <b style="color:${OR}">y negativ</b>. Versuch es nochmal.`);
+    }else if(tries>=2){
+      fb("bad","❌ Noch nicht.",`Schau dir den Weg an: erst <b style="color:${BLUE}">x</b> (waagerecht), dann <b style="color:${OR}">y</b> (senkrecht). Versuch es nochmal.`);
+      path(cur.x,cur.y);
+    }else{
+      fb("bad","❌ Noch nicht.",`Zähle die Kästchen vom Ursprung (0 | 0) aus noch einmal: erst <b style="color:${BLUE}">waagerecht</b>, dann <b style="color:${OR}">senkrecht</b>.`);
+    }
+    if(cur.m=="lesen"){inp={x:"",y:""};setActive("x");render()}
+  }
+  $("#score").textContent=`✓ ${score}`;$("#streak").textContent=`🔥 ${streak}`;
+}
+function fb(cls,t,txt){const f=$("#fb");f.className="fb "+cls;f.innerHTML=`<div class="t">${t}</div>${txt}`}
+$("#next").onclick=()=>{idx++; if(idx>=N)end(); else load()};
+$("#hintBtn").onclick=()=>fb("swap","💡 Tipp","Starte im Ursprung (0 | 0). <b style='color:"+BLUE+"'>Erst laufen</b> (x, auf der blauen Achse nach rechts oder links), <b style='color:"+OR+"'>dann springen</b> (y, nach oben oder unten).");
+$("#toHome").onclick=()=>show("start");
+$("#go").onclick=start;
+$("#again").onclick=start;
+$("#up").onclick=()=>{level=Math.min(3,level+1);document.querySelectorAll("#levels .choice").forEach(c=>c.classList.toggle("sel",+c.dataset.l==level));start()};
+
+function end(){
+  show("end");
+  $("#resNum").textContent=`${score} / ${N}`;
+  const s=score>=9?3:score>=7?2:score>=5?1:0;
+  $("#stars").textContent="★".repeat(s)+"☆".repeat(3-s);
+  $("#sum").innerHTML=`<tr><td>Stufe</td><td><b>${level}</b></td></tr><tr><td>Beim ersten Versuch richtig</td><td><b>${score}</b></td></tr><tr><td>Längste Serie 🔥</td><td><b>${best}</b></td></tr><tr><td>x und y vertauscht</td><td><b>${swaps}×</b></td></tr>`;
+  const t=$("#endTip");
+  if(swaps>=2){t.style.display="";t.innerHTML=`<b>Achtung:</b> Du hast ${swaps}-mal x und y vertauscht. Merke: <b style="color:${BLUE}">Erst laufen (x)</b>, <b style="color:${OR}">dann springen (y)</b>.`}
+  else t.style.display="none";
+  $("#up").style.display=level<3?"block":"none";
+}
+</script>
+</body>
+</html>
