@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Düsseldorf-Rallye</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0e1726; --bg2:#15213a; --card:#1b2944; --line:#2c3d60;
+    --gold:#f4b942; --gold2:#ffd27a; --cream:#f6efe2; --muted:#a9b4c9;
+    --ok:#4cc38a; --bad:#ef6b6b; --blue:#6fb3ff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--cream);font-family:Inter,system-ui,sans-serif;font-size:16px;line-height:1.45}
+  body{min-height:100vh;background:
+     radial-gradient(1200px 500px at 50% -200px,#24375e 0%,transparent 70%),
+     var(--bg)}
+  .wrap{max-width:520px;margin:0 auto;padding:14px 14px 90px}
+  header{position:sticky;top:0;z-index:5;background:rgba(14,23,38,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .bar{max-width:520px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:10px 14px}
+  .logo{font-family:Fraunces,serif;font-weight:800;font-size:19px;flex:1;letter-spacing:.2px}
+  .logo span{color:var(--gold)}
+  .pts{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-weight:700;font-size:14px;white-space:nowrap}
+  .pts b{color:var(--gold)}
+  .iconbtn{background:var(--card);border:1px solid var(--line);color:var(--cream);border-radius:999px;width:38px;height:38px;font-size:18px;display:grid;place-items:center;cursor:pointer}
+  h1{font-family:Fraunces,serif;font-size:30px;line-height:1.1;margin:18px 0 8px}
+  h2{font-family:Fraunces,serif;font-size:24px;line-height:1.15;margin-bottom:6px}
+  h3{font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:8px}
+  p{margin-bottom:10px}
+  .muted{color:var(--muted)}
+  .small{font-size:13px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0}
+  .btn{display:block;width:100%;text-align:center;border:none;border-radius:14px;padding:14px 16px;font:600 16px Inter,sans-serif;cursor:pointer;text-decoration:none;margin-top:10px}
+  .btn.gold{background:var(--gold);color:#1c1405}
+  .btn.gold:active{background:var(--gold2)}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--cream)}
+  .btn.blue{background:#22406e;color:#fff;border:1px solid #33598f}
+  .btn:disabled{opacity:.45}
+  .row{display:flex;gap:8px}
+  .row .btn{flex:1}
+  .progress{height:6px;background:var(--bg2);border-radius:99px;overflow:hidden;margin:6px 0 4px}
+  .progress i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:99px;transition:width .4s}
+  .pill{display:inline-block;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--bg2);border:1px solid var(--line);color:var(--muted);margin-right:6px}
+  .stlist button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--bg2);border:1px solid var(--line);color:var(--cream);border-radius:14px;padding:12px;margin-top:8px;font:500 15px Inter,sans-serif;cursor:pointer}
+  .stlist .num{width:30px;height:30px;border-radius:50%;background:var(--gold);color:#1c1405;display:grid;place-items:center;font-weight:800;flex:none}
+  .stlist .sub{display:block;font-size:12px;color:var(--muted)}
+  .q{margin-top:14px}
+  .qtext{font-weight:600;font-size:17px;margin-bottom:8px}
+  .opt{display:block;width:100%;text-align:left;background:var(--bg2);border:1px solid var(--line);color:var(--cream);border-radius:12px;padding:12px 14px;margin-top:8px;font:500 15px Inter,sans-serif;cursor:pointer;transition:background .15s}
+  .opt.wrong{background:#3a1f27;border-color:var(--bad);color:#ffc9c9;text-decoration:line-through}
+  .opt.right{background:#173b2c;border-color:var(--ok);color:#c9f5dd}
+  .opt:disabled{cursor:default}
+  .feedback{margin-top:10px;padding:10px 12px;border-radius:12px;font-size:14px}
+  .feedback.ok{background:#173b2c;border:1px solid #2b6b4c}
+  .feedback.no{background:#3a1f27;border:1px solid #6e3340}
+  .hint{margin-top:8px;font-size:14px;background:#2b2a1b;border:1px dashed #7a6a33;border-radius:12px;padding:10px 12px;color:#f3e2b0}
+  .linkbtn{background:none;border:none;color:var(--gold);font:600 14px Inter,sans-serif;cursor:pointer;padding:6px 0;margin-top:4px}
+  .bonus{border-color:#5a4a1f;background:linear-gradient(160deg,#2a2614,#1b2944)}
+  .cafehint{display:flex;align-items:center;gap:12px;border-color:#3b5d8f;background:linear-gradient(160deg,#1d2f50,#1b2944)}
+  .cafehint .cup{font-size:30px}
+  .cafehint .txt{flex:1;font-size:14px}
+  .cafehint button{background:var(--blue);color:#081a33;border:none;border-radius:10px;padding:9px 12px;font:700 14px Inter,sans-serif;cursor:pointer}
+  .overlay{position:fixed;inset:0;background:rgba(5,10,18,.75);z-index:20;display:none;align-items:flex-end;justify-content:center}
+  .overlay.show{display:flex}
+  .sheet{background:var(--bg2);border:1px solid var(--line);border-radius:22px 22px 0 0;width:100%;max-width:520px;max-height:88vh;overflow:auto;padding:18px 16px 30px}
+  .sheet .close{float:right}
+  .cafe{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-top:10px}
+  .cafe .name{font-weight:700;font-size:16px}
+  .open{color:var(--ok);font-weight:600}
+  .closed{color:var(--bad);font-weight:600}
+  .big{font-family:Fraunces,serif;font-size:56px;color:var(--gold);line-height:1;margin:10px 0}
+  .center{text-align:center}
+  .snow{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35}
+  .wrap,header{position:relative;z-index:1}
+  header{position:sticky}
+  .done-badge{display:inline-block;background:#173b2c;border:1px solid #2b6b4c;color:#c9f5dd;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700}
+  .fade{animation:fade .35s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<canvas class="snow" id="snow"></canvas>
+<header>
+  <div class="bar">
+    <div class="logo">Düsseldorf-<span>Rallye</span></div>
+    <div class="pts" id="ptsBox">⭐ <b id="pts">0</b></div>
+    <button class="iconbtn" id="cafeBtn" title="Cafés in der Nähe" aria-label="Cafés">☕</button>
+  </div>
+</header>
+
+<main class="wrap" id="app"></main>
+
+<div class="overlay" id="overlay"><div class="sheet" id="sheet"></div></div>
+
+<script>
+/* ================== DATEN ================== */
+const STATIONS = [
+ { id:"burg", name:"Burgplatz & Schlossturm", lat:51.22755, lng:6.77155,
+   info:"Der Schlossturm ist der letzte Rest des Düsseldorfer Schlosses, das 1872 abbrannte. Heute steckt darin das SchifffahrtMuseum. Auf dem Platz stehen das große Stadterhebungs-Monument und der Radschläger-Brunnen – direkt dahinter beginnt der Rhein.",
+   qs:[
+    {q:"In welchem Jahr wurde Düsseldorf zur Stadt erhoben?", o:["1135","1288","1517","1650"], a:1,
+     hint:"Im selben Jahr fand die berühmte Schlacht von Worringen statt.",
+     ex:"1288 – nach der Schlacht von Worringen bekam das Dorf an der Düssel die Stadtrechte. Das Monument hier am Platz erinnert daran."},
+    {q:"Was ist der „Radschläger“?", o:["Ein Mühlenarbeiter am Rhein","Ein Kind, das Räder schlägt – Symbol der Stadt","Ein Karnevalsorden","Ein alter Fuhrmann"], a:1,
+     hint:"Schaut euch die Figuren am Brunnen genau an – was machen die mit ihren Beinen?",
+     ex:"Der Legende nach schlugen Düsseldorfer Kinder nach dem Sieg von 1288 vor Freude Räder. Seitdem ist der Radschläger das Wahrzeichen der Stadt."},
+    {q:"Was ist heute im Schlossturm untergebracht?", o:["Das Rathaus","Ein Gefängnis","Das SchifffahrtMuseum","Eine Kapelle"], a:2,
+     hint:"Der Turm steht direkt am Fluss – passt thematisch!",
+     ex:"Im Schlossturm zeigt das SchifffahrtMuseum die Geschichte der Rheinschifffahrt."}
+   ],
+   bonus:"Einer von euch macht ein Rad – oder wenigstens die Radschläger-Pose – vor dem Brunnen. Foto!"},
+ { id:"lamb", name:"St. Lambertus", lat:51.22830, lng:6.77310,
+   info:"Die gotische Basilika St. Lambertus ist eine der ältesten Kirchen der Stadt. Schaut mal nach oben: Die Turmspitze ist sichtbar verdreht!",
+   qs:[
+    {q:"Warum ist die Turmspitze verdreht – offizielle Erklärung?", o:["Ein Erdbeben","Feuchtes Bauholz hat sich verzogen","Der Architekt wollte es so","Ein Blitzeinschlag"], a:1,
+     hint:"Nach einem Brand musste der Turmhelm schnell neu gebaut werden …",
+     ex:"Nach einem Brand 1815 wurde der Helm mit nicht ganz trockenem Holz neu gebaut – beim Trocknen hat er sich verdreht. Der Volksmund hat natürlich lustigere Legenden dazu 😉"},
+    {q:"Welcher Heilige ist Düsseldorfs Stadtpatron – seine Reliquien liegen in dieser Kirche?", o:["St. Martin","St. Nikolaus","St. Apollinaris","St. Quirinus"], a:2,
+     hint:"Die große Rheinkirmes im Sommer findet zu seinen Ehren statt.",
+     ex:"St. Apollinaris ist der Stadtpatron. Ihm zu Ehren feiert Düsseldorf jedes Jahr im Juli die „Größte Kirmes am Rhein“."}
+   ],
+   bonus:"Sucht euch eine Stelle, von der man die Drehung des Turms richtig gut sieht – und macht ein Foto."},
+ { id:"markt", name:"Marktplatz & Altes Rathaus", lat:51.22592, lng:6.77310,
+   info:"Das Alte Rathaus ist ein Renaissancebau. Davor reitet Kurfürst Johann Wilhelm II. – das Reiterstandbild von Gabriel de Grupello stammt von 1711. Jetzt im Advent steht hier der Weihnachtsmarkt.",
+   qs:[
+    {q:"Wie nennen die Düsseldorfer den Kurfürsten auf dem Pferd?", o:["Hannes Willi","Jan Wellem","Wellem der Große","Kurfürst Kö"], a:1,
+     hint:"Rheinische Kurzform von Johann Wilhelm.",
+     ex:"„Jan Wellem“ – unter ihm blühte Düsseldorf um 1700 richtig auf. Viele Straßen und Plätze tragen seinen Namen."},
+    {q:"Was haben laut Legende die Bürger gespendet, als beim Guss des Denkmals Metall fehlte?", o:["Kirchenglocken","Silberlöffel und Besteck","Goldmünzen","Alte Kanonen"], a:1,
+     hint:"Etwas, das in jeder Küchenschublade liegt.",
+     ex:"Die Legende erzählt, dass die Düsseldorfer ihr Silberbesteck brachten, damit der Guss gelingt."},
+    {q:"Wann ungefähr wurde das Alte Rathaus gebaut?", o:["um 1570","um 1820","um 1910","um 1955"], a:0,
+     hint:"Es ist ein Bau der Renaissance.",
+     ex:"Das Alte Rathaus entstand 1570–1573 und ist bis heute Teil des Rathauses."}
+   ],
+   bonus:"Teilt euch etwas Leckeres vom Weihnachtsmarkt (gebrannte Mandeln, Reibekuchen …) – Erinnerungsfoto vor Jan Wellem!"},
+ { id:"bolker", name:"Bolkerstraße – Heine & Schneider Wibbel", lat:51.22640, lng:6.77520,
+   info:"Die Bolkerstraße ist die Hauptader der Altstadt. Im Haus Nr. 53 wurde ein weltberühmter Dichter geboren. Gleich nebenan liegt die Schneider-Wibbel-Gasse mit Figur und Glockenspiel.",
+   qs:[
+    {q:"Welcher Dichter wurde 1797 hier in der Bolkerstraße geboren?", o:["Friedrich Schiller","Heinrich Heine","Thomas Mann","J. W. von Goethe"], a:1,
+     hint:"Nach ihm ist auch die Düsseldorfer Universität benannt.",
+     ex:"Heinrich Heine wurde am 13. Dezember 1797 in der Bolkerstraße 53 geboren."},
+    {q:"Was erlebt Schneider Wibbel in der berühmten Düsseldorfer Komödie?", o:["Er näht für den Kaiser","Er schaut bei seiner eigenen Beerdigung zu","Er gewinnt im Lotto","Er wird Bürgermeister"], a:1,
+     hint:"Es geht um einen Schwindel, bei dem eigentlich jemand anderes gestorben ist …",
+     ex:"Wibbel lässt einen anderen an seiner Stelle beerdigen und beobachtet den eigenen Trauerzug vom Fenster aus."},
+    {q:"Warum heißt die Altstadt „längste Theke der Welt“?", o:["Es gibt dort eine echte 1-km-Theke","Rund 260 Kneipen und Bars liegen dicht an dicht","Weil sie am Rhein entlang verläuft","Wegen eines Weltrekords im Bierzapfen"], a:1,
+     hint:"Zählt mal, wie viele Kneipen ihr hier auf 100 Metern seht.",
+     ex:"Auf weniger als einem Quadratkilometer gibt es rund 260 Kneipen, Bars und Brauhäuser."}
+   ],
+   bonus:"Findet die Schneider-Wibbel-Figur in der Gasse und macht ein Foto mit ihr."},
+ { id:"koe", name:"Königsallee & Tritonenbrunnen", lat:51.22470, lng:6.77870,
+   info:"Die „Kö“ ist Düsseldorfs Prachtboulevard: auf der einen Seite Luxusgeschäfte, auf der anderen Banken und Hotels, in der Mitte der Kö-Graben. Am Nordende steht der Tritonenbrunnen.",
+   qs:[
+    {q:"Wie hieß die Kö, bevor sie 1851 umbenannt wurde?", o:["Lindenallee","Kastanienallee","Grabenstraße","Rheinallee"], a:1,
+     hint:"Ein Baum, dessen Früchte Kinder im Herbst sammeln.",
+     ex:"Sie hieß Kastanienallee – bis zu einem peinlichen Zwischenfall mit dem König …"},
+    {q:"Was wurde 1848 hier auf den preußischen König geworfen?", o:["Tomaten","Pferdeäpfel","Schneebälle","Blumen"], a:1,
+     hint:"Es lag damals überall auf der Straße herum …",
+     ex:"Pferdeäpfel! Als Wiedergutmachung wurde die Straße 1851 in „Königsallee“ umbenannt."},
+    {q:"Nach welchem kleinen Fluss ist Düsseldorf benannt?", o:["Wupper","Erft","Düssel","Ruhr"], a:2,
+     hint:"Steckt im Stadtnamen.",
+     ex:"„Dorf an der Düssel“ – der kleine Fluss mündet in der Stadt in den Rhein."}
+   ],
+   bonus:"Schaufenster-Challenge: Jeder sucht das verrückteste (oder teuerste) Teil in einem Kö-Schaufenster und präsentiert es dem anderen."},
+ { id:"carls", name:"Carlsplatz", lat:51.22360, lng:6.77470,
+   info:"Der Carlsplatz liegt in der Carlstadt, dem barocken Viertel südlich der Altstadt. Tagsüber findet hier einer der schönsten Lebensmittel-Märkte der Stadt statt.",
+   qs:[
+    {q:"Nach wem ist die Carlstadt benannt?", o:["Karl dem Großen","Kurfürst Carl Theodor","Carl Benz","Karl Marx"], a:1,
+     hint:"Ebenfalls ein Kurfürst – wie Jan Wellem.",
+     ex:"Kurfürst Carl Theodor ließ das Viertel im 18. Jahrhundert anlegen."},
+    {q:"Was findet tagsüber auf dem Carlsplatz statt?", o:["Ein Flohmarkt für Autos","Ein großer Lebensmittel-Markt","Ein Fußballturnier","Gar nichts"], a:1,
+     hint:"Obst, Käse, Blumen, Feinkost …",
+     ex:"Der Markt am Carlsplatz ist bei Düsseldorfern sehr beliebt – mit Ständen für Feinkost, Obst, Blumen und Imbisse."}
+   ],
+   bonus:"Sucht in der Carlstadt ein Haus mit besonders schöner Fassade und macht ein Foto davon."},
+ { id:"uerige", name:"Brauerei Uerige", lat:51.22530, lng:6.77220,
+   info:"Das Uerige in der Berger Straße ist eine der legendären Hausbrauereien der Altstadt. Hier wird Altbier direkt aus dem Holzfass gezapft – und vom Köbes serviert.",
+   qs:[
+    {q:"Wie heißt der Kellner im Düsseldorfer Brauhaus?", o:["Zapfes","Köbes","Schorsch","Kellner-Jupp"], a:1,
+     hint:"Rheinische Form von „Jakob“.",
+     ex:"Der Köbes – trägt traditionell blaue Schürze und hat immer einen flotten Spruch parat."},
+    {q:"Was bedeutet „uerig“ auf Rheinisch?", o:["gemütlich","uralt","griesgrämig, launisch","durstig"], a:2,
+     hint:"Der erste Wirt soll nicht gerade der Freundlichste gewesen sein …",
+     ex:"„Uerig“ heißt so viel wie griesgrämig – der Name geht auf einen als mürrisch bekannten Wirt zurück."},
+    {q:"Welches Bier gehört zu Düsseldorf?", o:["Kölsch","Altbier","Weizen","Pils"], a:1,
+     hint:"Das Gegenstück zum Kölner Bier – sagt das andere hier lieber nicht zu laut 😉",
+     ex:"Altbier! Dunkel, obergärig und in kleinen Gläsern serviert."}
+   ],
+   bonus:"Prost! Stoßt vor dem Uerige an – mit Alt, Malzbier oder Glühwein – und macht ein Anstoß-Foto."},
+ { id:"rhein", name:"Rheinuferpromenade", lat:51.22470, lng:6.77060,
+   info:"Die Rheinuferpromenade gilt als eine der schönsten am ganzen Rhein. Sie wurde 1995 neu gestaltet – möglich wurde das durch einen Trick unter euren Füßen. Im Süden leuchtet der Rheinturm.",
+   qs:[
+    {q:"Was verläuft unter der Promenade?", o:["Eine U-Bahn-Werkstatt","Ein Autotunnel","Ein alter Schmugglergang","Gar nichts"], a:1,
+     hint:"Früher fuhren hier am Ufer die Autos entlang …",
+     ex:"Der Verkehr wurde in den Rheinufertunnel verlegt – oben ist seitdem Platz zum Flanieren."},
+    {q:"Wie hoch ist der Rheinturm ungefähr?", o:["ca. 120 m","ca. 180 m","ca. 240 m","ca. 368 m"], a:2,
+     hint:"Etwas weniger als der Berliner Fernsehturm (368 m).",
+     ex:"Rund 240 Meter – er ist das höchste Gebäude Düsseldorfs."},
+    {q:"Was zeigen die Lichter am Schaft des Rheinturms?", o:["Den Wasserstand","Die Uhrzeit","Die Temperatur","Nur Deko"], a:1,
+     hint:"Die Lampen sind in Gruppen eingeteilt – Stunden, Minuten, Sekunden.",
+     ex:"Die Lichtzeitpegel-Skulptur ist eine riesige Uhr. Mit etwas Übung könnt ihr die Zeit ablesen!"}
+   ],
+   bonus:"Selfie mit dem beleuchteten Rheinturm (oder dem Rhein bei Nacht) im Hintergrund."}
+];
+
+// Öffnungszeiten: [So,Mo,Di,Mi,Do,Fr,Sa] als [auf,zu] in Stunden, null = geschlossen
+const CAFES = [
+ {name:"JICKIE Café Boutique", addr:"Burgplatz 9", lat:51.22623, lng:6.77240,
+  desc:"Gemütlich, sehr freundlich, toller Kaffee – berühmt für den San-Sebastián-Cheesecake.",
+  h:[[10,19],[10,19],[10,19],[10,19],[10,19],[10,19],[10,19]]},
+ {name:"Café Düsselperle", addr:"Marktplatz 12", lat:51.22595, lng:6.77247,
+  desc:"Kleines Café direkt am Marktplatz mit Blick auf den Weihnachtsmarkt. Guter Kuchen, faire Preise.",
+  h:[[10,19],null,[10,19],[10,19],[10,19],[10,20.5],[10,20.5]]},
+ {name:"Café Kasbah", addr:"Rheinort 2", lat:51.22498, lng:6.77118,
+  desc:"Marokkanisches Flair nahe dem Rheinufer: Minztee, Mandelkuchen, orientalisches Gebäck. Perfekt zum Ausklang.",
+  h:[[10,20],null,null,[10,21],[10,21],[10,23],[10,24]]},
+ {name:"Henri's Café", addr:"Heinrich-Heine-Allee 37", lat:51.22594, lng:6.77655,
+  desc:"Hübsch und blumig eingerichtet, ruhig – Torten, Cupcakes und Macarons (Red Velvet!).",
+  h:[[9,19],[9,19],[9,19],[9,19],[9,19],[9,20],[9,20]]},
+ {name:"Konditorei Heinemann", addr:"Martin-Luther-Platz 32 (nahe Kö)", lat:51.22469, lng:6.78103,
+  desc:"Der Düsseldorfer Klassiker: Torten, Pralinen, Champagner-Trüffel. Achtung – schließt früh!",
+  h:[[10,18],[9,18],[9,18],[9,18],[9,18],[9,18],[9,18]]}
+];
+
+const RANKS = [
+ [0,"Altstadt-Tourist 🧳","Ein schöner Anfang – Düsseldorf hat euch neugierig gemacht!"],
+ [0.35,"Rhein-Spaziergänger 🚶","Ihr kennt euch schon richtig gut aus."],
+ [0.6,"Kö-Kenner ✨","Stark! Da staunt sogar der Köbes."],
+ [0.8,"Echte Düsseldorfer 🏆","Wahnsinn – ihr könntet selbst Stadtführungen machen!"]
+];
+
+/* ================== HILFEN ================== */
+const $ = s => document.querySelector(s);
+const app = $("#app");
+function dist(a,b){const R=6371000,t=Math.PI/180;const dLa=(b.lat-a.lat)*t,dLo=(b.lng-a.lng)*t;
+  const x=Math.sin(dLa/2)**2+Math.cos(a.lat*t)*Math.cos(b.lat*t)*Math.sin(dLo/2)**2;return 2*R*Math.asin(Math.sqrt(x));}
+function fmtDist(m){return m<1000?`${Math.round(m/10)*10} m`:`${(m/1000).toFixed(1).replace(".",",")} km`;}
+function walkMin(m){return Math.max(1,Math.round(m*1.3/80));} // Umwege mit eingerechnet
+function mapsWalk(p){return `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}&travelmode=walking`;}
+function mapsShow(p){return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name+" Düsseldorf")}`;}
+function fmtH(x){const h=Math.floor(x),m=Math.round((x-h)*60);return h===24?"24:00":`${h}:${String(m).padStart(2,"0")}`;}
+function cafeStatus(c){const d=new Date(),day=d.getDay(),hh=d.getHours()+d.getMinutes()/60,t=c.h[day];
+  if(!t) return {open:false,txt:"heute geschlossen"};
+  if(hh<t[0]) return {open:false,txt:`öffnet heute um ${fmtH(t[0])}`};
+  if(hh>=t[1]) return {open:false,txt:`heute schon zu (bis ${fmtH(t[1])})`};
+  const left=t[1]-hh;return {open:true,txt:`jetzt offen · bis ${fmtH(t[1])}`+(left<1?" – bald zu!":"")};}
+function maxPoints(){return STATIONS.reduce((s,st)=>s+st.qs.length*10+15,0);}
+
+/* ================== ZUSTAND ================== */
+let S;
+function fresh(){return {phase:"start",order:[],idx:0,score:0,arrived:false,st:{}};}
+function load(){try{const r=localStorage.getItem("dus-rallye-v1");S=r?JSON.parse(r):fresh();}catch(e){S=fresh();}}
+function save(){try{localStorage.setItem("dus-rallye-v1",JSON.stringify(S));}catch(e){}}
+function cur(){return STATIONS.find(x=>x.id===S.order[S.idx]);}
+function stState(id){if(!S.st[id])S.st[id]={q:[],bonus:null};return S.st[id];}
+function setPts(){$("#pts").textContent=S.score;}
+
+/* ================== GPS (falls erlaubt) ================== */
+let here=null;
+function tryGPS(cb){
+  try{
+    if(!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(p=>{here={lat:p.coords.latitude,lng:p.coords.longitude};cb&&cb();},()=>{}, {enableHighAccuracy:true,timeout:8000,maximumAge:30000});
+  }catch(e){}
+}
+
+function liveTxt(s){const d=dist(here,s);return d<45?`<span class="open">📍 Ihr seid da! (${fmtDist(d)})</span>`:`📍 Noch <b>${fmtDist(d)}</b> Luftlinie von euch`;}
+let watching=false;
+function watchGPS(){try{if(watching||!navigator.geolocation)return;watching=true;
+  navigator.geolocation.watchPosition(p=>{here={lat:p.coords.latitude,lng:p.coords.longitude};
+    const el=document.getElementById("liveDist");if(el&&S.phase==="play"){el.style.display="";el.innerHTML=liveTxt(cur());}},()=>{watching=false;},{enableHighAccuracy:true,maximumAge:5000,timeout:20000});}catch(e){}}
+/* ================== ANSICHTEN ================== */
+function render(){setPts();
+  if(S.phase==="start") return renderStart();
+  if(S.phase==="end") return renderEnd();
+  renderStation();
+}
+
+function renderStart(){
+  let list=STATIONS.map((s,i)=>({s,i}));
+  let near="";
+  if(here){list.sort((a,b)=>dist(here,a.s)-dist(here,b.s));near=`<p class="small muted">📍 Sortiert nach Entfernung zu euch.</p>`;}
+  app.innerHTML=`<div class="fade">
+   <h1>Willkommen zur<br>Düsseldorf-Rallye! ✨</h1>
+   <p class="muted">Ihr spielt als Team: Lauft gemeinsam 8 Stationen rund um Altstadt, Kö und Rhein ab, löst Rätsel und sammelt Punkte. Dauer: ca. 2–3 Stunden.</p>
+   <div class="card">
+     <h3>So funktioniert's</h3>
+     <p>🗺️ <b>Navigation:</b> Bei jeder Station öffnet ein Knopf Google Maps mit dem Fußweg.</p>
+     <p>📍 <b>Angekommen?</b> Tippt „Wir sind da!“ – dann erscheinen die Rätsel.</p>
+     <p>⭐ <b>Punkte:</b> Beim 1. Versuch richtig = 10, beim 2. = 5, beim 3. = 2. Ein Tipp kostet 3 Punkte. Bonus-Aufgaben bringen +15.</p>
+     <p style="margin:0">☕ <b>Kaffeepause?</b> Oben rechts findet ihr jederzeit Cafés in der Nähe – Pausen kosten keine Punkte.</p>
+   </div>
+   <div class="card">
+     <h3>Wo startet ihr?</h3>
+     <p class="small muted">Wählt die Station, die euch am nächsten ist. Die Runde läuft im Kreis – ihr landet am Ende wieder dort.</p>
+     ${near}
+     <div class="stlist">${list.map(({s,i})=>`<button data-start="${s.id}"><span class="num">${i+1}</span><span>${s.name}<span class="sub">${here?fmtDist(dist(here,s))+" entfernt":"&nbsp;"}</span></span></button>`).join("")}</div>
+     ${here?"":`<button class="linkbtn" id="gpsBtn">📍 Nächste Station per Standort finden</button>`}
+   </div></div>`;
+  app.querySelectorAll("[data-start]").forEach(b=>b.onclick=()=>startAt(b.dataset.start));
+  const g=$("#gpsBtn"); if(g) g.onclick=()=>{g.textContent="Suche Standort …";tryGPS(render);setTimeout(()=>{if(!here&&g.isConnected)g.textContent="Standort hier nicht verfügbar – wählt einfach oben aus.";},9000);};
+}
+
+function startAt(id){
+  const i=STATIONS.findIndex(s=>s.id===id);
+  S.order=STATIONS.map((_,k)=>STATIONS[(i+k)%STATIONS.length].id);
+  S.idx=0;S.phase="play";S.arrived=false;save();render();window.scrollTo(0,0);
+}
+
+function renderStation(){
+  const s=cur(), n=S.order.length, st=stState(s.id);
+  const prev=S.idx>0?STATIONS.find(x=>x.id===S.order[S.idx-1]):null;
+  const legM=prev?dist(prev,s):null;
+  const pct=Math.round(S.idx/n*100);
+  let html=`<div class="fade">
+   <div style="margin-top:12px"><span class="pill">Station ${S.idx+1} von ${n}</span>${st.done?'<span class="done-badge">✓ geschafft</span>':""}</div>
+   <div class="progress"><i style="width:${pct}%"></i></div>
+   <h1 style="margin-top:12px">${s.name}</h1>`;
+  if(!S.arrived){
+    html+=`<div class="card">
+      <h3>Auf dem Weg</h3>
+      ${legM?`<p>Ca. <b>${fmtDist(legM*1.3)}</b> Fußweg · etwa <b>${walkMin(legM)} Min.</b></p>`:`<p>Eure Startstation!</p>`}
+      <p class="small" id="liveDist" style="${here?"":"display:none"}">${here?liveTxt(s):""}</p>
+      <a class="btn blue" href="${mapsWalk(s)}" target="_blank" rel="noopener">🗺️ Weg in Google Maps öffnen</a>
+      <button class="btn gold" id="arrive">📍 Wir sind da!</button>
+    </div>`;
+    html+=cafeHint(s, true);
+  } else {
+    html+=`<div class="card"><h3>Gut zu wissen</h3><p style="margin:0">${s.info}</p></div>`;
+    s.qs.forEach((q,qi)=>{html+=renderQ(s,q,qi);});
+    html+=renderBonus(s);
+    if(allAnswered(s)){
+      html+=cafeHint(s,false);
+      const last=S.idx===n-1;
+      html+=`<button class="btn gold" id="next">${last?"🏁 Zum Ziel – Auswertung":"Weiter zur nächsten Station →"}</button>`;
+    }
+  }
+  html+=`<div class="row" style="margin-top:22px">
+     ${S.idx>0?'<button class="btn ghost" id="back">← Zurück</button>':""}
+     <button class="btn ghost" id="menu">☰ Übersicht</button></div></div>`;
+  app.innerHTML=html;
+  bindStation(s);
+}
+
+function allAnswered(s){const st=stState(s.id);return s.qs.every((_,i)=>st.q[i]&&st.q[i].done);}
+
+function renderQ(s,q,qi){
+  const st=stState(s.id), a=st.q[qi]||(st.q[qi]={wrong:[],hint:false,done:false,pts:0});
+  // Fragen nacheinander freischalten
+  if(qi>0){const p=st.q[qi-1];if(!p||!p.done) return "";}
+  let h=`<div class="card q fade"><h3>Frage ${qi+1} von ${s.qs.length}</h3><div class="qtext">${q.q}</div>`;
+  q.o.forEach((o,oi)=>{
+    let cls="opt";
+    if(a.wrong.includes(oi)) cls+=" wrong";
+    if(a.done && oi===q.a) cls+=" right";
+    h+=`<button class="${cls}" data-s="${s.id}" data-q="${qi}" data-o="${oi}" ${a.done||a.wrong.includes(oi)?"disabled":""}>${o}</button>`;
+  });
+  if(!a.done){
+    h+= a.hint?`<div class="hint">💡 ${q.hint}</div>`:`<button class="linkbtn" data-hint="${s.id}|${qi}">💡 Tipp anzeigen (−3 Punkte)</button>`;
+  } else {
+    h+=`<div class="feedback ${a.pts>0?"ok":"no"}">${a.pts>0?`🎉 Richtig! <b>+${a.pts} Punkte</b>`:"Diesmal leider keine Punkte"} <br><span class="small">${q.ex}</span></div>`;
+  }
+  return h+`</div>`;
+}
+
+function renderBonus(s){
+  if(!allAnswered(s)) return "";
+  const st=stState(s.id);
+  let h=`<div class="card bonus fade"><h3>⭐ Bonus-Aufgabe (+15)</h3><p>${s.bonus}</p>`;
+  if(st.bonus===null) h+=`<div class="row"><button class="btn gold" id="bonusYes">Erledigt! 📸</button><button class="btn ghost" id="bonusNo">Überspringen</button></div>`;
+  else h+= st.bonus?`<div class="feedback ok">Super gemacht – <b>+15 Punkte</b>!</div>`:`<p class="small muted" style="margin:0">Übersprungen – kein Problem.</p>`;
+  return h+`</div>`;
+}
+
+function cafeHint(s, onTheWay){
+  const near=CAFES.map(c=>({c,d:dist(s,c)})).filter(x=>x.d<=400).sort((a,b)=>a.d-b.d);
+  if(!near.length) return "";
+  const best=near.find(x=>cafeStatus(x.c).open)||near[0];
+  const stt=cafeStatus(best.c);
+  return `<div class="card cafehint fade"><div class="cup">☕</div>
+    <div class="txt">${onTheWay?"Erst mal aufwärmen?":"Lust auf Kaffee?"} <b>${best.c.name}</b> liegt ca. ${fmtDist(best.d)} von hier.<br><span class="${stt.open?"open":"closed"} small">${stt.txt}</span></div>
+    <button data-cafe="${best.c.name}">Zeigen</button></div>`;
+}
+
+function bindStation(s){
+  const st=stState(s.id);
+  const ar=$("#arrive"); if(ar) ar.onclick=()=>{S.arrived=true;save();render();window.scrollTo(0,0);};
+  app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>answer(s,+b.dataset.q,+b.dataset.o));
+  app.querySelectorAll("[data-hint]").forEach(b=>b.onclick=()=>{const qi=+b.dataset.hint.split("|")[1];st.q[qi].hint=true;save();render();});
+  const by=$("#bonusYes"); if(by) by.onclick=()=>{st.bonus=true;S.score+=15;save();render();};
+  const bn=$("#bonusNo"); if(bn) bn.onclick=()=>{st.bonus=false;save();render();};
+  const nx=$("#next"); if(nx) nx.onclick=()=>{st.done=true;
+     if(S.idx>=S.order.length-1){S.phase="end";}else{S.idx++;S.arrived=false;}
+     save();render();window.scrollTo(0,0);};
+  const bk=$("#back"); if(bk) bk.onclick=()=>{S.idx--;S.arrived=true;save();render();window.scrollTo(0,0);};
+  $("#menu").onclick=showMenu;
+  app.querySelectorAll("[data-cafe]").forEach(b=>b.onclick=()=>showCafes(b.dataset.cafe));
+}
+
+function answer(s,qi,oi){
+  const q=s.qs[qi], a=stState(s.id).q[qi];
+  if(a.done) return;
+  if(oi===q.a){
+    const tries=a.wrong.length;
+    let p=[10,5,2][tries]??0; if(a.hint) p=Math.max(0,p-3);
+    a.pts=p;a.done=true;S.score+=p;
+  } else {
+    a.wrong.push(oi);
+    if(a.wrong.length>=3){a.done=true;a.pts=0;}
+    else if(navigator.vibrate){try{navigator.vibrate(60)}catch(e){}}
+  }
+  save();render();
+  // zur nächsten Frage scrollen
+  setTimeout(()=>{const qs=app.querySelectorAll(".q");const el=a.done?(qs[qi+1]||app.querySelector(".bonus")):qs[qi];if(el)el.scrollIntoView({behavior:"smooth",block:"start"});},50);
+}
+
+function renderEnd(){
+  const max=maxPoints(), r=S.score/max;
+  let rank=RANKS[0]; RANKS.forEach(x=>{if(r>=x[0])rank=x;});
+  let right=0,total=0,bon=0;
+  STATIONS.forEach(s=>{const st=S.st[s.id];total+=s.qs.length;if(st){st.q.forEach(q=>{if(q&&q.pts>0)right++;});if(st.bonus)bon++;}});
+  app.innerHTML=`<div class="fade center">
+    <h1 style="margin-top:30px">Geschafft! 🎉</h1>
+    <p class="muted">Ihr habt die Runde durch Düsseldorf gemeinsam gemeistert.</p>
+    <div class="card">
+      <div class="big">${S.score}</div><p class="muted">von ${max} möglichen Punkten</p>
+      <h2 style="margin-top:14px">${rank[1]}</h2><p>${rank[2]}</p>
+    </div>
+    <div class="card" style="text-align:left">
+      <p>✅ Richtig beantwortet: <b>${right} von ${total}</b> Fragen</p>
+      <p style="margin:0">📸 Bonus-Aufgaben erledigt: <b>${bon} von ${STATIONS.length}</b></p>
+    </div>
+    <div class="card cafehint" style="text-align:left"><div class="cup">🍺</div><div class="txt">Zum Abschluss: ein Alt im Uerige – oder Minztee im Café Kasbah am Rhein (heute lange offen).</div><button data-cafe="Café Kasbah">Zeigen</button></div>
+    <button class="btn ghost" id="again">Nochmal von vorne spielen</button>
+  </div>`;
+  app.querySelector("[data-cafe]").onclick=()=>showCafes("Café Kasbah");
+  $("#again").onclick=()=>{openSheet(`<button class="iconbtn close" data-close>✕</button><h2>Neu starten?</h2><p class="muted">Alle Punkte werden zurückgesetzt.</p><button class="btn gold" id="yesReset">Ja, neu starten</button><button class="btn ghost" data-close>Abbrechen</button>`);
+    $("#yesReset").onclick=()=>{S=fresh();save();closeSheet();render();};};
+  confetti();
+}
+
+/* ================== OVERLAYS ================== */
+function openSheet(html){$("#sheet").innerHTML=html;$("#overlay").classList.add("show");
+  $("#sheet").querySelectorAll("[data-close]").forEach(b=>b.onclick=closeSheet);}
+function closeSheet(){$("#overlay").classList.remove("show");}
+$("#overlay").onclick=e=>{if(e.target.id==="overlay")closeSheet();};
+
+function showCafes(focus){
+  const ref = here || (S.phase==="play"?cur():null) || STATIONS[2];
+  const refTxt = here?"von euch":(S.phase==="play"?"von dieser Station":"vom Marktplatz");
+  const list=CAFES.map(c=>({c,d:dist(ref,c),s:cafeStatus(c)})).sort((a,b)=>(focus&&a.c.name===focus?-1:focus&&b.c.name===focus?1:0)||(b.s.open-a.s.open)||(a.d-b.d));
+  openSheet(`<button class="iconbtn close" data-close>✕</button>
+   <h2>☕ Cafés in der Nähe</h2><p class="small muted">Unsere Empfehlungen – Entfernung ${refTxt}. Pausen kosten keine Punkte!</p>
+   ${list.map(({c,d,s})=>`<div class="cafe" ${focus===c.name?'style="border-color:var(--gold)"':""}>
+     <div class="name">${c.name}</div>
+     <div class="small muted">${c.addr} · ca. ${fmtDist(d)} · ~${walkMin(d)} Min.</div>
+     <div class="small ${s.open?"open":"closed"}" style="margin:4px 0 6px">${s.txt}</div>
+     <p class="small" style="margin-bottom:6px">${c.desc}</p>
+     <div class="row"><a class="btn blue" style="padding:10px;font-size:14px;margin-top:4px" href="${mapsWalk(c)}" target="_blank" rel="noopener">🚶 Hinlaufen</a>
+     <a class="btn ghost" style="padding:10px;font-size:14px;margin-top:4px" href="${mapsShow(c)}" target="_blank" rel="noopener">📍 Auf Karte</a></div>
+   </div>`).join("")}`);
+}
+$("#cafeBtn").onclick=()=>showCafes();
+
+function showMenu(){
+  const n=S.order.length;
+  openSheet(`<button class="iconbtn close" data-close>✕</button><h2>Eure Route</h2>
+   <p class="small muted">Tippt auf eine Station, um direkt dorthin zu springen.</p>
+   <div class="stlist">${S.order.map((id,i)=>{const s=STATIONS.find(x=>x.id===id),st=S.st[id];
+     return `<button data-jump="${i}"><span class="num" style="${i===S.idx?"":"background:var(--line);color:var(--cream)"}">${i+1}</span><span>${s.name}<span class="sub">${st&&st.done?"✓ geschafft":i===S.idx?"← hier seid ihr":""}</span></span></button>`;}).join("")}</div>
+   <button class="btn ghost" id="restart" style="margin-top:18px">↺ Ganz neu starten</button>`);
+  $("#sheet").querySelectorAll("[data-jump]").forEach(b=>b.onclick=()=>{S.idx=+b.dataset.jump;S.arrived=false;save();closeSheet();render();window.scrollTo(0,0);});
+  $("#restart").onclick=()=>{S=fresh();save();closeSheet();render();};
+}
+
+/* ================== DEKO ================== */
+(function snow(){const c=$("#snow"),x=c.getContext("2d");let W,H,f=[];
+  function rs(){W=c.width=innerWidth;H=c.height=innerHeight;}rs();addEventListener("resize",rs);
+  for(let i=0;i<45;i++)f.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*2+.6,s:Math.random()*.5+.2,w:Math.random()*Math.PI*2});
+  (function loop(){x.clearRect(0,0,W,H);x.fillStyle="#fff";f.forEach(p=>{p.y+=p.s;p.w+=.01;p.x+=Math.sin(p.w)*.3;if(p.y>H){p.y=-5;p.x=Math.random()*W;}x.beginPath();x.arc(p.x,p.y,p.r,0,7);x.fill();});requestAnimationFrame(loop);})();
+})();
+function confetti(){const c=$("#snow"),x=c.getContext("2d");const cols=["#f4b942","#ffd27a","#6fb3ff","#4cc38a","#ef6b6b"];
+  let ps=Array.from({length:120},()=>({x:innerWidth/2,y:innerHeight/3,vx:(Math.random()-.5)*10,vy:Math.random()*-9-2,c:cols[Math.random()*5|0],t:0}));
+  c.style.opacity=1;let fr=0;(function l(){if(fr++>140){c.style.opacity=.35;return;}ps.forEach(p=>{p.vy+=.25;p.x+=p.vx;p.y+=p.vy;x.fillStyle=p.c;x.fillRect(p.x,p.y,6,6);});requestAnimationFrame(l);})();}
+
+/* ================== START ================== */
+load(); render(); tryGPS(()=>{ if(S.phase==="start") render(); watchGPS(); });
+</script>
+</body>
+</html>
