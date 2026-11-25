@@ -7,19 +7,19 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Lexend:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root{--blue:#123F88;--blue2:#164A9C;--orange:#C25A12;--red:#C8170F;--green:#1E7B34;--yel:#FFEDAA;--yelb:#B07F00;--vio:#5E35B1;--bg:#F3F6FB;--ink:#1B1F24}
+:root{--blue:#123F88;--blue2:#164A9C;--orange:#C25A12;--red:#C8170F;--green:#1E7B34;--yel:#FFEDAA;--yelb:#B07F00;--bg:#F3F6FB;--ink:#1B1F24}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;min-height:100%;background:var(--bg);font-family:Lexend,system-ui,sans-serif;color:var(--ink)}
 button{font-family:Fredoka,system-ui,sans-serif;cursor:pointer}
-.screen{display:none;padding:14px;max-width:1000px;margin:0 auto}
+.screen{display:none;padding:14px;max-width:1040px;margin:0 auto}
 .screen.on{display:block}
 h1{font-family:Fredoka;font-weight:600;color:var(--blue);font-size:clamp(28px,5vw,46px);margin:8px 0 4px;text-align:center}
 .sub{text-align:center;color:#333;margin:0 0 16px}
-.merke{background:var(--yel);border:3px solid var(--yelb);border-radius:14px;padding:12px 16px;max-width:720px;margin:12px auto;font-size:15px;line-height:1.6}
+.merke{background:var(--yel);border:3px solid var(--yelb);border-radius:14px;padding:12px 16px;max-width:760px;margin:12px auto;font-size:15px;line-height:1.6}
 .merke .ex{font-family:Fredoka;font-size:18px}
-.card{background:#fff;border:3px solid var(--blue);border-radius:16px;padding:16px;margin:12px auto;max-width:720px}
+.card{background:#fff;border:3px solid var(--blue);border-radius:16px;padding:16px;margin:12px auto;max-width:760px}
 .card h2{font-family:Fredoka;margin:0 0 10px;color:var(--blue);font-size:20px}
-.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
 .choice{border:3px solid var(--blue);background:#fff;border-radius:14px;padding:12px;text-align:left;font-size:18px;color:var(--blue)}
 .choice small{display:block;font-family:Lexend;font-size:13px;color:#333;margin-top:4px}
 .choice.sel{background:var(--blue);color:#fff}.choice.sel small{color:#dfe7f5}
@@ -31,22 +31,26 @@ h1{font-family:Fredoka;font-weight:600;color:var(--blue);font-size:clamp(28px,5v
 .prog{height:10px;background:#dfe5ef;border-radius:6px;overflow:hidden;margin:2px 0 12px}
 .prog i{display:block;height:100%;background:var(--green);width:0;transition:width .3s}
 .game{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;align-items:flex-start}
-.left{flex:1.3;min-width:300px;max-width:560px}
+.left{flex:1.3;min-width:300px;max-width:580px}
 .right{flex:1;min-width:280px;max-width:380px}
 .fn{font-family:Fredoka;font-size:clamp(28px,4.5vw,40px);color:var(--blue);background:#fff;border:3px solid var(--blue);border-radius:16px;padding:10px 16px;text-align:center;margin-bottom:12px}
 .task{font-family:Fredoka;font-size:20px;color:var(--blue);margin:2px 0 10px}
 .eq{font-family:Fredoka;font-size:clamp(30px,5vw,42px);display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:8px 0}
 .box{min-width:96px;height:66px;border:3px solid var(--blue);border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;color:var(--blue);box-shadow:0 0 0 4px #ffd54a}
-table.wt{border-collapse:collapse;margin:6px auto;font-family:Fredoka;font-size:clamp(18px,3vw,24px)}
-.wt th,.wt td{border:2px solid var(--ink);min-width:58px;height:54px;text-align:center;padding:0 4px}
-.wt th{background:#DDE5F2;color:var(--blue);min-width:62px}
+table.wt{border-collapse:collapse;margin:6px auto 10px;font-family:Fredoka;font-size:clamp(18px,3vw,24px)}
+.wt th,.wt td{border:2px solid var(--ink);min-width:56px;height:52px;text-align:center;padding:0 4px}
+.wt th{background:#DDE5F2;color:var(--blue);min-width:56px}
 .wt td.in{background:#fff;cursor:pointer;color:var(--blue)}
 .wt td.act{box-shadow:inset 0 0 0 4px #ffd54a}
 .wt td.ok{background:#DDF2E1;color:var(--green);cursor:default}
 .wt td.no{background:#FAD3CF;color:var(--red)}
-.wt td.given{background:#fff;color:#333;cursor:pointer}
-.wt td.given:hover{background:#FFF6D6}
-.wt td.picked{background:#FAD3CF;color:var(--red);text-decoration:line-through}
+svg.cs{background:#fff;border:3px solid var(--blue);border-radius:14px;width:100%;height:auto;display:block}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{position:relative;cursor:pointer;border-radius:14px}
+.opt svg.cs{border-color:#999}
+.opt .lab{position:absolute;left:8px;top:6px;font-family:Fredoka;font-size:20px;background:var(--blue);color:#fff;border-radius:8px;padding:0 8px}
+.opt.ok svg.cs{border-color:var(--green);box-shadow:0 0 0 4px #9fd8aa}
+.opt.no svg.cs{border-color:var(--red);opacity:.55}
 .keys{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .keys button{font-size:24px;height:54px;border-radius:12px;border:2px solid #555;background:#fff}
 .keys .ok{grid-column:span 2;background:var(--green);color:#fff;border:0}
@@ -69,19 +73,18 @@ table.sum td{padding:4px 12px;border-bottom:1px solid #ccc}
 
 <section id="start" class="screen on">
   <h1>Wertetabellen-Profi</h1>
-  <p class="sub">x einsetzen, Funktionswerte ausrechnen, Wertetabellen füllen</p>
+  <p class="sub">Funktion, Wertetabelle und Graph gehören zusammen</p>
   <div class="merke">
-    <b>Merke:</b> Für x setzt du die Zahl ein. <b>Punkt vor Strich!</b><br>
-    <span class="ex">f(x) = 2x + 1 &nbsp;→&nbsp; f(3) = 2 · 3 + 1 = 6 + 1 = 7</span><br>
-    <b style="color:var(--red)">Achtung:</b> Negative Zahlen kommen in Klammern:<br>
-    <span class="ex">f(−2) = 2 · (−2) + 1 = −4 + 1 = −3</span>
+    <b>Merke:</b> Jede Spalte der Wertetabelle ist ein Punkt auf dem Graphen: x = 2, y = 5 → <b>P (2 | 5)</b>.<br>
+    <b>y-Wert berechnen:</b> x einsetzen, <b>Punkt vor Strich</b>: <span class="ex">f(3) = 2 · 3 + 1 = 7</span><br>
+    <b style="color:var(--red)">Achtung:</b> Negative Zahlen in Klammern: <span class="ex">f(−2) = 2 · (−2) + 1 = −3</span>
   </div>
   <div class="card">
     <h2>Wähle eine Variante</h2>
     <div class="choices" id="modes">
-      <button class="choice sel" data-m="ein">🎯 Einsetzen<small>Ein x-Wert, ein Funktionswert: f(3) = ?</small></button>
-      <button class="choice" data-m="tab">📋 Wertetabelle<small>Fülle die ganze Tabelle aus.</small></button>
-      <button class="choice" data-m="fehler">🔍 Fehler finden<small>In der Tabelle ist ein Wert falsch. Finde ihn!</small></button>
+      <button class="choice sel" data-m="t2g">📋 → 📈 Tabelle zum Graphen<small>Welcher Graph passt zur Wertetabelle?</small></button>
+      <button class="choice" data-m="g2t">📈 → 📋 Werte ablesen<small>Lies am Graphen die y-Werte ab und fülle die Tabelle.</small></button>
+      <button class="choice" data-m="f2y">f(x) → y-Wert berechnen<small>Setze x in die Funktion ein: f(3) = ?</small></button>
     </div>
   </div>
   <button class="big" id="go">Los geht's ▶</button>
@@ -97,20 +100,23 @@ table.sum td{padding:4px 12px;border-bottom:1px solid #ccc}
   <div class="prog"><i id="bar"></i></div>
   <div class="game">
     <div class="left">
-      <div class="fn" id="fn"></div>
+      <div id="head"></div>
       <div class="task" id="task"></div>
       <div id="area"></div>
+    </div>
+    <div class="right">
+      <div id="side"></div>
+      <div id="keyWrap">
+        <div class="keys" id="keys">
+          <button>7</button><button>8</button><button>9</button><button class="minus">−</button>
+          <button>4</button><button>5</button><button>6</button><button>⌫</button>
+          <button>1</button><button>2</button><button>3</button><button>0</button>
+          <button class="ok" id="check">Prüfen ✓</button><button id="nxt" style="font-size:18px">Feld ▶</button><button id="clr" style="font-size:18px">Löschen</button>
+        </div>
+        <p class="small" id="keyHint"></p>
+      </div>
       <div class="fb" id="fb"></div>
       <button class="next" id="next">Weiter ▶</button>
-    </div>
-    <div class="right" id="keyWrap">
-      <div class="keys" id="keys">
-        <button>7</button><button>8</button><button>9</button><button class="minus">−</button>
-        <button>4</button><button>5</button><button>6</button><button>⌫</button>
-        <button>1</button><button>2</button><button>3</button><button>0</button>
-        <button class="ok" id="check">Prüfen ✓</button><button id="nxt" style="font-size:18px">Feld ▶</button><button id="clr" style="font-size:18px">Löschen</button>
-      </div>
-      <p class="small" id="keyHint"></p>
     </div>
   </div>
 </section>
@@ -127,202 +133,192 @@ table.sum td{padding:4px 12px;border-bottom:1px solid #ccc}
 
 <script>
 const $=s=>document.querySelector(s);
-let mode="ein",tasks=[],idx=0,score=0,streak=0,best=0,total=0,errs={klammer:0,punkt:0,n:0,vz:0};
+const NS="http://www.w3.org/2000/svg",BLUE="#123F88",OR="#C25A12",RED="#C8170F",GREEN="#1E7B34";
+let mode="t2g",tasks=[],idx=0,score=0,streak=0,best=0,total=0,errs={};
 let cur=null,val="",tries=0,done=false,cells=[],act=0;
 document.querySelectorAll("#modes .choice").forEach(b=>b.onclick=()=>{document.querySelectorAll("#modes .choice").forEach(c=>c.classList.remove("sel"));b.classList.add("sel");mode=b.dataset.m});
 function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("on"));$("#"+id).classList.add("on");window.scrollTo(0,0)}
-const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
-const pick=a=>a[rnd(0,a.length-1)];
-const f=(n)=>String(n).replace("-","−");
-const par=v=>v<0?`(${f(v)})`:f(v);
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),pick=a=>a[rnd(0,a.length-1)];
+const f=n=>String(n).replace("-","−").replace(".",","),par=v=>v<0?`(${f(v)})`:f(v);
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=rnd(0,i);[a[i],a[j]]=[a[j],a[i]]}return a};
+const val_=(F,x)=>F.m*x+F.n;
+function fnText(F){const {m,n}=F;let s;
+  if(m==1)s="x";else if(m==-1)s="−x";else if(m==0)s="";else s=f(m)+"x";
+  if(m==0)s=f(n);else if(n>0)s+=" + "+n;else if(n<0)s+=" − "+(-n);
+  return "f(x) = "+s}
+const mstr=m=>Math.abs(m)==0.5?(m<0?"(−0,5)":"0,5"):par(m);
+function steps(F,x){const p=F.m*x;let s=`f(${f(x)}) = ${mstr(F.m)} · ${par(x)}`;
+  if(F.n!=0)s+=` ${F.n>0?"+":"−"} ${Math.abs(F.n)}`;s+=` = ${f(p)}`;
+  if(F.n!=0)s+=` ${F.n>0?"+":"−"} ${Math.abs(F.n)} = ${f(p+F.n)}`;return s}
+function diagnose(F,x,a){const p=F.m*x;
+  if(a==-p+F.n&&p!=0)return["vz","Vorzeichen beim Malnehmen!",`${mstr(F.m)} · ${par(x)} = <b>${f(p)}</b>. Minus mal Minus = Plus, Plus mal Minus = Minus.`];
+  if(x<0&&a==F.m+x+F.n&&F.m!=1)return["klammer","Klammer vergessen?",`Negative Zahl in Klammern und malnehmen: ${mstr(F.m)} · ${par(x)}.`];
+  if(F.n!=0&&a==F.m*(x+F.n))return["punkt","Punkt vor Strich!","Erst <b>mal</b>, dann <b>plus/minus</b>."];
+  if(F.n!=0&&a==p)return["n",`Das „${F.n>0?"+":"−"} ${Math.abs(F.n)}“ fehlt!`,`Nach dem Malnehmen noch ${F.n>0?"plus":"minus"} ${Math.abs(F.n)} rechnen.`];
+  if(a==F.m+x+F.n)return["punkt","Mal, nicht plus!","2x heißt 2 · x."];
+  return["","Noch nicht richtig.","Rechne Schritt für Schritt: erst mal, dann plus/minus."]}
 
-// ---------- Funktionen ----------
-function makeFn(){
-  let m,n;
-  do{ m=pick([-3,-2,-1,1,2,3,4,0.5,-0.5]); n=rnd(-6,6);}while(m==1&&n==0);
-  return {m,n};
-}
-function fnText(F){
-  const {m,n}=F;let s;
-  if(m==1)s="x";else if(m==-1)s="−x";else if(m==0.5)s="0,5x";else if(m==-0.5)s="−0,5x";else s=f(m)+"x";
-  if(n>0)s+=" + "+n;else if(n<0)s+=" − "+(-n);
-  return "f(x) = "+s;
-}
-const mstr=m=>m==0.5?"0,5":m==-0.5?"(−0,5)":par(m);
-function val_(F,x){return F.m*x+F.n}
-function xFor(F){ // ganzzahlige Ergebnisse
-  let x; do{x=rnd(-4,5)}while(Math.abs(F.m)==0.5&&x%2!=0); return x;
-}
-function steps(F,x){
-  const p=F.m*x;
-  let s=`f(${f(x)}) = ${mstr(F.m)} · ${par(x)}`;
-  if(F.n!=0)s+=` ${F.n>0?"+":"−"} ${Math.abs(F.n)}`;
-  s+=` = ${f(p)}`;
-  if(F.n!=0)s+=` ${F.n>0?"+":"−"} ${Math.abs(F.n)} = ${f(p+F.n)}`;
-  return s;
-}
-// typische Fehler erkennen
-function diagnose(F,x,a){
-  const r=val_(F,x),p=F.m*x;
-  if(a==r)return null;
-  if(a==-p+F.n && p!=0) return ["vz","Vorzeichen beim Malnehmen!",`${mstr(F.m)} · ${par(x)} = <b>${f(p)}</b>. Minus mal Minus ergibt Plus, Plus mal Minus ergibt Minus.`];
-  if(x<0 && a==F.m+x+F.n && F.m!=1) return ["klammer","Klammer vergessen?",`Du hast wohl ${mstr(F.m)} ${f(x)} gerechnet. Schreib die negative Zahl in Klammern und multipliziere: ${mstr(F.m)} · ${par(x)}.`];
-  if(F.n!=0 && a==F.m*(x+F.n)) return ["punkt","Punkt vor Strich!","Erst <b>mal</b> rechnen, dann <b>plus/minus</b>."];
-  if(F.n!=0 && a==p) return ["n",`Das „${F.n>0?"+":"−"} ${Math.abs(F.n)}“ fehlt!`,`Nach dem Malnehmen musst du noch ${F.n>0?"plus":"minus"} ${Math.abs(F.n)} rechnen.`];
-  if(a==F.m+x+F.n) return ["punkt","Mal, nicht plus!","Zwischen der Zahl und x steht ein <b>Malpunkt</b>: 2x heißt 2 · x."];
-  if(a==p-F.n || a==-r) return ["vz","Vorzeichen prüfen!","Schau genau auf Plus und Minus."];
-  return ["","Noch nicht richtig.","Rechne Schritt für Schritt: erst mal, dann plus/minus."];
+// ---------- Koordinatensystem ----------
+function cs(lines,opt={}){
+  const R=opt.R||6,W=opt.W||420,pad=opt.pad||26,u=(W-2*pad)/(2*R),fs=opt.fs||15;
+  const X=x=>pad+(x+R)*u,Y=y=>pad+(R-y)*u;
+  let s=`<svg class="cs" viewBox="0 0 ${W} ${W}" xmlns="${NS}">`;
+  for(let i=-R;i<=R;i++){s+=`<line x1="${X(i)}" y1="${Y(-R)}" x2="${X(i)}" y2="${Y(R)}" stroke="#777" stroke-width="1"/><line x1="${X(-R)}" y1="${Y(i)}" x2="${X(R)}" y2="${Y(i)}" stroke="#777" stroke-width="1"/>`}
+  s+=`<line x1="${X(-R)-4}" y1="${Y(0)}" x2="${X(R)+10}" y2="${Y(0)}" stroke="#000" stroke-width="2.5"/><line x1="${X(0)}" y1="${Y(-R)+4}" x2="${X(0)}" y2="${Y(R)-10}" stroke="#000" stroke-width="2.5"/>`;
+  s+=`<path d="M${X(R)+16} ${Y(0)} l-9 -5 v10z"/><path d="M${X(0)} ${Y(R)-16} l-5 9 h10z"/>`;
+  const st=`font-family="Lexend" font-size="${fs}" paint-order="stroke" stroke="#fff" stroke-width="2.5"`;
+  for(let i=-R;i<=R;i++){if(!i)continue;
+    s+=`<text x="${X(i)}" y="${Y(0)+fs+3}" text-anchor="middle" ${st}>${f(i)}</text><text x="${X(0)-4}" y="${Y(i)+fs/3}" text-anchor="end" ${st}>${f(i)}</text>`}
+  s+=`<text x="${X(R)+2}" y="${Y(0)+fs+6}" font-family="Fredoka" font-size="${fs+5}" font-weight="600">x</text><text x="${X(0)+6}" y="${Y(R)-2}" font-family="Fredoka" font-size="${fs+5}" font-weight="600">y</text>`;
+  for(const L of lines){
+    let x1=-R,x2=R;const y=x=>L.m*x+L.n;
+    if(L.m!=0){const a=(R-L.n)/L.m,b=(-R-L.n)/L.m;x1=Math.max(-R,Math.min(a,b));x2=Math.min(R,Math.max(a,b))}
+    s+=`<line x1="${X(x1)}" y1="${Y(y(x1))}" x2="${X(x2)}" y2="${Y(y(x2))}" stroke="${L.col||BLUE}" stroke-width="${L.w||4}" stroke-linecap="round"/>`;
+  }
+  for(const P of (opt.pts||[]))s+=`<circle cx="${X(P[0])}" cy="${Y(P[1])}" r="${opt.pr||6}" fill="${P[2]||RED}" stroke="#fff" stroke-width="2"/>`;
+  return s+"</svg>";
 }
 
 // ---------- Aufgaben ----------
-function makeTasks(){
-  const t=[];
-  if(mode=="ein"){for(let i=0;i<10;i++){const F=makeFn();let x=xFor(F);if(i<5&&i%2==0){/* mehr negative x */ while(x>=0)x=xFor(F)}t.push({F,x})}}
-  if(mode=="tab"){for(let i=0;i<4;i++){const F=makeFn();const s=Math.abs(F.m)==0.5?[-4,-2,0,2,4]:pick([[-2,-1,0,1,2],[-3,-2,-1,0,1],[-1,0,1,2,3],[0,1,2,3,4]]);t.push({F,xs:s})}}
-  if(mode=="fehler"){for(let i=0;i<8;i++){const F=makeFn();const xs=Math.abs(F.m)==0.5?[-4,-2,0,2,4,6]:[-2,-1,0,1,2,3];
-      const ys=xs.map(x=>val_(F,x));
-      let k,w;
-      for(let g=0;g<50;g++){k=rnd(0,xs.length-1);const x=xs[k],p=F.m*x;
-        const opts=[-p+F.n, F.m*(x+F.n), p, F.m+x+F.n, p-F.n, val_(F,x)+pick([1,-1,2])].filter(v=>v!=ys[k]&&Number.isInteger(v));
-        w=pick(opts); if(w!=null)break;}
-      const shown=ys.slice();shown[k]=w;t.push({F,xs,ys,shown,k})}}
-  return t;
+function fnInt(maxAbsY,xs){
+  for(let g=0;g<500;g++){
+    const m=pick([-3,-2,-1,1,2,3,0.5,-0.5]),n=rnd(-4,4);
+    if(m==1&&n==0)continue;
+    if(xs.every(x=>Number.isInteger(val_({m,n},x))&&Math.abs(val_({m,n},x))<=maxAbsY))return{m,n};
+  }
+  return{m:1,n:1};
 }
-function start(){tasks=makeTasks();idx=0;score=0;streak=0;best=0;total=0;errs={klammer:0,punkt:0,n:0,vz:0};show("play");load()}
-function upd(){
-  const N=tasks.length;
-  $("#round").textContent=(mode=="tab"?"Tabelle ":"Aufgabe ")+(idx+1)+" / "+N;
-  $("#score").textContent="✓ "+score;$("#streak").textContent="🔥 "+streak;
-  $("#bar").style.width=(idx/N*100)+"%";
-}
+function makeTasks(){const t=[];
+  if(mode=="t2g"){
+    for(let i=0;i<8;i++){
+      const xs=pick([[-2,-1,0,1,2],[-1,0,1,2,3],[-2,0,2,4]]);
+      const F=fnInt(5,xs);
+      const D=[];const add=(G,why)=>{if(!D.some(d=>d.G.m==G.m&&d.G.n==G.n)&&!(G.m==F.m&&G.n==F.n))D.push({G,why})};
+      add({m:-F.m,n:F.n},"Die Steigung hat das falsche Vorzeichen. Schau: Wird y größer oder kleiner, wenn x größer wird?");
+      if(F.n!=0)add({m:F.m,n:-F.n},`Schau bei x = 0: Laut Tabelle ist y = ${f(F.n)}.`);
+      add({m:1/F.m,n:-F.n/F.m},"Hier sind x und y vertauscht! Erst nach rechts/links (x), dann nach oben/unten (y).");
+      add({m:F.m+(F.m>0?1:-1),n:F.n},"Fast! Ein Punkt passt, aber prüfe einen zweiten Punkt aus der Tabelle.");
+      add({m:F.m,n:F.n+(F.n>=0?2:-2)},`Schau bei x = 0: Laut Tabelle ist y = ${f(F.n)}.`);
+      const ds=shuffle(D).slice(0,3);
+      t.push({F,xs,opts:shuffle([{G:F,ok:true},...ds])});
+    }}
+  if(mode=="g2t"){
+    for(let i=0;i<6;i++){
+      let xs=pick([[-2,-1,0,1,2],[-3,-1,0,2,3],[0,1,2,3,4],[-4,-2,0,1,3]]);
+      let F=fnInt(6,xs);if(Math.abs(F.m)==0.5){xs=[-4,-2,0,2,4];F=fnInt(6,xs)}
+      t.push({F,xs})}}
+  if(mode=="f2y"){
+    for(let i=0;i<10;i++){const F=fnInt(30,[0]);let x;
+      do{x=rnd(-5,5)}while(!Number.isInteger(val_(F,x))||(i%2==0&&x>=0));t.push({F,x})}}
+  return t}
+function start(){tasks=makeTasks();idx=0;score=0;streak=0;best=0;total=0;errs={};show("play");load()}
+function upd(){const N=tasks.length;$("#round").textContent="Aufgabe "+(idx+1)+" / "+N;
+  $("#score").textContent="✓ "+score;$("#streak").textContent="🔥 "+streak;$("#bar").style.width=(idx/N*100)+"%"}
+function tableHTML(xs,ys,inputs){
+  return `<table class="wt"><tr><th>x</th>${xs.map(x=>`<td>${f(x)}</td>`).join("")}</tr><tr><th>y</th>${
+    inputs?xs.map((x,i)=>`<td class="in" data-i="${i}"></td>`).join(""):ys.map(y=>`<td>${f(y)}</td>`).join("")}</tr></table>`}
+const small=(G,pts)=>cs([{m:G.m,n:G.n}],{R:5,W:260,pad:20,fs:15,pts,pr:6});
 function load(){
-  cur=tasks[idx];val="";tries=0;done=false;
-  $("#fb").className="fb";$("#fb").innerHTML="";$("#next").style.display="none";
-  $("#fn").textContent=fnText(cur.F);upd();
-  const A=$("#area");$("#keyWrap").style.display="";$("#nxt").style.visibility=mode=="tab"?"visible":"hidden";
-  if(mode=="ein"){
-    $("#task").innerHTML=`Berechne den Funktionswert.`;
-    A.innerHTML=`<div class="eq">f(${f(cur.x)}) = <div class="box" id="ans"></div></div>`;
-    $("#keyHint").textContent="Rechne im Kopf oder auf dem Block. Tippe das Ergebnis ein.";
+  cur=tasks[idx];val="";tries=0;done=false;upd();
+  $("#fb").className="fb";$("#fb").innerHTML="";$("#next").style.display="none";$("#side").innerHTML="";
+  const A=$("#area"),H=$("#head");$("#keyWrap").style.display="";$("#nxt").style.display="";
+  if(mode=="t2g"){
+    H.innerHTML=tableHTML(cur.xs,cur.xs.map(x=>val_(cur.F,x)));
+    $("#task").innerHTML="Welcher Graph passt zur Wertetabelle? Tippe ihn an.";
+    A.innerHTML=`<div class="opts">${cur.opts.map((o,i)=>`<div class="opt" data-i="${i}"><span class="lab">${"ABCD"[i]}</span>${small(o.G)}</div>`).join("")}</div>`;
+    A.querySelectorAll(".opt").forEach(d=>d.onclick=()=>pickGraph(+d.dataset.i,d));
+    $("#keyWrap").style.display="none";
+    $("#side").innerHTML=`<div class="merke" style="margin:0">Tipp: Nimm <b>zwei Punkte</b> aus der Tabelle und prüfe, ob sie auf dem Graphen liegen. Erst nach rechts/links (x), dann nach oben/unten (y).</div>`;
     total++;
   }
-  if(mode=="tab"){
-    $("#task").innerHTML="Fülle die Wertetabelle aus. Tippe auf ein Feld, um es zu wählen.";
+  if(mode=="g2t"){
+    H.innerHTML="";
+    $("#task").innerHTML="Lies die y-Werte am Graphen ab und fülle die Tabelle.";
+    A.innerHTML=cs([{m:cur.F.m,n:cur.F.n}],{R:6,W:440})+tableHTML(cur.xs,null,true);
     cells=cur.xs.map(()=>({v:"",ok:false,first:true}));act=0;
-    A.innerHTML=`<table class="wt"><tr><th>x</th>${cur.xs.map(x=>`<td>${f(x)}</td>`).join("")}</tr><tr><th>f(x)</th>${cur.xs.map((x,i)=>`<td class="in" data-i="${i}"></td>`).join("")}</tr></table>`;
     A.querySelectorAll("td.in").forEach(td=>td.onclick=()=>{const i=+td.dataset.i;if(!cells[i].ok){act=i;rTab()}});
-    $("#keyHint").textContent="Mit „Feld ▶“ oder durch Antippen kommst du zum nächsten Feld. Am Ende auf „Prüfen“ tippen.";
+    $("#keyHint").textContent="Gehe auf der x-Achse zur Zahl, dann senkrecht bis zum Graphen. Mit „Feld ▶“ kommst du zum nächsten Feld.";
     total+=cur.xs.length;rTab();
   }
-  if(mode=="fehler"){
-    $("#task").innerHTML="Ein Wert in der Tabelle ist <b>falsch</b>. Tippe ihn an!";
-    A.innerHTML=`<table class="wt"><tr><th>x</th>${cur.xs.map(x=>`<td>${f(x)}</td>`).join("")}</tr><tr><th>f(x)</th>${cur.shown.map((y,i)=>`<td class="given" data-i="${i}">${f(y)}</td>`).join("")}</tr></table><div id="fix"></div>`;
-    A.querySelectorAll("td.given").forEach(td=>td.onclick=()=>pickCell(+td.dataset.i,td));
-    $("#keyWrap").style.display="none";cur.stage="find";total++;
+  if(mode=="f2y"){
+    H.innerHTML=`<div class="fn">${fnText(cur.F)}</div>`;
+    $("#task").innerHTML="Berechne den y-Wert.";
+    A.innerHTML=`<div class="eq">f(${f(cur.x)}) = <div class="box" id="ans"></div></div>`;
+    $("#nxt").style.display="none";
+    $("#keyHint").textContent="Rechne auf dem Block mit und tippe das Ergebnis ein.";
+    total++;
   }
 }
-function rAns(){const b=$("#ans");if(b)b.textContent=f(val)}
-function rTab(){
-  document.querySelectorAll("#area td.in").forEach(td=>{const i=+td.dataset.i,c=cells[i];
-    td.textContent=f(c.v);td.className="in"+(c.ok?" ok":c.bad?" no":"")+(i==act&&!c.ok?" act":"")});
-}
-// Tastatur
+function rTab(){document.querySelectorAll("#area td.in").forEach(td=>{const i=+td.dataset.i,c=cells[i];
+  td.textContent=f(c.v);td.className="in"+(c.ok?" ok":c.bad?" no":"")+(i==act&&!c.ok?" act":"")})}
 $("#keys").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;press(b.id=="check"?"OK":b.id=="clr"?"CLR":b.id=="nxt"?"NEXT":b.textContent)});
 document.addEventListener("keydown",e=>{if(!$("#play").classList.contains("on"))return;
   if(e.key=="Enter"){done?$("#next").click():press("OK");return}
-  if(/^\d$/.test(e.key))press(e.key);else if(e.key=="-")press("−");else if(e.key=="Backspace")press("⌫");
-  else if(e.key=="Tab"&&mode=="tab"){e.preventDefault();act=(act+1)%cells.length;rTab()}});
-function edit(s,k){
-  if(k=="⌫")return s.slice(0,-1);
-  if(k=="−")return s.startsWith("-")?s.slice(1):"-"+s;
-  if(k=="CLR"||k=="NEXT")return k=="CLR"?"":s;
-  if(/\d/.test(k)&&s.replace("-","").length<3)return s+k;
-  return s;
-}
-function press(k){
-  if(done)return;
-  if(mode=="ein"){ if(k=="OK")return checkEin(); val=edit(val,k);rAns(); }
-  else if(mode=="tab"){
-    if(k=="OK")return checkTab();
+  if(/^\d$/.test(e.key))press(e.key);else if(e.key=="-")press("−");else if(e.key=="Backspace")press("⌫");else if(e.key=="Tab"){e.preventDefault();press("NEXT")}});
+function edit(s,k){if(k=="⌫")return s.slice(0,-1);if(k=="−")return s.startsWith("-")?s.slice(1):"-"+s;if(k=="CLR")return "";
+  if(/^\d$/.test(k)&&s.replace("-","").length<3)return s+k;return s}
+function press(k){if(done||mode=="t2g")return;
+  if(mode=="f2y"){if(k=="OK")return checkY();if(k=="NEXT")return;val=edit(val,k);$("#ans").textContent=f(val)}
+  if(mode=="g2t"){if(k=="OK")return checkTab();
     if(k=="NEXT"){let j=act;for(let s=0;s<cells.length;s++){j=(j+1)%cells.length;if(!cells[j].ok)break}act=j;rTab();return}
     if(k=="CLR"){cells.forEach(c=>{if(!c.ok){c.v="";c.bad=false}});rTab();return}
-    const c=cells[act];if(c.ok)return;c.v=edit(c.v,k);c.bad=false;rTab();
-  }
-  else if(mode=="fehler"&&cur.stage=="fix"){ if(k=="OK")return checkFix(); val=edit(val,k);$("#fixbox").textContent=f(val); }
-}
+    const c=cells[act];if(c.ok)return;c.v=edit(c.v,k);c.bad=false;rTab()}}
 function fb(cls,t,html){const e=$("#fb");e.className="fb "+cls;e.innerHTML=`<div class="t">${t}</div>${html}`}
-function right(first){ if(first){score++;streak++;best=Math.max(best,streak)}else streak=0; upd() }
-function finish(){done=true;$("#next").style.display="inline-block"}
+function finish(){done=true;$("#next").style.display="inline-block";upd()}
+function err(k){if(k)errs[k]=(errs[k]||0)+1}
 
-function checkEin(){
-  if(val===""||val==="-"){fb("hint","✏️ Tippe zuerst ein Ergebnis ein.","");return}
-  const a=+val,F=cur.F,x=cur.x;tries++;
-  if(a==val_(F,x)){right(tries==1);fb("good","✅ Richtig!",`<div class="calc">${steps(F,x)}</div>`);finish();return}
-  const d=diagnose(F,x,a);if(d[0])errs[d[0]]++;
-  streak=0;upd();
-  if(tries>=2){fb("bad","❌ "+d[1],d[2]+`<div class="calc">So geht's: ${steps(F,x)}</div>`);finish()}
-  else{fb("bad","❌ "+d[1],d[2]+"<br>Versuch es nochmal.");val="";rAns()}
-}
+// Variante 1: Tabelle -> Graph
+function pickGraph(i,d){if(done||d.classList.contains("no"))return;tries++;const o=cur.opts[i];
+  if(o.ok){if(tries==1){score++;streak++;best=Math.max(best,streak)}else streak=0;
+    d.innerHTML=`<span class="lab">${"ABCD"[i]}</span>`+small(cur.F,cur.xs.map(x=>[x,val_(cur.F,x),GREEN]).filter(p=>Math.abs(p[1])<=5));
+    d.classList.add("ok");
+    const P=cur.xs.slice(0,2).map(x=>`(${f(x)} | ${f(val_(cur.F,x))})`).join(" und ");
+    fb("good","✅ Richtig!",`Alle Punkte der Tabelle liegen auf Graph ${"ABCD"[i]}, z. B. ${P}.<br><span class="calc">${fnText(cur.F)}</span>`);finish()}
+  else{d.classList.add("no");streak=0;
+    if(o.why.includes("vertauscht"))err("xy");else if(o.why.includes("Vorzeichen"))err("vz");else err("punkt2");
+    if(tries>=2){const k=cur.opts.findIndex(o=>o.ok),dk=document.querySelectorAll(".opt")[k];
+      dk.innerHTML=`<span class="lab">${"ABCD"[k]}</span>`+small(cur.F,cur.xs.map(x=>[x,val_(cur.F,x),GREEN]).filter(p=>Math.abs(p[1])<=5));dk.classList.add("ok");
+      fb("bad","❌ Nicht ganz.",o.why+`<br>Richtig ist Graph <b>${"ABCD"[k]}</b>: Dort liegen alle Punkte der Tabelle (grün).`);finish()}
+    else fb("bad","❌ Dieser Graph passt nicht.",o.why+" Versuch es nochmal.")}}
+// Variante 2: Graph -> Tabelle
 function checkTab(){
   if(cells.some(c=>!c.ok&&(c.v===""||c.v==="-"))){fb("hint","✏️ Fülle zuerst alle Felder aus.","");return}
   tries++;const F=cur.F;let wrong=[];
-  cells.forEach((c,i)=>{if(c.ok)return;const x=cur.xs[i];
-    if(+c.v==val_(F,x)){c.ok=true;c.bad=false;if(c.first)score++;}
-    else{c.bad=true;c.first=false;const d=diagnose(F,x,+c.v);if(d[0])errs[d[0]]++;wrong.push({i,x,d})}});
-  if(!wrong.length){streak++;best=Math.max(best,streak);upd();rTab();
-    fb("good","✅ Alles richtig!","Die ganze Tabelle stimmt.");finish();return}
-  streak=0;upd();
-  act=wrong[0].i;rTab();
-  if(tries>=2){
-    wrong.forEach(w=>{cells[w.i].v=String(val_(F,w.x));cells[w.i].ok=true;cells[w.i].bad=false});rTab();
-    document.querySelectorAll("#area td.in").forEach((td,i)=>{if(wrong.some(w=>w.i==i)){td.className="in no";td.textContent=f(val_(F,cur.xs[i]))}});
-    fb("bad","❌ Hier die Lösung für die roten Felder:",wrong.map(w=>`<div class="calc">${steps(F,w.x)}</div>`).join(""));finish();
-  }else{
-    fb("bad",`❌ ${wrong.length} ${wrong.length==1?"Feld ist":"Felder sind"} noch falsch (rot).`,
-      wrong.map(w=>`<div>• Bei x = ${f(w.x)}: <b>${w.d[1]}</b> ${w.d[2]}</div>`).join("")+"Verbessere die roten Felder und prüfe nochmal.");
-  }
-}
-function pickCell(i,td){
-  if(done||cur.stage!="find")return;tries++;
-  if(i==cur.k){
-    cur.stage="fix";val="";td.classList.add("picked");
-    const x=cur.xs[i];
-    const d=diagnose(cur.F,x,cur.shown[i]);
-    fb("good","✅ Gefunden!",`Bei x = ${f(x)} stimmt ${f(cur.shown[i])} nicht.${d&&d[0]?` Typischer Fehler: <b>${d[1]}</b>`:""}<br>Wie heißt der richtige Wert?`);
-    $("#fix").innerHTML=`<div class="eq">f(${f(x)}) = <div class="box" id="fixbox"></div></div>`;
-    $("#keyWrap").style.display="";$("#keyHint").textContent="Tippe den richtigen Wert ein.";
-    cur.firstFind=(tries==1);tries=0;
-  }else{
-    td.classList.add("ok");td.onclick=null;
-    const x=cur.xs[i];
-    fb("bad","❌ Dieser Wert stimmt.",`<div class="calc">${steps(cur.F,x)}</div>Such weiter!`);
-  }
-}
-function checkFix(){
-  if(val===""||val==="-")return;const x=cur.xs[cur.k];tries++;
-  if(+val==val_(cur.F,x)){right(cur.firstFind&&tries==1);fb("good","✅ Super, verbessert!",`<div class="calc">${steps(cur.F,x)}</div>`);
-    const td=document.querySelectorAll("#area td.given")[cur.k];td.className="given ok";td.textContent=f(val_(cur.F,x));finish()}
-  else if(tries>=2){streak=0;upd();fb("bad","❌ Noch nicht.",`<div class="calc">So geht's: ${steps(cur.F,x)}</div>`);finish()}
-  else{fb("bad","❌ Noch nicht richtig.","Rechne nach: erst mal, dann plus/minus.");val="";$("#fixbox").textContent=""}
-}
+  cells.forEach((c,i)=>{if(c.ok)return;const x=cur.xs[i],y=val_(F,x),a=+c.v;
+    if(a==y){c.ok=true;c.bad=false;if(c.first)score++}
+    else{c.bad=true;c.first=false;let why="Zähle die Kästchen noch einmal.";
+      if(a==x&&y!=x){why="Das ist der x-Wert! Geh senkrecht bis zum Graphen und lies dann an der y-Achse ab.";err("xy")}
+      else if(a==-y){why="Vorzeichen! Liegt der Punkt unter der x-Achse, ist y negativ.";err("vz")}
+      else if(cur.xs.some(xx=>xx!=x&&val_(F,xx)==a)){why="Das ist der y-Wert an einer anderen Stelle. Bist du beim richtigen x?";err("ab")}
+      else err("ab");
+      wrong.push({i,x,why})}});
+  if(!wrong.length){streak++;best=Math.max(best,streak);rTab();fb("good","✅ Alles richtig!",`Die Tabelle passt zum Graphen.<br><span class="calc">${fnText(F)}</span>`);finish();return}
+  streak=0;act=wrong[0].i;rTab();
+  if(tries>=2){wrong.forEach(w=>{const c=cells[w.i];c.v=String(val_(F,w.x));c.ok=true});rTab();
+    document.querySelectorAll("#area td.in").forEach((td,i)=>{if(wrong.some(w=>w.i==i))td.className="in no"});
+    $("#area svg").outerHTML=cs([{m:F.m,n:F.n}],{R:6,W:440,pts:wrong.map(w=>[w.x,val_(F,w.x),RED])});
+    fb("bad","❌ Die roten Werte sind jetzt verbessert.",wrong.map(w=>`<div>• x = ${f(w.x)} → y = <b>${f(val_(F,w.x))}</b> (roter Punkt)</div>`).join(""));finish()}
+  else fb("bad",`❌ ${wrong.length} ${wrong.length==1?"Feld ist":"Felder sind"} noch falsch (rot).`,wrong.map(w=>`<div>• Bei x = ${f(w.x)}: ${w.why}</div>`).join("")+"Verbessere und prüfe nochmal.")}
+// Variante 3: Funktion -> y-Wert
+function checkY(){if(val===""||val==="-"){fb("hint","✏️ Tippe zuerst ein Ergebnis ein.","");return}
+  const a=+val,F=cur.F,x=cur.x;tries++;
+  if(a==val_(F,x)){if(tries==1){score++;streak++;best=Math.max(best,streak)}fb("good","✅ Richtig!",`<div class="calc">${steps(F,x)}</div>`);finish();return}
+  const d=diagnose(F,x,a);err(d[0]);streak=0;upd();
+  if(tries>=2){fb("bad","❌ "+d[1],d[2]+`<div class="calc">So geht's: ${steps(F,x)}</div>`);finish()}
+  else{fb("bad","❌ "+d[1],d[2]+"<br>Versuch es nochmal.");val="";$("#ans").textContent=""}}
+
 $("#next").onclick=()=>{idx++;if(idx>=tasks.length)end();else load()};
 $("#toHome").onclick=()=>show("start");$("#go").onclick=start;$("#again").onclick=start;$("#other").onclick=()=>show("start");
-
-function end(){
-  show("end");
-  $("#resNum").textContent=`${score} / ${total}`;
-  const q=score/total,s=q>=.9?3:q>=.7?2:q>=.5?1:0;
+function end(){show("end");
+  $("#resNum").textContent=`${score} / ${total}`;const q=score/total,s=q>=.9?3:q>=.7?2:q>=.5?1:0;
   $("#stars").textContent="★".repeat(s)+"☆".repeat(3-s);
-  const name={ein:"Einsetzen",tab:"Wertetabelle",fehler:"Fehler finden"}[mode];
+  const name={t2g:"Tabelle zum Graphen",g2t:"Werte ablesen",f2y:"y-Wert berechnen"}[mode];
+  const lab={xy:"x und y verwechselt",vz:"Vorzeichenfehler",klammer:"Klammer vergessen",punkt:"Punkt vor Strich",n:"+ n vergessen",ab:"Falsch abgelesen",punkt2:"Nur einen Punkt geprüft"};
   $("#sum").innerHTML=`<tr><td>Variante</td><td><b>${name}</b></td></tr><tr><td>Beim ersten Versuch richtig</td><td><b>${score} von ${total}</b></td></tr><tr><td>Längste Serie 🔥</td><td><b>${best}</b></td></tr>`+
-    (errs.klammer?`<tr><td>Klammer vergessen</td><td><b>${errs.klammer}×</b></td></tr>`:"")+
-    (errs.vz?`<tr><td>Vorzeichenfehler</td><td><b>${errs.vz}×</b></td></tr>`:"")+
-    (errs.punkt?`<tr><td>Punkt vor Strich</td><td><b>${errs.punkt}×</b></td></tr>`:"")+
-    (errs.n?`<tr><td>+ n vergessen</td><td><b>${errs.n}×</b></td></tr>`:"");
-  const top=Object.entries(errs).sort((a,b)=>b[1]-a[1])[0];
-  const tips={klammer:"Negative Zahlen beim Einsetzen <b>immer in Klammern</b>: 2 · (−3).",vz:"<b>Minus mal Minus = Plus</b>, Plus mal Minus = Minus.",punkt:"<b>Punkt vor Strich</b>: erst mal, dann plus/minus.",n:"Vergiss das <b>+ n</b> am Ende nicht."};
-  const t=$("#endTip");if(top[1]>=2){t.style.display="";t.innerHTML="<b>Dein Tipp:</b> "+tips[top[0]]}else t.style.display="none";
-}
+    Object.entries(errs).map(([k,v])=>`<tr><td>${lab[k]||k}</td><td><b>${v}×</b></td></tr>`).join("");
+  const tips={xy:"Erst <b>x</b> (nach rechts/links), dann <b>y</b> (nach oben/unten).",vz:"Unter der x-Achse ist y <b>negativ</b>. Minus mal Minus = Plus.",klammer:"Negative Zahlen beim Einsetzen <b>immer in Klammern</b>.",punkt:"<b>Punkt vor Strich</b>: erst mal, dann plus/minus.",n:"Vergiss das <b>+ n</b> am Ende nicht.",ab:"Gehe vom x-Wert <b>senkrecht</b> zum Graphen und lies dann <b>waagerecht</b> an der y-Achse ab.",punkt2:"Prüfe immer <b>mindestens zwei Punkte</b> aus der Tabelle."};
+  const top=Object.entries(errs).sort((a,b)=>b[1]-a[1])[0],t=$("#endTip");
+  if(top&&top[1]>=2){t.style.display="";t.innerHTML="<b>Dein Tipp:</b> "+tips[top[0]]}else t.style.display="none"}
 </script>
 </body>
 </html>
