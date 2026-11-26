@@ -37,6 +37,12 @@ Spielarten: Klassenduell (Team Blau gegen Team Orange) und Blitzrunde. Drei Nive
 | [Wachstumsfaktor-Blitz](wachstumsfaktor-blitz.html) | Prozent → Faktor q, Zunahme/Abnahme erkennen, k · qˣ berechnen (2 Teams, Klau-Chance) |
 | [Gleichungs-Challenge](gleichungs-challenge.html) | Situation, Tabelle, Graph der passenden Gleichung f(x) = k · qˣ zuordnen (2 Gruppen gleichzeitig, Joker) |
 
+## Mathe 10E · Quadratische Funktionen
+
+| Spiel | Thema |
+|---|---|
+| [Parabel-Profi](parabel-profi.html) | Nullstellen zuordnen, Punktprobe, Eigenschaften ankreuzen, Öffnung und Streckung (Klassenduell mit Klau-Chance oder Blitzrunde, drei Niveaus) |
+
 ## Mathe 5 · Addition und Subtraktion
 
 | Spiel | Thema |
